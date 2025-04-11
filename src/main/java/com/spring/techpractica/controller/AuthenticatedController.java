@@ -17,7 +17,8 @@ public class AuthenticatedController {
 
     @PostMapping("/registration")
     public void createAccount(@RequestBody UserCreateAccount userCreateAccount) {
-        userService.createAccount(userCreateAccount);
+
+       userService.createAccount(userCreateAccount);
     }
 
     @PostMapping("/login")
