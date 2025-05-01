@@ -32,4 +32,8 @@ public class FieldManagementData {
     public List<Field> getFieldsByFieldsName(List<String> fieldsName) {
         return fieldRepository.findAllById(fieldsName);
     }
+
+    public void save(Field field) {
+        fieldRepository.save(field);
+    }
 }

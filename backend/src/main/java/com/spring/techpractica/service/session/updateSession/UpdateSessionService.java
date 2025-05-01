@@ -64,8 +64,10 @@ public class UpdateSessionService {
 
         session.setPrivate(updatedSessionRequest.isPrivateSession());
 
+        session.getSessionTechnologies().clear();
         technologyLinker.linkTechnologiesToSession(session, updatedSessionRequest.getTechnologies());
 
+        session.getSessionCategories().clear();
         categoryLinker.linkCategoryToSession(session, updatedSessionRequest.getCategory());
 
 
@@ -73,6 +75,7 @@ public class UpdateSessionService {
         List<Requirement> requirements = requirementMapper.fieldToRequirement(session,updatedSessionRequest);
         session.getSessionRequirements().addAll(requirements);
 
+        session.getSessionFields().clear();
         fieldLinker.linkFieldsToSession(session, updatedSessionRequest.getFields());
 
         sessionManagementData.saveSession(session);

@@ -70,9 +70,29 @@ public class TechSkillsController {
             summary = "Add a new category",
             description = "Creates a new category based on the provided Category object in the request body."
     )
-    @PostMapping("/categories")
-    public ResponseEntity<String> addCategory(@RequestBody Category category) {
+    @PostMapping("/category")
+    public ResponseEntity<String> addCategory(@RequestBody String category) {
         categoryService.addCategory(category);
         return ResponseEntity.ok("Category added successfully");
     }
+
+//    @Operation(
+//            summary = "Add a new technology",
+//            description = "Creates a new technology based on the provided technology object in the request body."
+//    )
+//    @PostMapping("/technology")
+//    public ResponseEntity<String> addTechnology(@RequestBody String technology) {
+//        technologyService.addTechnology(technology);
+//        return ResponseEntity.ok("Technology added successfully");
+//    }
+//
+//    @Operation(
+//            summary = "Add a new field",
+//            description = "Creates a new field based on the provided field object in the request body."
+//    )
+//    @PostMapping("/field")
+//    public ResponseEntity<String> addField(@RequestBody String field) {
+//        fieldService.addField(field);
+//        return ResponseEntity.ok("Field added successfully");
+//    }
 }

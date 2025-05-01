@@ -29,6 +29,6 @@ public class CategoryService {
         return categoryManagementData.getCategoryByName(name);
     }
 
-    public void addCategory(Category category) {
+    public void addCategory(String category) {
         categoryManagementData.save(category);    }
 }
