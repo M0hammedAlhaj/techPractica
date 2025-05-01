@@ -31,7 +31,11 @@ public class MailSenderService {
         message.setTo(otpResponse.getUserEmail());
         message.setSubject(SUBJECT_EMAIL_RESET_PASSWORD);
 
-        message.setText("This is your Otp " + otp.getOtpCode() + "\n\n" + "the code will expire in 5 minutes.");
+        message.setText("This is your Otp " +
+                otp.getOtpCode() + "\n\n"
+                + "the code will expire in 5 minutes.");
         javaMailSender.send(message);
     }
+
+
 }

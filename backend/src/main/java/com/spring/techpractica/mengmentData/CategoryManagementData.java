@@ -27,4 +27,8 @@ public class CategoryManagementData {
                 .orElseThrow(()
                         -> new ResourcesNotFoundException("categorise no concentrate"));
     }
+
+    public void save(Category category) {
+        categoryRepository.save(category);
+    }
 }

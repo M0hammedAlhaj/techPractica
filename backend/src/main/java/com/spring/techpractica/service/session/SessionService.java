@@ -15,6 +15,7 @@ import com.spring.techpractica.model.entity.Session;
 import com.spring.techpractica.model.entity.User;
 import com.spring.techpractica.model.entity.techSkills.Category;
 import com.spring.techpractica.service.session.createSession.CreateSessionService;
+import com.spring.techpractica.service.session.updateSession.UpdateSessionService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,11 +36,14 @@ public class SessionService {
 
     private final CreateSessionService createSessionService;
 
+    private final UpdateSessionService updateSessionService;
+
     private final TechnologyManagementData technologyManagementData;
 
     private final FieldManagementData fieldManagementData;
 
     private final AuthenticatedUserSessionManagementData authenticatedUserSessionManagementData;
+
 
     public SessionResponse createSession(SessionRequest sessionRequest,
                                          String userEmail) {
@@ -102,72 +106,81 @@ public class SessionService {
 
     }
 
+
     @Transactional
     public SessionResponse updateSession(Long sessionId,
                                          SessionRequest updatedSessionRequest,
                                          String userEmail) {
 
-
-        User user = userManagementData.getUserByEmail(userEmail);
-
-        Session session = sessionManagementData.getSessionById(sessionId);
-
-        if (getSessionRole(user.getUserId(), sessionId) != SessionRole.OWNER) {
-            throw new AuthenticationException("User must be an OWNER to perform this action.");
-        }
-
-        session.setSessionName(updatedSessionRequest.getNameSession());
-
-        session.setSessionDescription(updatedSessionRequest.getDescriptionSession());
-
-        session.setPrivate(updatedSessionRequest.isPrivateSession());
-
-        session.setSessionTechnologies(
-                new ArrayList<>(technologyManagementData
-                        .getTechnologiesByTechnologiesName(updatedSessionRequest.getTechnologies()))
-        );
-
-        session.setSessionCategories(
-                new ArrayList<>(categoriesStringToCategoriesList(
-                        List.of(updatedSessionRequest.getCategory())
-                ))
-        );
-
-        session.getSessionRequirements().clear();
-
-        List<Requirement> requirements = updatedSessionRequest.getFields().stream()
-                .map(field -> RequirementFactory.createRequirement(
-                        session,
-                        fieldManagementData.getFieldByFieldName(field)
-                ))
-                .collect(Collectors.toCollection(ArrayList::new));
-
-        session.getSessionRequirements().addAll(requirements);
-
-        session.setSessionFields(
-                new ArrayList<>(fieldManagementData
-                        .getFieldsByFieldsName(updatedSessionRequest.getFields()))
-        );
-
-        sessionManagementData.saveSession(session);
-
-        return SessionMapper.sessionToSessionResponse(session);
-    }
-
-    private List<Category> categoriesStringToCategoriesList(List<String> categories) {
-        return categories.stream()
-                .map(categoryManagementData::getCategoryByName)
-                .toList();
-    }
-
-    public SessionRole getSessionRole(Long userId, Long sessionId) {
-
-        AuthenticatedUserSession authenticatedUserSession = authenticatedUserSessionManagementData
-                .findByUserUserIdAndUserSessionId(userId, sessionId)
-                .orElseThrow(() -> new AuthenticationException("User is not authenticated"));
-
-        return authenticatedUserSession.getScopedRole();
+        return updateSessionService.updateSession(sessionId,updatedSessionRequest,userEmail);
 
     }
+//    @Transactional
+//    public SessionResponse updateSession(Long sessionId,
+//                                         SessionRequest updatedSessionRequest,
+//                                         String userEmail) {
+//
+//
+//        User user = userManagementData.getUserByEmail(userEmail);
+//
+//        Session session = sessionManagementData.getSessionById(sessionId);
+//
+//        if (getSessionRole(user.getUserId(), sessionId) != SessionRole.OWNER) {
+//            throw new AuthenticationException("User must be an OWNER to perform this action.");
+//        }
+//
+//        session.setSessionName(updatedSessionRequest.getNameSession());
+//
+//        session.setSessionDescription(updatedSessionRequest.getDescriptionSession());
+//
+//        session.setPrivate(updatedSessionRequest.isPrivateSession());
+//
+//        session.setSessionTechnologies(
+//                new ArrayList<>(technologyManagementData
+//                        .getTechnologiesByTechnologiesName(updatedSessionRequest.getTechnologies()))
+//        );
+//
+//        session.setSessionCategories(
+//                new ArrayList<>(categoriesStringToCategoriesList(
+//                        List.of(updatedSessionRequest.getCategory())
+//                ))
+//        );
+//
+//        session.getSessionRequirements().clear();
+//
+//        List<Requirement> requirements = updatedSessionRequest.getFields().stream()
+//                .map(field -> RequirementFactory.createRequirement(
+//                        session,
+//                        fieldManagementData.getFieldByFieldName(field)
+//                ))
+//                .collect(Collectors.toCollection(ArrayList::new));
+//
+//        session.getSessionRequirements().addAll(requirements);
+//
+//        session.setSessionFields(
+//                new ArrayList<>(fieldManagementData
+//                        .getFieldsByFieldsName(updatedSessionRequest.getFields()))
+//        );
+//
+//        sessionManagementData.saveSession(session);
+//
+//        return SessionMapper.sessionToSessionResponse(session);
+//    }
+
+//    private List<Category> categoriesStringToCategoriesList(List<String> categories) {
+//        return categories.stream()
+//                .map(categoryManagementData::getCategoryByName)
+//                .toList();
+//    }
+
+//    public SessionRole getSessionRole(Long userId, Long sessionId) {
+//
+//        AuthenticatedUserSession authenticatedUserSession = authenticatedUserSessionManagementData
+//                .findByUserUserIdAndUserSessionId(userId, sessionId)
+//                .orElseThrow(() -> new AuthenticationException("User is not authenticated"));
+//
+//        return authenticatedUserSession.getScopedRole();
+//
+//    }
 
 }

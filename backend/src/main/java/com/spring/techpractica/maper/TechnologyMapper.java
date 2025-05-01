@@ -14,6 +14,7 @@ public class TechnologyMapper {
     private final TechnologyManagementData technologyManagementData;
 
     public static List<String> technologiesToListString(List<Technology> technologies) {
+
         return technologies.stream().map((Technology::getTechnologyName))
                 .toList();
     }
