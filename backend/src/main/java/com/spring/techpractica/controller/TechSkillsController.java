@@ -2,6 +2,7 @@ package com.spring.techpractica.controller;
 
 import com.spring.techpractica.dto.techSkills.CategoryResponse;
 import com.spring.techpractica.dto.techSkills.FieldTransfer;
+import com.spring.techpractica.model.entity.techSkills.Category;
 import com.spring.techpractica.model.entity.techSkills.Field;
 import com.spring.techpractica.model.entity.techSkills.Technology;
 import com.spring.techpractica.service.techSkills.Category.CategoryService;
@@ -12,6 +13,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
@@ -36,7 +39,7 @@ public class TechSkillsController {
     }
 
     @Operation(
-            summary = "Retrieve AGI`fgll Categories",
+            summary = "Retrieve All Categories",
             description = "Fetches a list of all available categories that can be used to classify sessions."
     )
     @GetMapping("/categories")
@@ -61,4 +64,35 @@ public class TechSkillsController {
     public ResponseEntity<List<Field>> getFields() {
         return ResponseEntity.ok(fieldService.getAllFields());
     }
+
+
+    @Operation(
+            summary = "Add a new category",
+            description = "Creates a new category based on the provided Category object in the request body."
+    )
+    @PostMapping("/category")
+    public ResponseEntity<String> addCategory(@RequestBody String category) {
+        categoryService.addCategory(category);
+        return ResponseEntity.ok("Category added successfully");
+    }
+
+//    @Operation(
+//            summary = "Add a new technology",
+//            description = "Creates a new technology based on the provided technology object in the request body."
+//    )
+//    @PostMapping("/technology")
+//    public ResponseEntity<String> addTechnology(@RequestBody String technology) {
+//        technologyService.addTechnology(technology);
+//        return ResponseEntity.ok("Technology added successfully");
+//    }
+//
+//    @Operation(
+//            summary = "Add a new field",
+//            description = "Creates a new field based on the provided field object in the request body."
+//    )
+//    @PostMapping("/field")
+//    public ResponseEntity<String> addField(@RequestBody String field) {
+//        fieldService.addField(field);
+//        return ResponseEntity.ok("Field added successfully");
+//    }
 }

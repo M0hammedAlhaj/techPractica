@@ -35,4 +35,8 @@ public class TechnologyManagementData {
     public List<Technology> getTechnologiesByTechnologiesName(List<String> technologiesName) {
         return technologyRepository.findAllById(technologiesName);
     }
+
+    public void save(Technology technology) {
+        technologyRepository.save(technology);
+    }
 }
