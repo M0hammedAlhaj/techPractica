@@ -11,8 +11,6 @@ public class CategoryFactory {
     public static Category createCategory(String categoryName) {
         return Category.builder()
                 .categoryName(categoryName)
-                .sessions(null)
-                .technologies(null)
                 .build();
     }
 }

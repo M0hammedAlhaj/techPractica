@@ -1,5 +1,6 @@
 package com.spring.techpractica.mengmentData;
 
+import com.spring.techpractica.exception.ResourcesNotFoundException;
 import com.spring.techpractica.model.entity.AuthenticatedUserSession;
 import com.spring.techpractica.model.entity.Session;
 import com.spring.techpractica.model.entity.User;
@@ -46,8 +47,11 @@ public class AuthenticatedUserSessionManagementData {
 
     public Optional<AuthenticatedUserSession> findByUserUserIdAndUserSessionId(Long userId, Long sessionId) {
         return authenticatedUserSessioneRepository.findByUserUserIdAndSessionSessionId(userId, sessionId);
+    }
 
-
+    public AuthenticatedUserSession getByUserUserIdAndUserSessionId(Long userId, Long sessionId) {
+        return authenticatedUserSessioneRepository.findByUserUserIdAndSessionSessionId(userId, sessionId)
+                .orElseThrow(()-> new ResourcesNotFoundException("Authenticated User Session Not Found"));
     }
 
 }

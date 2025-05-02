@@ -30,6 +30,7 @@ public class CategoryManagementData {
     }
 
     public void save(String category) {
+        getCategoryByName(category);
         categoryRepository.save(CategoryFactory.createCategory(category));
     }
 }

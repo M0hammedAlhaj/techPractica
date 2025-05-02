@@ -1,6 +1,7 @@
 package com.spring.techpractica.service.session.updateSession;
 
 
+import com.spring.techpractica.dto.SessionAuthorization;
 import com.spring.techpractica.dto.session.SessionRequest;
 import com.spring.techpractica.dto.session.SessionResponse;
 import com.spring.techpractica.exception.AuthenticationException;
@@ -17,6 +18,7 @@ import com.spring.techpractica.model.entity.User;
 import com.spring.techpractica.service.session.createSession.SessionCategoryLinker;
 import com.spring.techpractica.service.session.createSession.SessionFieldLinker;
 import com.spring.techpractica.service.session.createSession.SessionTechnologyLinker;
+import com.spring.techpractica.validator.SessionAuthorizationValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +47,8 @@ public class UpdateSessionService {
 
     private final RequirementMapper requirementMapper;
 
+    private final SessionAuthorizationValidator sessionAuthorizationValidator;
+
     @Transactional
     public SessionResponse updateSession(Long sessionId,
                                          SessionRequest updatedSessionRequest,
@@ -54,9 +58,10 @@ public class UpdateSessionService {
         User user = userManagementData.getUserByEmail(userEmail);
         Session session = sessionManagementData.getSessionById(sessionId);
 
-        if (getSessionRole(user.getUserId(), sessionId) != SessionRole.OWNER) {
-            throw new AuthenticationException("User must be an OWNER to perform this action.");
-        }
+        sessionAuthorizationValidator.
+                validate(sessionAuthorizationBuilder
+                        (authenticatedUserSessionManagementData.getByUserUserIdAndUserSessionId(user.getUserId(), sessionId)));
+
 
         session.setSessionName(updatedSessionRequest.getNameSession());
 
@@ -72,9 +77,6 @@ public class UpdateSessionService {
 
 
         session.getSessionRequirements().clear();
-        List<Requirement> requirements = requirementMapper.fieldToRequirement(session,updatedSessionRequest);
-        session.getSessionRequirements().addAll(requirements);
-
         session.getSessionFields().clear();
         fieldLinker.linkFieldsToSession(session, updatedSessionRequest.getFields());
 
@@ -83,13 +85,11 @@ public class UpdateSessionService {
         return SessionMapper.sessionToSessionResponse(session);
     }
 
-    private SessionRole getSessionRole(Long userId, Long sessionId) {
-
-        AuthenticatedUserSession authenticatedUserSession = authenticatedUserSessionManagementData
-                .findByUserUserIdAndUserSessionId(userId, sessionId)
-                .orElseThrow(() -> new AuthenticationException("User is not authenticated"));
-
-        return authenticatedUserSession.getScopedRole();
-
+    private SessionAuthorization sessionAuthorizationBuilder(AuthenticatedUserSession authenticatedUserSession) {
+        return SessionAuthorization.builder()
+                .sessionRole(SessionRole.OWNER)
+                .authenticatedUserSession(authenticatedUserSession)
+                .build();
     }
+
 }
