@@ -60,7 +60,10 @@ const SessionCardReq = ({ username, categoryName, brief }: IProps) => {
         transition={{ delay: 0.3 }}
         className="text-gray-600"
       >
-        {cleaned}
+        <div
+          className="text-gray-600 text-sm mb-4 sm:mb-6 [&_ol]:list-decimal [&_ol]:ml-5 [&_ul]:list-disc [&_ul]:ml-5 [&_li]:mb-1 break-words"
+          dangerouslySetInnerHTML={{ __html: cleaned }}
+        />
       </motion.p>
       <div className="flex justify-end gap-2 mt-4">
         <button className="px-3 py-1 text-sm text-white bg-[#42D5AE] rounded hover:bg-[#38b28d] ">
