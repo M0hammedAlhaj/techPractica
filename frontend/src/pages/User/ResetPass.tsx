@@ -18,6 +18,8 @@ import toast from "react-hot-toast";
 import CookiesService from "../../service.ts";
 
 const ResetPass = () => {
+  document.title = "TechPractica | Reset Password";
+
   const navigate = useNavigate();
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [showPassword, setShowPassword] = useState(false);

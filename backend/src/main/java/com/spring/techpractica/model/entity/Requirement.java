@@ -1,6 +1,6 @@
 package com.spring.techpractica.model.entity;
 
-import com.spring.techpractica.model.entity.techSkills.Field;
+import com.spring.techpractica.model.entity.techSkills.Category;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,7 +24,7 @@ public class Requirement {
     @JoinColumn(name = "session_id")
     private Session session;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "field_name")
-    private Field field;
+    @OneToOne
+    @JoinColumn(name = "category_name")
+    private Category category;
 }

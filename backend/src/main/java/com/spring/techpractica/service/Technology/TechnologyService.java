@@ -1,12 +1,10 @@
-package com.spring.techpractica.service.techSkills.Technology;
+package com.spring.techpractica.service.Technology;
 
 import com.spring.techpractica.mengmentData.TechnologyManagementData;
 import com.spring.techpractica.model.entity.techSkills.Technology;
-import com.spring.techpractica.repository.techSkills.TechnologyRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TechnologyService {

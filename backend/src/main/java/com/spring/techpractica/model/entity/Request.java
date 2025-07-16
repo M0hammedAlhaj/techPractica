@@ -16,7 +16,7 @@ import java.util.Set;
 @Data
 @Builder
 @Table(name = "REQUEST")
-public class Request {
+public class  Request {
 
 
     @Id
@@ -29,7 +29,8 @@ public class Request {
     private String requestStatus;
 
 
-    @Column(name = "brief")
+    @Column(name = "brief",
+            length = 1000)
     private String brief;
 
 

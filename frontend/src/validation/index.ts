@@ -1,16 +1,8 @@
 import * as yup from "yup";
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+
 export const registerSchema = yup
   .object({
-    firstName: yup
-      .string()
-      .required("First Name is required")
-      .min(3, "Must be at least 3 characters")
-      .max(18, "Must be 20 characters or less"),
-    lastName: yup
-      .string()
-      .required("Last Name is required")
-      .min(3, "Must be at least 3 characters")
-      .max(18, "Must be 20 characters or less"),
     name: yup
       .string()
       .required("Username is required")
@@ -29,7 +21,11 @@ export const registerSchema = yup
       .string()
       .required("Password is required")
       .min(8, "Password should be at least 8 charachters.")
-      .max(100, "Must be 100 characters or less"),
+      .max(100, "Must be 100 characters or less")
+      .matches(
+        passwordRegex,
+        "Must have uppercase, lowercase, digit, and special character"
+      ),
   })
   .required();
 export const loginSchema = yup
@@ -80,13 +76,11 @@ export const sessionSchema = yup.object({
     .string()
     .required("Description is required")
     .min(100, "Minimum 100 characters")
-    .max(550, "Maximum 250 characters"),
+    .max(1000, "Maximum 1000 characters"),
 
-  privateSession: yup.string().required("Select session type"),
+  system: yup.string().required("Select a category"),
 
-  category: yup.string().required("Select a category"),
-
-  fields: yup
+  categories: yup
     .array()
     .of(yup.string().required())
     .min(1, "Select at least one field")
@@ -97,4 +91,13 @@ export const sessionSchema = yup.object({
     .of(yup.string().required())
     .min(1, "Select at least one technology")
     .required("Technologies are required"),
+});
+export const ApplySchema = yup.object({
+  brief: yup
+    .string()
+    .required("brief is required")
+    .min(500, "Minimum 500 characters")
+    .max(1000, "Maximum 1000 characters"),
+
+  categoryName: yup.string().required("Select a category"),
 });

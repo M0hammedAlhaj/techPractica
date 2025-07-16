@@ -1,34 +1,28 @@
-import { Link } from "react-router-dom";
-import page404 from "../../assets/404.svg";
-import { IoHomeOutline } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 
-const PageNotFound = () => {
+export const NotFound = () => {
+  const navigate = useNavigate();
+
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center bg-white p-6">
-      <div className="max-w-md text-center space-y-8">
-        <img
-          src={page404}
-          alt="404 Not Found"
-          className="w-full max-w-xs mx-auto"
-        />
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
+      {/* Giant 404 Text */}
+      <h1 className="text-[20vw] md:text-[15rem] font-black text-[#022639] leading-none">
+        404
+      </h1>
 
-        <div className="space-y-4">
-          <h1 className="text-3xl font-bold text-[#022639]">Page Not Found</h1>
-          <p className="text-gray-600">
-            The page you're looking for doesn't exist or has been moved.
-          </p>
-        </div>
+      {/* Page Not Found Text */}
+      <h2 className="text-2xl md:text-4xl font-bold text-[#022639] mb-8 tracking-wide">
+        PAGE NOT FOUND
+      </h2>
 
-        <Link
-          to="/"
-          className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#42D5AE] hover:bg-[#38b28d] focus:ring-2 focus:ring-[#42D5AE] focus:ring-offset-2 text-white font-medium px-5 py-3 transition-colors duration-200"
-        >
-          <IoHomeOutline className="h-5 w-5" />
-          Return Home
-        </Link>
-      </div>
-    </main>
+      {/* Action Button */}
+      <button
+        onClick={() => navigate("/")}
+        className="px-8 py-3 bg-[#42D5AE] hover:bg-[#38b28d] text-white font-bold rounded-lg text-lg transition-colors duration-200 shadow-md"
+      >
+        Return to Home
+      </button>
+    </div>
   );
 };
-
-export default PageNotFound;
+export default NotFound;

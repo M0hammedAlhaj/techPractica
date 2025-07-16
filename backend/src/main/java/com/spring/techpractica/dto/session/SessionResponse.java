@@ -1,6 +1,5 @@
 package com.spring.techpractica.dto.session;
 
-import com.spring.techpractica.model.entity.techSkills.Category;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,9 +22,12 @@ public class SessionResponse {
 
     private List<String> technologies;
 
-    private String category;
+    private String system;
 
-    private List<String> fields;
+    private List<String> categories;
 
-    private boolean IsPrivate;
+    private boolean privateSession;
+
+    private String ownerName;
+
 }

@@ -1,13 +1,14 @@
 package com.spring.techpractica.model.entity.techSkills;
 
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Entity
 @Table(name = "TECHNOLOGIES")
@@ -21,10 +22,4 @@ public class Technology {
     @Column(name = "technology_name")
     private String technologyName;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            joinColumns = @JoinColumn(name = "technology_name"),
-            inverseJoinColumns = @JoinColumn(name = "category_name")
-    )
-    private List<Category> categories;
 }

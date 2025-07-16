@@ -1,17 +1,23 @@
 package com.spring.techpractica.controller;
 
+import com.spring.techpractica.dto.UserRequestSession;
 import com.spring.techpractica.dto.session.SessionRequest;
+import com.spring.techpractica.dto.session.SessionRequestCreation;
 import com.spring.techpractica.dto.session.SessionResponse;
 import com.spring.techpractica.dto.session.SessionsResponse;
 import com.spring.techpractica.service.session.SessionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/api/v1/sessions")
@@ -45,15 +51,16 @@ public class SessionController {
 
 
     @Operation(
-            summary = "Get Sessions by Category",
-            description = "Fetches a paginated list of sessions based on the provided category name."
+            summary = "Get Sessions by system",
+            description = "Fetches a paginated list of sessions based on the provided system name."
     )
-    @GetMapping("/category")
-    public ResponseEntity<SessionsResponse> getSessionsByCategoryName(
-            @RequestParam String categoryName,
-            @RequestParam int pageSize, @RequestParam int pageNumber) {
+    @GetMapping("/system")
+    public ResponseEntity<SessionsResponse> getSessionsBySystemName(
+            @RequestParam String systemName,
+            @RequestParam int pageSize,
+            @RequestParam int pageNumber) {
         return ResponseEntity.ok(sessionService.
-                getSessionsByCategoryName(categoryName, pageSize, pageNumber));
+                getSessionsBySystemName(systemName, pageSize, pageNumber));
     }
 
     @Operation(
@@ -62,7 +69,8 @@ public class SessionController {
     )
     @GetMapping("/users")
     public ResponseEntity<SessionsResponse> getUserSessions(@AuthenticationPrincipal UserDetails userDetails,
-                                                            @RequestParam int pageSize, @RequestParam int pageNumber) {
+                                                            @RequestParam int pageSize,
+                                                            @RequestParam int pageNumber) {
         String userEmail = userDetails.getUsername();
         return ResponseEntity.ok(sessionService.
                 getUserSessions(userEmail, pageSize, pageNumber));
@@ -99,7 +107,7 @@ public class SessionController {
             @AuthenticationPrincipal UserDetails userDetails) {
 
         String userEmail = userDetails.getUsername();
-
+        sessionService.deleteSessionByUserEmailAndSessionId(userEmail, sessionId);
         return ResponseEntity.ok("Deleted Successfully");
     }
 
@@ -128,13 +136,14 @@ public class SessionController {
             summary = "Get sessions matching user's skills",
             description = "Returns sessions that match the authenticated user's skills, with pagination support."
     )
-            @GetMapping("/user/skills")
-    public ResponseEntity<SessionsResponse> getSessionsByUserSkills(@AuthenticationPrincipal UserDetails userDetails,
-                                                                  @Parameter(description = "Number of sessions per page", example = "10")
-                                                                  @RequestParam int pageSize,
+    @GetMapping("/user/skills")
+    public ResponseEntity<SessionsResponse>
+    getSessionsByUserSkills(@AuthenticationPrincipal UserDetails userDetails,
+                            @Parameter(description = "Number of sessions per page", example = "10")
+                            @RequestParam int pageSize,
 
-                                                                  @Parameter(description = "Page number to retrieve", example = "1")
-                                                                  @RequestParam int pageNumber) {
+                            @Parameter(description = "Page number to retrieve", example = "1")
+                            @RequestParam int pageNumber) {
 
         SessionsResponse sessionsResponse =
                 sessionService.getSessionsByUserEmail(userDetails.getUsername(),
@@ -143,5 +152,34 @@ public class SessionController {
         return ResponseEntity.ok(sessionsResponse);
     }
 
+    @PutMapping("/request")
+    @Operation(summary = "Send a session request", description = "Allows a user to send a session request")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Request sent successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")
+    })
+    public ResponseEntity<String> userRequestSession(@AuthenticationPrincipal UserDetails userDetails,
+                                                     @RequestBody SessionRequestCreation sessionRequestCreation) {
+        String userEmail = userDetails.getUsername();
+        sessionService.createRequestSession(sessionRequestCreation, userEmail);
+        return ResponseEntity.ok("send request successfully to session ");
+    }
+
+    @GetMapping("{sessionId}/request")
+    @Operation(summary = "Get session requests", description = "Retrieves all session requests for a given session ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved session requests"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "404", description = "Session not found")
+    })
+    public ResponseEntity<List<UserRequestSession>> userRequestSession(
+            @PathVariable Long sessionId,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        return ResponseEntity.ok(sessionService.getSessionsRequest(sessionId, userDetails.getUsername()));
+    }
 }
+
+
 

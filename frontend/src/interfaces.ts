@@ -130,17 +130,16 @@ export interface Iinpform {
   type: string;
   label: string;
 }
-export type Category = {
-  categoryName: string;
-  technologies?: any[];
+export type System = {
+  systemName: string;
 };
 export interface ISession {
   id: number;
   sessionName: string;
   sessionDescription: string;
   technologies: string[];
-  category: CategoryType;
-  fields: string[];
+  system: CategoryType;
+  categories: string[];
   privateSession: boolean;
 }
 export interface ISessionRes {
@@ -148,7 +147,42 @@ export interface ISessionRes {
   sessionName: string;
   sessionDescription: string;
   technologies: string[];
-  category: CategoryType;
-  fields: string[];
+  system: CategoryType;
+  categories: string[];
   isPrivate: boolean;
+  ownerName: string;
+}
+
+export interface User {
+  id: string;
+  name: string;
+  avatar: string; // URL or path
+}
+
+export interface Task {
+  id: string;
+  content: string;
+  title: string;
+  priority: "low" | "medium" | "high";
+  dueDate?: string;
+  createdAt?: string;
+  tags?: string[];
+  likes?: number;
+  comments?: number;
+  users?: User[];
+  status?: string;
+  image?: string;
+}
+
+export interface Column {
+  id: string;
+  title: string;
+  tasks: Task[];
+}
+
+export interface KanbanBoarde {
+  columns: {
+    [key: string]: Column;
+  };
+  columnOrder: string[];
 }

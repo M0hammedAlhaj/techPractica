@@ -1,9 +1,8 @@
 package com.spring.techpractica.mengmentData;
 
-import com.spring.techpractica.dto.techSkills.TechnologyTransfer;
 import com.spring.techpractica.exception.ResourcesNotFoundException;
 import com.spring.techpractica.model.entity.techSkills.Technology;
-import com.spring.techpractica.repository.techSkills.TechnologyRepository;
+import com.spring.techpractica.repository.TechnologyRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

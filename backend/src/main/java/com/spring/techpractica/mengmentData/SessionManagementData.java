@@ -2,7 +2,7 @@ package com.spring.techpractica.mengmentData;
 
 import com.spring.techpractica.exception.ResourcesNotFoundException;
 import com.spring.techpractica.model.entity.Session;
-import com.spring.techpractica.model.entity.techSkills.Category;
+import com.spring.techpractica.model.entity.techSkills.System;
 import com.spring.techpractica.repository.SessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -82,13 +82,13 @@ public class SessionManagementData {
     /**
      * Retrieves a paginated list of sessions associated with the given category.
      *
-     * @param category The category used to filter sessions.
+     * @param system   The category used to filter sessions.
      * @param pageable The pagination information.
      * @return A list of sessions that belong to the specified category and page.
      */
-    public List<Session> getSessionsByCategoryAndPageable(Category category,
-                                                          Pageable pageable) {
-        Page<Session> page = sessionRepository.findAllBySessionCategories(category, pageable);
+    public List<Session> getSessionsBySystemAndPageable(System system,
+                                                        Pageable pageable) {
+        Page<Session> page = sessionRepository.findAllBySessionSystems(system, pageable);
         return page.getContent();
     }
 
@@ -102,10 +102,10 @@ public class SessionManagementData {
         return sessionRepository.findAll(pageable).getContent();
     }
 
-    public long getNumberOfCategorySessions(Category category) {
-        List<Category> categories =new ArrayList<>();
-        categories.add(category);
-        return sessionRepository.countBySessionCategories(categories);
+    public long getNumberOfSystemSessions(System system) {
+        List<System> categories = new ArrayList<>();
+        categories.add(system);
+        return sessionRepository.countBySessionSystems(categories);
     }
 
     public long getNumberOfSessions() {

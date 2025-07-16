@@ -1,30 +1,21 @@
 import { CookiesService, useAuthQuery } from "./imports.ts";
 
 export const token = CookiesService.get("UserToken");
-
+//Field
 export const useCategories = () =>
   useAuthQuery({
     queryKey: ["CategoryData"],
     url: "/tech-skills/categories",
-    config: {
-      headers: { Authorization: `Bearer ${token}` },
-    },
   });
-
-export const useFields = () =>
+//category
+export const useSystems = () =>
   useAuthQuery({
     queryKey: ["fieldsData"],
-    url: "/tech-skills/fields",
-    config: {
-      headers: { Authorization: `Bearer ${token}` },
-    },
+    url: "/tech-skills/systems",
   });
 
 export const useTechnologies = () =>
   useAuthQuery({
     queryKey: ["technologiesData"],
     url: "/tech-skills/technologies",
-    config: {
-      headers: { Authorization: `Bearer ${token}` },
-    },
   });

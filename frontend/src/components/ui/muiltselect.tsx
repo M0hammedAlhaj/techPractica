@@ -52,7 +52,7 @@ export default function MultiSelectField<T>({
                           value.filter((v: T) => getLabel(v) !== getLabel(item))
                         );
                       }}
-                      className="bg-teal-100 text-black text-xs px-2 py-1 rounded-full hover:bg-teal-200 transition cursor-pointer"
+                      className=" text-xs px-2 py-1 rounded-full bg-[#42D5AE]/10 text-[#022639] transition cursor-pointer"
                     >
                       {getLabel(item)}
                     </span>

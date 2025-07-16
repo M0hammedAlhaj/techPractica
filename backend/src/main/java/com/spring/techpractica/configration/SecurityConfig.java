@@ -40,8 +40,11 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.GET, "/api/v1/sessions/")
+                        .permitAll()
                         .requestMatchers(
-                                HttpMethod.GET,"/api/v1/sessions/",
+                                "/api/v1/tech-skills/**",
+                                "/api/v1/sessions/system",
                                 "/api/v1/authenticated/registration",
                                 "/api/v1/authenticated/login",
                                 "/api/v1/authenticated/send-reset-password",
@@ -50,9 +53,9 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/swagger-resources/**",
                                 "/webjars/**"
-                        )
-                        .permitAll()
-                        .anyRequest().authenticated()
+                        ).permitAll()
+                        .anyRequest()
+                        .authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -84,7 +87,6 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
 
 }

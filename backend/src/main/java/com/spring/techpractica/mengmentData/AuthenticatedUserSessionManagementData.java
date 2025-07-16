@@ -1,5 +1,6 @@
 package com.spring.techpractica.mengmentData;
 
+import com.spring.techpractica.model.SessionRole;
 import com.spring.techpractica.model.entity.AuthenticatedUserSession;
 import com.spring.techpractica.model.entity.Session;
 import com.spring.techpractica.model.entity.User;
@@ -31,6 +32,10 @@ public class AuthenticatedUserSessionManagementData {
     public long getNumberOfUserSessions(User user) {
         return authenticatedUserSessioneRepository.countByUser(user);
 
+    }
+
+    public AuthenticatedUserSession getUserBySessionIdAndRole(SessionRole role, long sessionId) {
+        return authenticatedUserSessioneRepository.getAuthenticatedUserSessionByScopedRoleAndUserSessionIdSessionId(role, sessionId);
     }
 
 

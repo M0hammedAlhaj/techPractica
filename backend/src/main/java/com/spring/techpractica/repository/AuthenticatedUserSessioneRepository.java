@@ -1,5 +1,6 @@
 package com.spring.techpractica.repository;
 
+import com.spring.techpractica.model.SessionRole;
 import com.spring.techpractica.model.UserSessionId;
 import com.spring.techpractica.model.entity.AuthenticatedUserSession;
 import com.spring.techpractica.model.entity.User;
@@ -16,4 +17,7 @@ public interface AuthenticatedUserSessioneRepository extends JpaRepository<Authe
     long countByUser(User user);
 
     Optional<AuthenticatedUserSession> findByUserUserIdAndSessionSessionId(Long userId, Long sessionId);
+
+    AuthenticatedUserSession getAuthenticatedUserSessionByScopedRoleAndUserSessionIdSessionId(SessionRole role,
+                                                                          long sessionId);
 }

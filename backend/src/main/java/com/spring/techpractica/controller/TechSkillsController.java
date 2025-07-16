@@ -1,12 +1,11 @@
 package com.spring.techpractica.controller;
 
-import com.spring.techpractica.dto.techSkills.CategoryResponse;
-import com.spring.techpractica.dto.techSkills.FieldTransfer;
-import com.spring.techpractica.model.entity.techSkills.Field;
+import com.spring.techpractica.dto.SystemResponse;
+import com.spring.techpractica.model.entity.techSkills.Category;
 import com.spring.techpractica.model.entity.techSkills.Technology;
-import com.spring.techpractica.service.techSkills.Category.CategoryService;
-import com.spring.techpractica.service.techSkills.Field.FieldService;
-import com.spring.techpractica.service.techSkills.Technology.TechnologyService;
+import com.spring.techpractica.service.Technology.TechnologyService;
+import com.spring.techpractica.service.category.CategoryService;
+import com.spring.techpractica.service.system.SystemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -20,28 +19,29 @@ import java.util.List;
 @RequestMapping("/api/v1/tech-skills")
 @Tag(
         name = "TechSkills Controller",
-        description = "Handles The Skills and categories operations including getting all the  tech , fields and technologies "
+        description = "Handles The Skills and categories operations including getting all the  tech ," +
+                " fields and technologies "
 )
 public class TechSkillsController {
 
 
-    private final CategoryService categoryService;
+    private final SystemService systemService;
     private final TechnologyService technologyService;
-    private final FieldService fieldService;
+    private final CategoryService categoryService;
 
-    public TechSkillsController(CategoryService categoryService, TechnologyService technologyService, FieldService fieldService) {
-        this.categoryService = categoryService;
+    public TechSkillsController(SystemService systemService, TechnologyService technologyService, CategoryService categoryService) {
+        this.systemService = systemService;
         this.technologyService = technologyService;
-        this.fieldService = fieldService;
+        this.categoryService = categoryService;
     }
 
     @Operation(
-            summary = "Retrieve AGI`fgll Categories",
-            description = "Fetches a list of all available categories that can be used to classify sessions."
+            summary = "Retrieve systems",
+            description = "Fetches a list of all available systems that can be used to classify sessions."
     )
-    @GetMapping("/categories")
-    public ResponseEntity<List<CategoryResponse>> getCategories() {
-        return ResponseEntity.ok(categoryService.findAllCategories());
+    @GetMapping("/systems")
+    public ResponseEntity<List<SystemResponse>> getSystems() {
+        return ResponseEntity.ok(systemService.findAllSystems());
     }
 
     @Operation(
@@ -54,11 +54,11 @@ public class TechSkillsController {
     }
 
     @Operation(
-            summary = "Retrieve All Fields",
-            description = "Fetches a list of all fields related to the session context, useful for filtering or tagging."
+            summary = "Retrieve All categories",
+            description = "Fetches a list of all categories related to the session context, useful for filtering or tagging."
     )
-    @GetMapping("/fields")
-    public ResponseEntity<List<Field>> getFields() {
-        return ResponseEntity.ok(fieldService.getAllFields());
+    @GetMapping("/categories")
+    public ResponseEntity<List<Category>> getCategories() {
+        return ResponseEntity.ok(categoryService.getAllCategories());
     }
 }

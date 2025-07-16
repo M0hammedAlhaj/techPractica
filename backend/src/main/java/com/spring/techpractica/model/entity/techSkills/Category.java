@@ -1,16 +1,16 @@
 package com.spring.techpractica.model.entity.techSkills;
 
-import com.spring.techpractica.model.entity.Session;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
-@Table(name = "CATEGORIES")
 @Entity
+@Table(name = "CATEGORIES")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,9 +21,4 @@ public class Category {
     @Column(name = "category_name")
     private String categoryName;
 
-    @ManyToMany(mappedBy = "sessionCategories", fetch = FetchType.LAZY)
-    private List<Session> sessions;
-
-    @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY)
-    private List<Technology> technologies;
 }

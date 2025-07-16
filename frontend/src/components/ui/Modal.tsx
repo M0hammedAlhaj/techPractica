@@ -13,6 +13,7 @@ interface IProps {
   title?: string;
   description?: string;
   children: ReactNode;
+  Position?: string;
 }
 
 const Modal = ({
@@ -21,6 +22,7 @@ const Modal = ({
   description,
   children,
   closeModal = () => {},
+  Position = "flex min-h-full  items-center justify-center p-4 text-center overflow-visible  ",
 }: IProps) => {
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -39,7 +41,7 @@ const Modal = ({
         </TransitionChild>
 
         <div className="fixed inset-0 overflow-y-auto overflow-x-visible">
-          <div className="flex min-h-full items-center justify-center p-4 text-center overflow-visible">
+          <div className={Position}>
             <TransitionChild
               as={Fragment}
               enter="ease-out duration-300"

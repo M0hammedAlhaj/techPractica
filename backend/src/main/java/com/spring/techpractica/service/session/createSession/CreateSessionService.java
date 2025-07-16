@@ -9,8 +9,8 @@ import com.spring.techpractica.mengmentData.UserManagementData;
 import com.spring.techpractica.model.entity.Session;
 import com.spring.techpractica.model.entity.User;
 import com.spring.techpractica.service.session.linker.SessionCategoryLinker;
-import com.spring.techpractica.service.session.linker.SessionFieldLinker;
 import com.spring.techpractica.service.session.linker.SessionRoleAssigner;
+import com.spring.techpractica.service.session.linker.SessionSystemLinker;
 import com.spring.techpractica.service.session.linker.SessionTechnologyLinker;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -37,25 +37,25 @@ public class CreateSessionService {
     private final UserManagementData userManagementData;
     private final SessionFactory sessionFactory;
     private final SessionRoleAssigner roleAssigner;
-    private final SessionFieldLinker fieldLinker;
     private final SessionCategoryLinker categoryLinker;
+    private final SessionSystemLinker systemLinker;
     private final SessionTechnologyLinker technologyLinker;
     private final SessionManagementData sessionManagementData;
 
     /**
      * Creates a new session based on the data provided by the user and the session creation request.
-     *
-       */
+     */
     @Transactional
     public SessionResponse createSession(SessionRequest request, String userEmail) {
-
 
         User owner = userManagementData.getUserByEmail(userEmail);
         Session session = sessionFactory.createFrom(request);
 
         roleAssigner.assignRole(session, owner);
-        fieldLinker.linkFieldsToSession(session, request.getFields());
-        categoryLinker.linkCategoryToSession(session, request.getCategory());
+        categoryLinker.linkCategoriesToSession(session, request.getCategories());
+
+        systemLinker.linkSystemToSession(session, request.getSystem());
+
         technologyLinker.linkTechnologiesToSession(session, request.getTechnologies());
 
         session = sessionManagementData.saveSession(session);

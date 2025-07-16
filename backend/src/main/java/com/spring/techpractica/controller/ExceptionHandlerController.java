@@ -2,6 +2,7 @@ package com.spring.techpractica.controller;
 
 import com.spring.techpractica.exception.AuthenticationException;
 import com.spring.techpractica.exception.ResourcesNotFoundException;
+import com.spring.techpractica.exception.UserAlreadyExistsException;
 import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,4 +40,13 @@ public class ExceptionHandlerController {
         response.put("timestamp", String.valueOf(System.currentTimeMillis()));
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<HashMap<Object, String>> userAlreadyExistsException(ResourcesNotFoundException e) {
+        HashMap<Object, String> response = new HashMap<>();
+        response.put("message", e.getMessage());
+        response.put("timestamp", String.valueOf(System.currentTimeMillis()));
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
 }

@@ -2,7 +2,7 @@ package com.spring.techpractica.model.entity;
 
 import com.spring.techpractica.model.TimestampType;
 import com.spring.techpractica.model.entity.techSkills.Category;
-import com.spring.techpractica.model.entity.techSkills.Field;
+import com.spring.techpractica.model.entity.techSkills.System;
 import com.spring.techpractica.model.entity.techSkills.Technology;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -51,7 +51,9 @@ public class Session {
     @Column(name = "session_name")
     private String sessionName;
 
-    @Column(name = "session_description")
+
+    @Column(name = "session_description",
+            length = 1000)
     private String sessionDescription;
 
     @Column(name = "is_private")
@@ -59,13 +61,15 @@ public class Session {
 
 
     @OneToMany(mappedBy = "session",
-            fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<AuthenticatedUserSession> sessionMembers = new ArrayList<>();
 
     @Column(name = "is_running")
     private boolean sessionIsRunning;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = CascadeType.PERSIST)
     @JoinTable(
             joinColumns = @JoinColumn(name = "session_id"),
             inverseJoinColumns = @JoinColumn(name = "timestamp_id")
@@ -75,7 +79,8 @@ public class Session {
 
     @OneToMany(mappedBy = "session",
             fetch = FetchType.LAZY,
-            cascade = {CascadeType.REMOVE},
+            cascade = {CascadeType.REMOVE,
+                    CascadeType.PERSIST},
             orphanRemoval = true)
     private List<Requirement> sessionRequirements = new ArrayList<>();
 
@@ -87,18 +92,19 @@ public class Session {
 
     @OneToMany(mappedBy = "session",
             fetch = FetchType.LAZY,
-            cascade = CascadeType.REMOVE)
+            cascade = {CascadeType.PERSIST,
+                    CascadeType.REMOVE, CascadeType.MERGE})
     private List<Request> sessionRequests = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany
     @JoinTable(
-            name = "CATEGORIES_SESSIONS"
+            name = "SYSTEMS_SESSIONS"
             , joinColumns = @JoinColumn(name = "category_name")
             , inverseJoinColumns = @JoinColumn(name = "session_id")
     )
-    private List<Category> sessionCategories = new ArrayList<>();
+    private List<System> sessionSystems = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany
     @JoinTable(
             name = "TECHNOLOGIES_SESSIONS"
             , joinColumns = @JoinColumn(name = "technology_name")
@@ -108,9 +114,10 @@ public class Session {
 
     @ManyToMany
     @JoinTable(
-            name = "FIELDS_SESSIONS",
-            joinColumns = @JoinColumn(name = "field_name"),
+            name = "CATEGORIES_SESSIONS",
+            joinColumns = @JoinColumn(name = "category_name"),
             inverseJoinColumns = @JoinColumn(name = "session_id")
     )
-    private List<Field> sessionFields = new ArrayList<>();
+    private List<Category> sessionCategories = new ArrayList<>();
+
 }

@@ -4,19 +4,18 @@ import com.spring.techpractica.dto.otp.NewPassword;
 import com.spring.techpractica.dto.otp.OtpResponse;
 import com.spring.techpractica.dto.otp.UserEmailSendOtp;
 import com.spring.techpractica.dto.otp.UserSubmitOtp;
+import com.spring.techpractica.dto.session.SessionRequestCreation;
 import com.spring.techpractica.dto.userRegestation.UserCreateAccount;
 import com.spring.techpractica.dto.userRegestation.UserLogin;
 import com.spring.techpractica.service.MailSenderService;
+import com.spring.techpractica.service.session.SessionService;
 import com.spring.techpractica.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/authenticated")
@@ -32,10 +31,12 @@ public class AuthenticatedController {
 
 
     public AuthenticatedController(UserService userService,
-                                   MailSenderService mailSenderService) {
+                                   MailSenderService mailSenderService,
+                                   SessionService sessionService) {
         this.userService = userService;
         this.mailSenderService = mailSenderService;
     }
+
 
     @Operation(
             summary = "Create a new user account",

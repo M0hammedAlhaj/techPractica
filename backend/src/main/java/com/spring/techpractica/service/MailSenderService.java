@@ -1,5 +1,6 @@
 package com.spring.techpractica.service;
 
+import com.spring.techpractica.configration.MailConfig;
 import com.spring.techpractica.dto.otp.OtpResponse;
 import com.spring.techpractica.model.entity.Otp;
 import com.spring.techpractica.mengmentData.OtpManagementData;
@@ -17,7 +18,8 @@ public class MailSenderService {
 
     private static final String SUBJECT_EMAIL_SUBMIT_EMAIL = "SUBMIT_EMAIL";
 
-    private final JavaMailSender javaMailSender;
+
+    private final MailConfig mailConfig;
 
     private final OtpManagementData otpManagementData;
 
@@ -32,6 +34,9 @@ public class MailSenderService {
         message.setSubject(SUBJECT_EMAIL_RESET_PASSWORD);
 
         message.setText("This is your Otp " + otp.getOtpCode() + "\n\n" + "the code will expire in 5 minutes.");
+
+        JavaMailSender javaMailSender = mailConfig.javaMailSender();
+
         javaMailSender.send(message);
     }
 }

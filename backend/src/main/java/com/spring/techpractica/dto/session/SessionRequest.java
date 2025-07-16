@@ -17,12 +17,12 @@ public class SessionRequest {
 
     private String descriptionSession;
 
-    private boolean isPrivateSession;
+    private boolean privateSession;
 
-    private String category;
+    private String system;
 
     private List<String> technologies;
 
-    private List<String> fields;
+    private List<String> categories;
 
 }

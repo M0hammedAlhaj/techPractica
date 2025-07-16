@@ -1,9 +1,11 @@
 import { Outlet } from "react-router-dom";
 
-interface IProps {}
-
-const ProjectsLayout = ({}: IProps) => {
-  return <Outlet />;
+const ProjectsLayout = () => {
+  return (
+    <div className="min-h-screen">
+      <Outlet />
+    </div>
+  );
 };
 
 export default ProjectsLayout;

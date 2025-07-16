@@ -1,17 +1,16 @@
-package com.spring.techpractica.dto.techSkills;
-
+package com.spring.techpractica.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class TechnologyTransfer {
+public class SystemResponse {
 
-    private String technologyName;
+    private String systemName;
+
 }

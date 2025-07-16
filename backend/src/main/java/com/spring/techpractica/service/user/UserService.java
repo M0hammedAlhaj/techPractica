@@ -57,7 +57,7 @@ public class UserService {
         if (!passwordEncoder.matches(userLogin.getUserPassword(), user.getUserPassword())) {
             throw new AuthenticationException("Wrong password");
         }
-        return jwtService.generateToken(user.getUserEmail());
+        return jwtService.generateToken(user.getUserEmail(), user.getUserName());
     }
 
     public OtpResponse userCreateOtpCode(UserEmailSendOtp userEmailSendOtp) {

@@ -17,6 +17,4 @@ public class SessionsResponse {
     private long sessionsCount;
 
     private List<SessionResponse> sessions;
-
-
 }

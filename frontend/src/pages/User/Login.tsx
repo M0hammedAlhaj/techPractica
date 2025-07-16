@@ -9,8 +9,11 @@ import axiosInstance from "../../config/axios.config";
 import toast from "react-hot-toast";
 import { AxiosError } from "axios";
 import { LoginForm } from "../../interfaces";
-
+import { FiLoader, FiLogIn } from "react-icons/fi";
+import { FaGoogle, FaGithub } from "react-icons/fa";
 const Login = () => {
+  document.title = "TechPractica | Login";
+
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -38,6 +41,7 @@ const Login = () => {
       const err = error as AxiosError<{ message: string }>;
       toast.error(err.response?.data.message || "Login failed", {
         position: "top-center",
+        duration: 4000,
       });
     } finally {
       setIsSubmitting(false);
@@ -85,18 +89,21 @@ const Login = () => {
   });
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-8 w-full">
+    <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md mx-auto border border-gray-100">
       <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-[#022639]">Welcome Back</h2>
-        <p className="text-gray-600 mt-2">Sign in to your account</p>
+        <h1 className="text-2xl font-bold text-gray-900">Welcome Back</h1>
+        <p className="text-gray-500 mt-2">
+          Sign in to continue to your account
+        </p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         {renderForm}
-        <div className="flex items-center justify-end">
+
+        <div className="flex items-center justify-between">
           <Link
             to="/User/ResetPassword"
-            className="text-sm font-medium text-[#42D5AE] hover:text-[#38b28d]"
+            className="text-sm font-medium text-emerald-600 hover:text-emerald-700 focus:outline-none focus:underline"
           >
             Forgot password?
           </Link>
@@ -105,42 +112,54 @@ const Login = () => {
         <Button
           type="submit"
           disabled={isSubmitting}
-          className="w-full py-3 px-4 bg-[#42D5AE] hover:bg-[#38b28d] text-white font-medium rounded-lg shadow-sm transition-colors duration-300"
+          className="w-full py-3 px-4  bg-[#42D5AE] hover:bg-[#38b28d] text-white font-medium rounded-lg shadow-sm transition-all duration-300 flex items-center justify-center focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+          aria-label={isSubmitting ? "Signing in..." : "Sign in"}
         >
           {isSubmitting ? (
             <>
-              <svg
-                className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
+              <FiLoader className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" />
               Signing in...
             </>
           ) : (
-            "Sign In"
+            <>
+              <FiLogIn className="-ml-1 mr-3 h-5 w-5" />
+              Sign In
+            </>
           )}
         </Button>
 
-        <div className="text-center text-sm text-gray-600">
+        <div className="relative my-6">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-300"></div>
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2 bg-white text-gray-500">Or sign in with</span>
+          </div>
+        </div>
+
+        <div className="flex justify-center gap-4">
+          <button
+            type="button"
+            className="p-3 rounded-full border border-gray-300 hover:bg-gray-50 transition-colors shadow-sm  "
+            aria-label="Sign up with Google"
+          >
+            <FaGoogle className="h-5 w-5 text-black" />
+          </button>
+
+          <button
+            type="button"
+            className="p-3 rounded-full border border-gray-300 hover:bg-gray-50 transition-colors shadow-sm "
+            aria-label="Sign up with GitHub"
+          >
+            <FaGithub className="h-5 w-5 text-gray-800" />
+          </button>
+        </div>
+
+        <div className="text-center text-sm text-gray-500 mt-4">
           Don't have an account?{" "}
           <Link
             to="/User/Register"
-            className="font-medium text-[#42D5AE] hover:text-[#38b28d]"
+            className="font-medium text-emerald-600  focus:outline-none focus:underline"
           >
             Sign up
           </Link>
