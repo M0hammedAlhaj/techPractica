@@ -37,6 +37,7 @@ public class AuthenticatedController {
         this.mailSenderService = mailSenderService;
     }
 
+
     @Operation(
             summary = "Create a new user account",
             description = "Allows a user to register by providing required account details like name, email, and password."

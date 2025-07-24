@@ -1,4 +1,4 @@
-# TechPractica
+#    TechPractica
 
 TechPractica is a project designed to help users practice and improve their technical skills through hands-on exercises, coding challenges, and real-world scenarios. Whether you are a beginner looking to build foundational knowledge or an experienced developer aiming to sharpen your expertise, TechPractica offers a structured environment for growth.
 
