@@ -1,12 +1,12 @@
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { Button, CookiesService, SelectField } from "../imports";
-import TinyMCEWithForm from "./ui/RichTextEditor";
+import { Button, CookiesService, SelectField } from "../../imports";
+import TinyMCEWithForm from "./../ui/RichTextEditor";
 import { AxiosError } from "axios";
 import toast from "react-hot-toast";
-import axiosInstance from "../config/axios.config";
-import { IErrorResponse } from "../interfaces";
+import axiosInstance from "../../config/axios.config";
+import { IErrorResponse } from "../../interfaces";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { ApplySchema } from "../validation";
+import { ApplySchema } from "../../validation";
 import { InferType } from "yup";
 interface IProps {
   closeModal: () => void;
