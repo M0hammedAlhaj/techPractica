@@ -1,6 +1,7 @@
 package com.spring.techpractica.UI.Rest.Shared;
 
 import com.spring.techpractica.Core.Shared.Exception.ResourcesNotFoundException;
+import com.spring.techpractica.Core.User.Exception.UserAuthenticationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -22,6 +23,17 @@ public class GlobalExceptionHandler {
                         .message(ex.getMessage())
                         .status(HttpStatus.NOT_FOUND.value())
                         .code("RESOURCE_NOT_FOUND")
+                        .build());
+    }
+
+    @ExceptionHandler(UserAuthenticationException.class)
+    public ResponseEntity<StandardErrorResponse> handleUserAuthenticationException(UserAuthenticationException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(StandardErrorResponse.builder()
+                        .timestamp(Instant.now())
+                        .message(ex.getMessage())
+                        .status(HttpStatus.UNAUTHORIZED.value())
+                        .code("AUTHENTICATION_FAILED")
                         .build());
     }
 

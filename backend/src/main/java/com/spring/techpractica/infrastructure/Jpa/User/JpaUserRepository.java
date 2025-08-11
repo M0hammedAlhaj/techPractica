@@ -44,4 +44,9 @@ public class JpaUserRepository implements UserRepository {
     public Optional<User> findByEmail(String email) {
         return jpaUser.findByEmail(email);
     }
+
+    @Override
+    public void deleteAll() {
+        jpaUser.deleteAll();
+    }
 }

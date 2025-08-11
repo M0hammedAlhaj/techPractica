@@ -11,5 +11,4 @@ public class TechPracticaApplication {
         SpringApplication.run(TechPracticaApplication.class, args);
 
     }
-
 }
