@@ -23,9 +23,9 @@ All new tasks (features, bugs, enhancements) are tracked using GitHub **Issues**
 After receiving or choosing an issue:
 
 ```bash
-git checkout dev
-git pull origin dev
-git checkout -b feature/doctor-search
+git checkout master
+git pull origin master
+git checkout -b feature/session-search
 ```
 
 > 🔖 Branch naming rules:
