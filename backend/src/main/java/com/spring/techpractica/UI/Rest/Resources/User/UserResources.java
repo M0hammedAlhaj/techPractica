@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class UserResources {
+
     private final String id;
     private final String name;
     private final String email;
