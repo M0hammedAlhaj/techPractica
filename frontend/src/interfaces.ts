@@ -1,11 +1,6 @@
 import { CategoryType } from "./data/data";
 
-export type FormInputRegister =
-  | "firstName"
-  | "lastName"
-  | "name"
-  | "userEmail"
-  | "userPassword";
+export type FormInputRegister = "name" | "email" | "password";
 export interface IRegister {
   name: FormInputRegister;
   placeholder: string;
@@ -14,31 +9,19 @@ export interface IRegister {
 }
 export const RegisterForm: IRegister[] = [
   {
-    name: "firstName",
-    type: "text",
-    placeholder: "First Name",
-    label: "First Name",
-  },
-  {
-    name: "lastName",
-    type: "text",
-    placeholder: "Last Name",
-    label: "Last Name",
-  },
-  {
     name: "name",
     type: "text",
     placeholder: "Username",
     label: "Username",
   },
   {
-    name: "userEmail",
+    name: "email",
     type: "email",
     placeholder: "name@example.com",
     label: "Your email",
   },
   {
-    name: "userPassword",
+    name: "password",
     type: "password",
     placeholder: "••••••••",
     label: "Password",

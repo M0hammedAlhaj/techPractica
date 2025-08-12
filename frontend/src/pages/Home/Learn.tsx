@@ -48,39 +48,6 @@ const Learn = () => {
     url: Url,
   });
 
-  useEffect(() => {
-    if (category) {
-      setActiveFilter(category);
-      setPage(1);
-    }
-  }, [category]);
-
-  useEffect(() => {
-    if (sessionData?.sessions) {
-      let result = [...sessionData.sessions];
-
-      if (activeFilter !== "all") {
-        result = result.filter((s) => s.system === activeFilter);
-      }
-
-      if (searchQuery) {
-        result = result.filter(
-          (s) =>
-            s.sessionName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            s.system.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            s.technologies.some((tech: any) =>
-              tech.toLowerCase().includes(searchQuery.toLowerCase())
-            )
-        );
-      }
-
-      const start = (page - 1) * sessionsPerPage;
-      const end = start + sessionsPerPage;
-      setFilteredSessions(result.slice(start, end));
-      setPageCount(Math.ceil(result.length / sessionsPerPage));
-    }
-  }, [sessionData, searchQuery, activeFilter, page]);
-
   const handleSearch = (query: string) => {
     setSearchQuery(query);
     setPage(1);
