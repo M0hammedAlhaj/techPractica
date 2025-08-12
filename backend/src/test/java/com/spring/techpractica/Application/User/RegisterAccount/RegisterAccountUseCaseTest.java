@@ -1,5 +1,6 @@
 package com.spring.techpractica.Application.User.RegisterAccount;
 
+import com.spring.techpractica.Core.User.Exception.EmailAlreadyUsedException;
 import com.spring.techpractica.Core.User.User;
 import com.spring.techpractica.Core.User.UserFactory;
 import com.spring.techpractica.Core.User.UserRepository;
@@ -55,6 +56,25 @@ public class RegisterAccountUseCaseTest {
         verify(userFactory).create(request.name(), request.email(), request.password());
         verify(userRepository).existsByEmail(user.getEmail());
         verify(userRepository).save(user);
+    }
 
+    @Test
+    public void should_throw_email_already_used_exception_when_email_already_exists() {
+        RegisterAccountCommand request =
+                new RegisterAccountCommand("name","email", "password");
+
+        User user = User.builder()
+                .name(request.name())
+                .email(request.email())
+                .password(request.password())
+                .build();
+
+        when(userRepository.existsByEmail(user.getEmail())).thenReturn(true);
+
+        assertThrows(EmailAlreadyUsedException.class, () -> {
+            underTest.execute(request);
+        });
+
+        verify(userRepository).existsByEmail(user.getEmail());
     }
 }
