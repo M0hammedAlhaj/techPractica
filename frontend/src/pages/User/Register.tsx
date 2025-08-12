@@ -19,11 +19,9 @@ const Register = () => {
   const navigate = useNavigate();
 
   type IFormInput = {
-    firstName?: string;
-    lastName?: string;
     name: string;
-    userEmail: string;
-    userPassword: string;
+    email: string;
+    password: string;
   };
 
   const {
@@ -38,7 +36,7 @@ const Register = () => {
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     try {
-      await axiosInstance.post("/authenticated/registration", data);
+      await axiosInstance.post("/auth/register", data);
       toast.success("Registration successful!", {
         position: "top-center",
         duration: 2000,
@@ -58,7 +56,6 @@ const Register = () => {
     return (
       <div className="mb-4" key={name}>
         <label
-          hidden={name === "lastName" || name === "firstName"}
           htmlFor={label}
           className="block text-sm font-medium text-gray-700 mb-1"
         >
@@ -66,8 +63,6 @@ const Register = () => {
         </label>
         <div className="relative">
           <Inputs
-            hidden={name === "lastName" || name === "firstName"}
-            defaultValue={name === "lastName" || name === "firstName" ? "" : ""}
             id={label}
             type={isPasswordField ? (showPassword ? "text" : "password") : type}
             placeholder={placeholder}

@@ -12,12 +12,12 @@ export const registerSchema = yup
         /^[a-zA-Z0-9_.]+$/,
         "Only letters, numbers, underscores, and dots allowed"
       ),
-    userEmail: yup
+    email: yup
       .string()
       .required("Email is required")
       .max(320, "Must be 320 characters or less")
       .matches(/^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/, "Not a valid email address."),
-    userPassword: yup
+    password: yup
       .string()
       .required("Password is required")
       .min(8, "Password should be at least 8 charachters.")
