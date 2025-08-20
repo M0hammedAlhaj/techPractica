@@ -37,6 +37,13 @@ public class User extends BaseEntity {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "is_active")
+    private boolean isActive;
+
+    public void activate() {
+        isActive = true;
+    }
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "USERS_SKILLS",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),

@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.UUID;
 import java.util.function.Function;
 
 @Component
@@ -24,8 +25,9 @@ public class JwtExtracting {
         return claimsResolver.apply(claims);
     }
 
-    public String extractId(String token) {
-        return extractClaim(token, Claims::getSubject);
+    public UUID extractId(String token) {
+        String id = extractClaim(token, Claims::getSubject);
+        return UUID.fromString(id);
     }
 
     public String extractEmail(String token) {

@@ -25,7 +25,7 @@ public class RegisterAccountUseCase {
         }
         User user = userFactory.create(command.name(), email, command.password());
         User userSaved = userRepository.save(user);
-        publisher.publishEvent(new UserRegistrationEvent(userSaved.getId(), userSaved.getEmail()));
+        publisher.publishEvent(new UserRegistrationEvent(userSaved.getId(), userSaved.getEmail(), userSaved.getName()));
         return userSaved;
     }
 }

@@ -2,7 +2,10 @@ package com.spring.techpractica.Core.System.Entity;
 
 import com.spring.techpractica.Core.Session.Entity.Session;
 import com.spring.techpractica.Core.Shared.BaseEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +21,7 @@ import java.util.List;
 @Builder
 public class System extends BaseEntity {
     private String name;
-    
-    @ManyToMany(mappedBy = "sessionSystems", fetch = FetchType.LAZY)
+
+    @ManyToMany(mappedBy = "systems", fetch = FetchType.LAZY)
     private List<Session> sessions;
 }

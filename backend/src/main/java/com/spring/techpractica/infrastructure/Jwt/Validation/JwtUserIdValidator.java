@@ -6,6 +6,8 @@ import com.spring.techpractica.infrastructure.Jwt.JwtExtracting;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 @AllArgsConstructor
 public class JwtUserIdValidator extends AbstractHandler<JwtValidationContext> {
@@ -14,7 +16,7 @@ public class JwtUserIdValidator extends AbstractHandler<JwtValidationContext> {
 
     @Override
     public void process(JwtValidationContext context) {
-        String actualId = jwtExtracting.extractId(context.token());
+        UUID actualId = jwtExtracting.extractId(context.token());
 
         if (!actualId.equals(context.expectedUserId())) {
             throw new JwtValidationException("User ID in token does not match the request");
