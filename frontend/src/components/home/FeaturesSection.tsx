@@ -1,5 +1,4 @@
 import {
-  fadeInScale,
   featuress,
   floatingShapesFeatures,
   geometricShapesFeatures,
@@ -74,7 +73,6 @@ const FeaturesSection = ({}: IProps) => {
               ({ icon: Icon, title, description, color, bgColor }, idx) => (
                 <motion.div
                   key={idx}
-                  variants={fadeInScale}
                   whileHover={{ y: -10, scale: 1.02 }}
                   transition={{ duration: 0.4 }}
                 >

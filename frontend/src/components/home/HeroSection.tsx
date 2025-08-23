@@ -11,8 +11,12 @@ import GeometricShape from "../ui/GeometricShape";
 import ProgrammingShape from "../ui/ProgrammingShape";
 import FloatingShape from "../ui/FloatingShape";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+
 interface IProps {}
+
 const HeroSection = ({}: IProps) => {
+  const navigate = useNavigate();
   return (
     <>
       <section className="relative bg-gradient-to-br from-[#f0fdf9] via-[#f8fafc] to-[#e0f2fe] min-h-screen flex items-center justify-center px-4 overflow-hidden ">
@@ -22,7 +26,7 @@ const HeroSection = ({}: IProps) => {
           {floatingShapes.map(
             ({ color, delay, duration, opacity, size, x, y }) => (
               <FloatingShape
-                key={size * y}
+                key={`${size}-${y}-${x}`}
                 delay={delay}
                 duration={duration}
                 size={size}
@@ -39,7 +43,7 @@ const HeroSection = ({}: IProps) => {
           {/* Enhanced Geometric Shapes */}
           {geometricShapes.map(({ delay, duration, size, x, y }) => (
             <GeometricShape
-              key={size * y}
+              key={`${size}-${y}-${x}`}
               delay={delay}
               duration={duration}
               size={size}
@@ -68,16 +72,10 @@ const HeroSection = ({}: IProps) => {
             animate={{
               scaleY: [1, 1.3, 1],
               opacity: [0.2, 0.3, 0.2],
-              transform: [
-                "skewX(0deg)",
-                "skewX(2deg)",
-                "skewX(-2deg)",
-                "skewX(0deg)",
-              ],
             }}
             transition={{
               duration: 10,
-              repeat: Number.POSITIVE_INFINITY,
+              repeat: Infinity,
               ease: "easeInOut",
             }}
           />
@@ -124,6 +122,9 @@ const HeroSection = ({}: IProps) => {
                 scale: 1.05,
                 boxShadow: "0 20px 40px rgba(66, 213, 174, 0.3)",
               }}
+              onClick={() => {
+                navigate("/Explore");
+              }}
               whileTap={{ scale: 0.95 }}
               className="bg-gradient-to-r from-[#42D5AE] to-[#38b28d] hover:from-[#38b28d] hover:to-[#42D5AE] text-white px-10 py-4 text-xl rounded-xl font-bold transition-all duration-300 flex items-center gap-3 shadow-xl"
             >
@@ -136,4 +137,5 @@ const HeroSection = ({}: IProps) => {
     </>
   );
 };
+
 export default HeroSection;
