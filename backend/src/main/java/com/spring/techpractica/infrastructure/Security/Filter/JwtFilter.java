@@ -36,15 +36,19 @@ public class JwtFilter extends OncePerRequestFilter {
         try {
             String headerAuthorization = request.getHeader("Authorization");
             String token = null;
-            String id = null;
-
+            UUID id = null;
             if (headerAuthorization != null && headerAuthorization.startsWith("Bearer ")) {
                 token = headerAuthorization.substring(7);
                 id = jwtExtracting.extractId(token);
             }
 
+            if (token == null && request.getParameter("token") != null) {
+                token = request.getParameter("token");
+                id = jwtExtracting.extractId(token);
+            }
+
             if (id != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserAuthentication userDetails = userRepository.findById(UUID.fromString(id))
+                UserAuthentication userDetails = userRepository.findById(id)
                         .map(UserAuthentication::new)
                         .orElseThrow(() -> new UserAuthenticationException("User doesn't have access"));
 

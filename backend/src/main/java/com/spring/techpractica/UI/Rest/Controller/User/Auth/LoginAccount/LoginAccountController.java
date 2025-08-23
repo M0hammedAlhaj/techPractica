@@ -29,24 +29,25 @@ import java.time.Instant;
 @AllArgsConstructor
 @Tag(name = "Authentication")
 public class LoginAccountController {
+
     private final LoginAccountUseCase loginAccountUseCase;
     private final JwtGeneration jwtGeneration;
 
     @Operation(summary = "Login user account", description = "Authenticates user and returns a JWT token")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Login successful",
+            @ApiResponse(responseCode = "200", description = "Login account successful",
                     content = @Content(schema = @Schema(implementation = LoginAccountResponse.class))),
             @ApiResponse(responseCode = "401", description = "Invalid credentials",
                     content = @Content),
             @ApiResponse(responseCode = "400", description = "Invalid request payload",
                     content = @Content),
-
     })
     @PostMapping("/login")
     public ResponseEntity<?> loginAccount(@RequestBody @Valid LoginAccountRequest request) {
         try {
             User user = loginAccountUseCase.execute(new LoginAccountCommand(request.email(), request.password()));
             String token = jwtGeneration.generateToken(user.getId(), user.getName());
+
             return ResponseEntity.ok(StandardSuccessResponse.<LoginAccountResponse>builder()
                     .data(new LoginAccountResponse(user, token))
                     .message("Login account successful")

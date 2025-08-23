@@ -20,6 +20,7 @@ const FeaturesSection = ({}: IProps) => {
           {floatingShapesFeatures.map(
             ({ color, delay, duration, opacity, size, x, y }) => (
               <FloatingShape
+                key={color + delay + duration + size + x + y}
                 delay={delay}
                 duration={duration}
                 size={size}
@@ -32,6 +33,7 @@ const FeaturesSection = ({}: IProps) => {
           )}
           {geometricShapesFeatures.map(({ delay, duration, size, x, y }) => (
             <GeometricShape
+              key={delay + duration + size + x + y}
               delay={delay}
               duration={duration}
               size={size}

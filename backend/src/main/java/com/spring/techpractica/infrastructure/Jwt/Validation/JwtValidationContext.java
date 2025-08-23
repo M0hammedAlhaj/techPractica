@@ -1,5 +1,7 @@
 package com.spring.techpractica.infrastructure.Jwt.Validation;
 
 
-public record JwtValidationContext(String token, String expectedUserId) {
+import java.util.UUID;
+
+public record JwtValidationContext(String token, UUID expectedUserId) {
 }

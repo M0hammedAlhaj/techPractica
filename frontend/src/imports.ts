@@ -13,11 +13,9 @@ import LayoutHome from "../src/pages/Home/Layout";
 import LayoutLogin from "../src/pages/User/Layout";
 import Home from "../src/pages/Home/Home";
 import PageNotFound from "../src/pages/User/PageNotFound";
-import Login from "../src/pages/User/Login";
 import Learn from "../src/pages/Home/Learn";
 import Projects from "../src/pages/Projects/Projects";
 import Profile from "../src/pages/Home/Profile";
-import Register from "../src/pages/User/Register";
 import ResetPass from "../src/pages/User/ResetPass";
 import ProjectsLayout from "../src/pages/Projects/ProjectsLayout";
 import SessionRequests from "../src/pages/Projects/SessionRequests";
@@ -33,11 +31,9 @@ export {
   Home,
   SessionRequests,
   PageNotFound,
-  Login,
   Learn,
   Projects,
   Profile,
-  Register,
   ResetPass,
   Inputs,
   Button,

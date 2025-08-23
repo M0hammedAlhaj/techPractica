@@ -1,5 +1,6 @@
 package com.spring.techpractica.UI.Rest.Shared;
 
+import com.spring.techpractica.Core.Shared.Exception.ResourcesDuplicateException;
 import com.spring.techpractica.Core.Shared.Exception.ResourcesNotFoundException;
 import com.spring.techpractica.Core.User.Exception.UserAuthenticationException;
 import org.springframework.http.HttpStatus;
@@ -26,14 +27,14 @@ public class GlobalExceptionHandler {
                         .build());
     }
 
-    @ExceptionHandler(UserAuthenticationException.class)
-    public ResponseEntity<StandardErrorResponse> handleUserAuthenticationException(UserAuthenticationException ex) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(ResourcesDuplicateException.class)
+    public ResponseEntity<StandardErrorResponse> handleResourcesDuplicateException(ResourcesDuplicateException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(StandardErrorResponse.builder()
                         .timestamp(Instant.now())
+                        .status(HttpStatus.CONFLICT.value())
                         .message(ex.getMessage())
-                        .status(HttpStatus.UNAUTHORIZED.value())
-                        .code("AUTHENTICATION_FAILED")
+                        .code("RESOURCE_ALREADY_EXISTS")
                         .build());
     }
 

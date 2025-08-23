@@ -22,6 +22,7 @@ const HeroSection = ({}: IProps) => {
           {floatingShapes.map(
             ({ color, delay, duration, opacity, size, x, y }) => (
               <FloatingShape
+                key={size * y}
                 delay={delay}
                 duration={duration}
                 size={size}
@@ -38,6 +39,7 @@ const HeroSection = ({}: IProps) => {
           {/* Enhanced Geometric Shapes */}
           {geometricShapes.map(({ delay, duration, size, x, y }) => (
             <GeometricShape
+              key={size * y}
               delay={delay}
               duration={duration}
               size={size}
@@ -66,7 +68,12 @@ const HeroSection = ({}: IProps) => {
             animate={{
               scaleY: [1, 1.3, 1],
               opacity: [0.2, 0.3, 0.2],
-              skewX: [0, 2, -2, 0],
+              transform: [
+                "skewX(0deg)",
+                "skewX(2deg)",
+                "skewX(-2deg)",
+                "skewX(0deg)",
+              ],
             }}
             transition={{
               duration: 10,

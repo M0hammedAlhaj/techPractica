@@ -1,7 +1,7 @@
 package com.spring.techpractica.Application.User.RegisterAccount;
 
 import com.spring.techpractica.Core.User.Event.UserRegistrationEvent;
-import com.spring.techpractica.Core.User.Exception.EmailAlreadyUsedException;
+import com.spring.techpractica.Core.User.Service.PasswordEncryptor;
 import com.spring.techpractica.Core.User.User;
 import com.spring.techpractica.Core.User.UserFactory;
 import com.spring.techpractica.Core.User.UserRepository;
@@ -21,11 +21,11 @@ public class RegisterAccountUseCase {
     public User execute(RegisterAccountCommand command) {
         String email = command.email();
         if (userRepository.existsByEmail(email)) {
-            throw new EmailAlreadyUsedException();
+            return userFactory.create(command.name(), email, command.password());
         }
         User user = userFactory.create(command.name(), email, command.password());
         User userSaved = userRepository.save(user);
-        publisher.publishEvent(new UserRegistrationEvent(userSaved.getId(), userSaved.getEmail()));
+        publisher.publishEvent(new UserRegistrationEvent(userSaved.getId(), userSaved.getEmail(), userSaved.getName()));
         return userSaved;
     }
 }

@@ -1,7 +1,7 @@
 package com.spring.techpractica.Core.Session.Entity;
 
-import com.spring.techpractica.Core.AuthenticatedUserSession.Entity.AuthenticatedUserSession;
-import com.spring.techpractica.Core.Category.Entity.Category;
+import com.spring.techpractica.Core.SessionMembers.Entity.SessionMembers;
+import com.spring.techpractica.Core.Field.Entity.Field;
 import com.spring.techpractica.Core.Request.Entity.Request;
 import com.spring.techpractica.Core.Requirement.Entity.Requirement;
 import com.spring.techpractica.Core.Shared.BaseEntity;
@@ -37,7 +37,7 @@ public class Session extends BaseEntity {
     @OneToMany(mappedBy = "session",
             fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<AuthenticatedUserSession> sessionMembers = new ArrayList<>();
+    private List<SessionMembers> members = new ArrayList<>();
 
     @Column(name = "is_running")
     private boolean sessionIsRunning;
@@ -48,7 +48,7 @@ public class Session extends BaseEntity {
             cascade = {CascadeType.REMOVE,
                     CascadeType.PERSIST},
             orphanRemoval = true)
-    private List<Requirement> sessionRequirements = new ArrayList<>();
+    private List<Requirement> requirements = new ArrayList<>();
 
     @OneToMany(mappedBy = "session",
             fetch = FetchType.LAZY,
@@ -59,15 +59,17 @@ public class Session extends BaseEntity {
             fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST,
                     CascadeType.REMOVE, CascadeType.MERGE})
-    private List<Request> sessionRequests = new ArrayList<>();
+    private List<Request> requests = new ArrayList<>();
 
-    @ManyToMany
+
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "SYSTEMS_SESSIONS"
-            , joinColumns = @JoinColumn(name = "category_name")
-            , inverseJoinColumns = @JoinColumn(name = "session_id")
+            name = "SYSTEMS_SESSIONS",
+            joinColumns = @JoinColumn(name = "session_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "system_id", referencedColumnName = "id")
     )
-    private List<System> sessionSystems = new ArrayList<>();
+    private List<System> systems = new ArrayList<>();
+
 
     @ManyToMany
     @JoinTable(
@@ -75,13 +77,13 @@ public class Session extends BaseEntity {
             , joinColumns = @JoinColumn(name = "technology_id", referencedColumnName = "id")
             , inverseJoinColumns = @JoinColumn(name = "session_id", referencedColumnName = "id")
     )
-    private List<Technology> sessionTechnologies = new ArrayList<>();
+    private List<Technology> technologies = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(
             name = "CATEGORIES_SESSIONS",
-            joinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id"),
+            joinColumns = @JoinColumn(name = "field_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "session_id", referencedColumnName = "id")
     )
-    private List<Category> sessionCategories = new ArrayList<>();
+    private List<Field> fields = new ArrayList<>();
 }

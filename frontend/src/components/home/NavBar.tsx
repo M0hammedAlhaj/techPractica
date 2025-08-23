@@ -1,355 +1,201 @@
-import { useState, useEffect, useCallback } from "react";
-import {
-  motion,
-  AnimatePresence,
-  useScroll,
-  useTransform,
-} from "framer-motion";
-import { Menu, X, LogOut, Sparkles, Zap } from "lucide-react";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X, User, LogOut, ChevronDown, Zap } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { NavLinks } from "../../data/data";
 import { CookiesService } from "../../imports";
 
-export default function ImprovedNavbar() {
-  const [isOpen, setIsOpen] = useState(false);
+export default function Navbar() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [token, setToken] = useState<string | null>(null);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
-  const location = useLocation();
-  const pathname = location.pathname;
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const pathname = useLocation().pathname;
 
-  const { scrollY } = useScroll();
-  const navbarOpacity = useTransform(scrollY, [0, 100], [0.95, 0.98]);
-  const navbarBlur = useTransform(scrollY, [0, 100], [20, 30]);
-
-  // Enhanced scroll effect with smoother transitions
+  // Handle scroll effect
   useEffect(() => {
-    const handleScroll = () => {
-      const scrolled = window.scrollY > 20;
-      setIsScrolled(scrolled);
-    };
-
-    const throttledScroll = throttle(handleScroll, 16); // 60fps
-    window.addEventListener("scroll", throttledScroll, { passive: true });
-    return () => window.removeEventListener("scroll", throttledScroll);
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Optimized mouse tracking with throttling
-  const handleMouseMove = useCallback(
-    throttle((e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    }, 16),
-    []
-  );
-
+  // Get token
   useEffect(() => {
-    window.addEventListener("mousemove", handleMouseMove, { passive: true });
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, [handleMouseMove]);
-
-  useEffect(() => {
-    const userToken = CookiesService.get("UserToken");
-    setToken(userToken);
+    setToken(CookiesService.get("UserToken"));
   }, []);
-
-  const filteredLinks = NavLinks.filter(({ label }) => {
-    if (token) {
-      return label !== "Login" && label !== "Join";
-    } else {
-      return label !== "Profile" && label !== "Sessions";
-    }
-  });
 
   const handleLogout = () => {
-    localStorage.removeItem("UserToken");
+    CookiesService.remove("UserToken");
     setToken(null);
-    setIsOpen(false);
+    setShowUserMenu(false);
   };
-
-  const closeMenu = () => setIsOpen(false);
 
   return (
     <>
-      {/* Enhanced Glassmorphism Navbar */}
+      {/* Navbar */}
       <motion.nav
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-        style={{
-          opacity: navbarOpacity,
-          backdropFilter: `blur(${navbarBlur}px)`,
-        }}
-        className={`fixed top-4 left-4 right-4 z-50 transition-all duration-700 ${
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           isScrolled
-            ? "bg-gradient-to-r from-[#022639]/25 via-[#022639]/20 to-[#022639]/25"
-            : "bg-gradient-to-r from-[#022639]/20 via-[#022639]/15 to-[#022639]/20"
-        } rounded-3xl border border-[#42D5AE]/30 shadow-2xl shadow-[#42D5AE]/20`}
+            ? "bg-white/95 backdrop-blur-xl border-b border-gray-200/50 shadow-lg"
+            : "bg-white/80 backdrop-blur-md"
+        }`}
       >
-        {/* Dynamic gradient border */}
-        <motion.div
-          className="absolute inset-0 rounded-3xl p-[1px] overflow-hidden"
-          animate={{
-            background: [
-              "conic-gradient(from 0deg, rgba(66, 213, 174, 0.4), rgba(56, 178, 141, 0.2), rgba(2, 38, 57, 0.4), rgba(66, 213, 174, 0.4))",
-              "conic-gradient(from 120deg, rgba(66, 213, 174, 0.4), rgba(56, 178, 141, 0.2), rgba(2, 38, 57, 0.4), rgba(66, 213, 174, 0.4))",
-              "conic-gradient(from 240deg, rgba(66, 213, 174, 0.4), rgba(56, 178, 141, 0.2), rgba(2, 38, 57, 0.4), rgba(66, 213, 174, 0.4))",
-            ],
-          }}
-          transition={{
-            duration: 6,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "linear",
-          }}
-        >
-          <div className="h-full w-full rounded-3xl bg-[#022639]/40 backdrop-blur-3xl" />
-        </motion.div>
-
-        {/* Enhanced floating particles */}
-        <div className="absolute inset-0 overflow-hidden rounded-3xl">
-          {[...Array(6)].map((_, i) => (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
             <motion.div
-              key={i}
-              className={`absolute w-2 h-2 bg-gradient-to-r from-[#42D5AE] to-[#38b28d] rounded-full opacity-30`}
-              style={{
-                left: `${20 + i * 15}%`,
-                top: `${30 + (i % 2) * 40}%`,
-              }}
-              animate={{
-                y: [-10, 10, -10],
-                x: [-5, 5, -5],
-                scale: [0.8, 1.2, 0.8],
-                opacity: [0.2, 0.6, 0.2],
-              }}
-              transition={{
-                duration: 3 + i * 0.5,
-                repeat: Number.POSITIVE_INFINITY,
-                ease: "easeInOut",
-                delay: i * 0.2,
-              }}
-            />
-          ))}
-        </div>
-
-        {/* Interactive mouse glow */}
-        <motion.div
-          className="absolute inset-0 rounded-3xl opacity-30"
-          style={{
-            background: `radial-gradient(300px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(66, 213, 174, 0.15), transparent 50%)`,
-          }}
-        />
-
-        <div className="relative z-10 max-w-7xl mx-auto px-8">
-          <div className="flex items-center justify-between h-20">
-            {/* Enhanced Logo */}
-            <motion.div
-              className="flex items-center"
               whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+              className="flex items-center gap-4"
             >
               <Link to="/" className="flex items-center group">
-                <div className="relative">
-                  <motion.div
-                    className="relative w-14 h-14 rounded-2xl bg-gradient-to-br from-[#42D5AE] via-[#38b28d] to-[#022639] shadow-xl shadow-[#42D5AE]/40 group-hover:shadow-2xl group-hover:shadow-[#42D5AE]/60 transition-all duration-500 flex items-center justify-center overflow-hidden"
-                    whileHover={{ rotate: 8, scale: 1.05 }}
-                    transition={{ duration: 0.4, ease: "easeOut" }}
-                  >
-                    {/* Logo icon with enhanced animation */}
-                    <motion.div
-                      className="relative z-10"
-                      animate={{ rotate: 360 }}
-                      transition={{
-                        duration: 20,
-                        repeat: Number.POSITIVE_INFINITY,
-                        ease: "linear",
-                      }}
-                    >
-                      <Zap className="w-7 h-7 text-white drop-shadow-lg" />
-                    </motion.div>
-
-                    {/* Animated background pattern */}
-                    <motion.div
-                      className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent"
-                      animate={{
-                        scale: [1, 1.2, 1],
-                        rotate: [0, 180, 360],
-                      }}
-                      transition={{
-                        duration: 8,
-                        repeat: Number.POSITIVE_INFINITY,
-                        ease: "easeInOut",
-                      }}
-                    />
-
-                    {/* Sparkle effects */}
-                    <motion.div
-                      className="absolute top-1 right-1"
-                      animate={{
-                        scale: [0, 1, 0],
-                        rotate: [0, 180, 360],
-                      }}
-                      transition={{
-                        duration: 2,
-                        repeat: Number.POSITIVE_INFINITY,
-                        ease: "easeInOut",
-                      }}
-                    >
-                      <Sparkles className="w-3 h-3 text-white/80" />
-                    </motion.div>
-                  </motion.div>
-
-                  {/* Enhanced pulsing glow */}
-                  <motion.div
-                    className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#42D5AE]/60 to-[#38b28d]/60 blur-xl"
-                    animate={{
-                      scale: [1, 1.5, 1],
-                      opacity: [0.4, 0, 0.4],
-                    }}
-                    transition={{
-                      duration: 3,
-                      repeat: Number.POSITIVE_INFINITY,
-                      ease: "easeInOut",
-                    }}
-                  />
-                </div>
-
-                {/* Enhanced brand text */}
-                <div className="ml-5">
-                  <motion.div
-                    className="flex items-baseline"
-                    whileHover={{ scale: 1.02 }}
-                  >
-                    <span className="text-3xl font-black bg-gradient-to-r from-white via-gray-100 to-[#42D5AE]/90 bg-clip-text text-transparent tracking-tight">
-                      Tech
-                    </span>
-                    <motion.span
-                      className="text-3xl font-black bg-gradient-to-r from-[#42D5AE] via-[#38b28d] to-[#42D5AE] bg-clip-text text-transparent tracking-tight ml-1"
-                      animate={{
-                        backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-                      }}
-                      transition={{
-                        duration: 4,
-                        repeat: Number.POSITIVE_INFINITY,
-                        ease: "easeInOut",
-                      }}
-                      style={{
-                        backgroundSize: "200% 200%",
-                      }}
-                    >
-                      Practica
-                    </motion.span>
-                  </motion.div>
-                  <motion.div
-                    className="text-xs font-semibold text-[#42D5AE]/80 tracking-[0.2em] uppercase"
-                    initial={{ opacity: 0, y: 5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.6 }}
-                  >
-                    Learn • Build • Grow
-                  </motion.div>
+                <div className="ml-3 hidden sm:block">
+                  <span className="text-xl font-black bg-gradient-to-r from-[#022639] to-[#42D5AE] bg-clip-text text-transparent">
+                    TechPractica
+                  </span>
                 </div>
               </Link>
             </motion.div>
 
-            {/* Enhanced Desktop Navigation */}
-            <div className="hidden lg:flex items-center">
-              <div className="flex items-center space-x-2 bg-[#022639]/40 backdrop-blur-2xl rounded-full p-2 border border-[#42D5AE]/40 shadow-xl shadow-[#42D5AE]/20">
-                {filteredLinks.map(({ label, path }, index) => {
-                  const isActive =
-                    pathname === path ||
-                    (label === "Sessions" && pathname === "/sessions");
-                  const linkPath = label === "Sessions" ? "/sessions" : path;
-
-                  return (
-                    <motion.div
-                      key={index}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onHoverStart={() => setHoveredItem(label)}
-                      onHoverEnd={() => setHoveredItem(null)}
-                      transition={{ duration: 0.2, ease: "easeOut" }}
-                    >
-                      <Link
-                        to={linkPath}
-                        className={`relative px-6 py-3 text-sm font-semibold transition-all duration-300 rounded-full overflow-hidden ${
-                          isActive
-                            ? "text-white"
-                            : "text-gray-300 hover:text-white"
-                        }`}
-                      >
-                        {/* Active background */}
-                        {isActive && (
-                          <motion.div
-                            layoutId="activePill"
-                            className="absolute inset-0 bg-gradient-to-r from-[#42D5AE] via-[#38b28d] to-[#42D5AE] rounded-full shadow-lg shadow-[#42D5AE]/40"
-                            initial={false}
-                            transition={{
-                              type: "spring",
-                              stiffness: 500,
-                              damping: 30,
-                            }}
-                          />
-                        )}
-
-                        {/* Hover effect */}
-                        {!isActive && hoveredItem === label && (
-                          <motion.div
-                            className="absolute inset-0 bg-gradient-to-r from-[#42D5AE]/20 via-[#38b28d]/20 to-[#42D5AE]/20 rounded-full"
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.8 }}
-                            transition={{ duration: 0.2 }}
-                          />
-                        )}
-
-                        <span className="relative z-10">{label}</span>
-
-                        {/* Shimmer effect for active item */}
-                        {isActive && (
-                          <motion.div
-                            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-full"
-                            animate={{ x: ["-100%", "100%"] }}
-                            transition={{
-                              duration: 2,
-                              repeat: Number.POSITIVE_INFINITY,
-                              ease: "easeInOut",
-                            }}
-                          />
-                        )}
-                      </Link>
-                    </motion.div>
-                  );
-                })}
-              </div>
-
-              {/* Enhanced Logout Button */}
-              {token && (
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="ml-4"
-                >
-                  <button
-                    onClick={handleLogout}
-                    className="flex items-center space-x-2 px-6 py-3 text-sm font-semibold text-red-300 hover:text-white bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 hover:border-red-400/50 rounded-full transition-all duration-300 backdrop-blur-xl shadow-lg shadow-red-500/20 hover:shadow-red-500/30"
+            {/* Desktop Nav */}
+            <div className="hidden lg:flex items-center space-x-1">
+              {NavLinks.slice(0, 4).map(({ label, path, icon: Icon }) => {
+                const isActive = pathname === path;
+                return (
+                  <motion.div
+                    key={label}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                   >
-                    <LogOut className="w-4 h-4" />
-                    <span>Logout</span>
-                  </button>
-                </motion.div>
-              )}
+                    <Link
+                      to={path}
+                      className={`relative flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
+                        isActive
+                          ? "text-[#42D5AE]"
+                          : "text-gray-600 hover:text-[#42D5AE] hover:bg-gray-50"
+                      }`}
+                    >
+                      <Icon className="w-4 h-4" />
+                      {label}
+                      {isActive && (
+                        <motion.div
+                          layoutId="activeTab"
+                          className="absolute inset-0 rounded-xl border border-[#42D5AE]/20"
+                          initial={false}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 500,
+                            damping: 30,
+                          }}
+                        />
+                      )}
+                    </Link>
+                  </motion.div>
+                );
+              })}
             </div>
 
-            {/* Enhanced Mobile Menu Button */}
-            <div className="lg:hidden">
+            {/* Right Section */}
+            <div className="flex items-center gap-3">
+              {/* User / Auth */}
+              {token ? (
+                <div className="relative">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setShowUserMenu(!showUserMenu)}
+                    className="flex items-center gap-2 p-2 rounded-xl hover:bg-gray-100 transition-colors"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#42D5AE] to-[#38b28d] flex items-center justify-center text-white font-semibold text-sm">
+                      JD
+                    </div>
+                    <ChevronDown
+                      className={`w-4 h-4 text-gray-600 transition-transform ${
+                        showUserMenu ? "rotate-180" : ""
+                      }`}
+                    />
+                  </motion.button>
+
+                  <AnimatePresence>
+                    {showUserMenu && (
+                      <>
+                        {/* Backdrop */}
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          className="fixed inset-0 z-10"
+                          onClick={() => setShowUserMenu(false)}
+                        />
+
+                        {/* Menu */}
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                          animate={{ opacity: 1, scale: 1, y: 0 }}
+                          exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                          className="absolute right-0 top-full mt-2 w-56 bg-white border border-gray-200 rounded-2xl shadow-xl z-20 py-2"
+                        >
+                          <div className="px-4 py-3 border-b border-gray-100">
+                            <p className="font-semibold text-gray-900">
+                              John Doe
+                            </p>
+                            <p className="text-sm text-gray-600">
+                              john@example.com
+                            </p>
+                          </div>
+                          <div className="py-2">
+                            <Link
+                              to="/profile"
+                              className="flex items-center gap-3 px-4 py-2 text-sm hover:bg-gray-50 transition-colors"
+                              onClick={() => setShowUserMenu(false)}
+                            >
+                              <User className="w-4 h-4" />
+                              Profile
+                            </Link>
+                          </div>
+                          <div className="border-t border-gray-100 py-2">
+                            <button
+                              onClick={handleLogout}
+                              className="flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors w-full text-left"
+                            >
+                              <LogOut className="w-4 h-4" />
+                              Logout
+                            </button>
+                          </div>
+                        </motion.div>
+                      </>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ) : (
+                <div className="hidden sm:flex items-center gap-2">
+                  <Link
+                    to="/auth"
+                    className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-[#42D5AE] transition-colors"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/auth"
+                    className="px-4 py-2 text-sm font-medium bg-gradient-to-r from-[#42D5AE] to-[#38b28d] text-white rounded-xl hover:shadow-lg transition-all duration-300"
+                  >
+                    Sign Up
+                  </Link>
+                </div>
+              )}
+
+              {/* Mobile Menu Button */}
               <motion.button
                 whileTap={{ scale: 0.9 }}
-                onClick={() => setIsOpen(!isOpen)}
-                className="relative p-4 bg-[#022639]/50 backdrop-blur-xl border border-[#42D5AE]/50 rounded-2xl hover:bg-[#022639]/70 transition-all duration-300 shadow-xl shadow-[#42D5AE]/20"
-                aria-label="Toggle menu"
+                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                className="lg:hidden p-2 rounded-xl hover:bg-gray-100 transition-colors"
               >
-                <AnimatePresence mode="wait">
-                  {isOpen ? (
+                <AnimatePresence>
+                  {isSidebarOpen ? (
                     <motion.div
                       key="close"
                       initial={{ rotate: -90, opacity: 0 }}
@@ -357,7 +203,7 @@ export default function ImprovedNavbar() {
                       exit={{ rotate: 90, opacity: 0 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <X className="w-6 h-6 text-white" />
+                      <X className="w-5 h-5 text-gray-600" />
                     </motion.div>
                   ) : (
                     <motion.div
@@ -367,7 +213,7 @@ export default function ImprovedNavbar() {
                       exit={{ rotate: -90, opacity: 0 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <Menu className="w-6 h-6 text-white" />
+                      <Menu className="w-5 h-5 text-gray-600" />
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -377,9 +223,9 @@ export default function ImprovedNavbar() {
         </div>
       </motion.nav>
 
-      {/* Enhanced Mobile Menu */}
+      {/* Mobile Sidebar */}
       <AnimatePresence>
-        {isOpen && (
+        {isSidebarOpen && (
           <>
             {/* Backdrop */}
             <motion.div
@@ -387,91 +233,96 @@ export default function ImprovedNavbar() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="fixed inset-0 z-40 bg-[#022639]/40 backdrop-blur-md"
-              onClick={closeMenu}
+              className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm lg:hidden"
+              onClick={() => setIsSidebarOpen(false)}
             />
 
-            {/* Mobile menu panel */}
+            {/* Sidebar */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: -20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: -20 }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="fixed top-28 left-4 right-4 z-50 bg-[#022639]/50 backdrop-blur-3xl border border-[#42D5AE]/40 rounded-3xl shadow-2xl overflow-hidden"
+              initial={{ x: "100%", opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: "100%", opacity: 0 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className="fixed top-0 right-0 bottom-0 z-50 w-80 bg-white shadow-2xl lg:hidden"
             >
-              {/* Animated top border */}
-              <motion.div
-                className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#42D5AE] via-[#38b28d] to-[#42D5AE]"
-                animate={{
-                  background: [
-                    "linear-gradient(90deg, #42D5AE, #38b28d, #42D5AE)",
-                    "linear-gradient(90deg, #38b28d, #42D5AE, #38b28d)",
-                    "linear-gradient(90deg, #42D5AE, #38b28d, #42D5AE)",
-                  ],
-                }}
-                transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
-              />
-
-              {/* Background effects */}
-              <div className="absolute inset-0">
-                <motion.div
-                  className="absolute top-8 right-8 w-32 h-32 bg-gradient-to-br from-[#42D5AE]/20 to-[#38b28d]/20 rounded-full blur-3xl"
-                  animate={{
-                    scale: [1, 1.4, 1],
-                    opacity: [0.3, 0.7, 0.3],
-                  }}
-                  transition={{ duration: 5, repeat: Number.POSITIVE_INFINITY }}
-                />
+              <div className="flex items-center justify-between p-6 border-b border-gray-200">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#42D5AE] to-[#38b28d] flex items-center justify-center">
+                    <Zap className="w-5 h-5 text-white" />
+                  </div>
+                  <span className="text-xl font-black bg-gradient-to-r from-[#022639] to-[#42D5AE] bg-clip-text text-transparent">
+                    TechPractica
+                  </span>
+                </div>
+                <button
+                  onClick={() => setIsSidebarOpen(false)}
+                  className="p-2 rounded-xl hover:bg-gray-100 transition-colors"
+                >
+                  <X className="w-5 h-5 text-gray-600" />
+                </button>
               </div>
 
-              <div className="relative z-10 p-8 space-y-3">
-                {filteredLinks.map(({ label, path }, index) => {
-                  const isActive =
-                    pathname === path ||
-                    (label === "Sessions" && pathname === "/sessions");
-                  const linkPath = label === "Sessions" ? "/sessions" : path;
-
-                  return (
-                    <motion.div
-                      key={label}
-                      initial={{ opacity: 0, x: -30 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.08, duration: 0.4 }}
-                    >
-                      <Link
-                        to={linkPath}
-                        className={`block px-8 py-5 text-lg font-semibold transition-all duration-300 rounded-2xl ${
-                          isActive
-                            ? "text-white bg-gradient-to-r from-[#42D5AE] via-[#38b28d] to-[#42D5AE] shadow-xl shadow-[#42D5AE]/40"
-                            : "text-gray-300 hover:text-white hover:bg-[#022639]/60"
-                        }`}
-                        onClick={closeMenu}
+              <div className="flex-1 overflow-y-auto py-6">
+                <div className="space-y-2 px-6">
+                  {NavLinks.map(({ label, path, icon: Icon }, index) => {
+                    const isActive = pathname === path;
+                    return (
+                      <motion.div
+                        key={label}
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.05, duration: 0.3 }}
                       >
-                        <span className="relative z-10">{label}</span>
-                      </Link>
-                    </motion.div>
-                  );
-                })}
+                        <Link
+                          to={path}
+                          className={`flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium transition-all duration-300 ${
+                            isActive
+                              ? "text-[#42D5AE] bg-[#42D5AE]/10 border border-[#42D5AE]/20"
+                              : "text-gray-700 hover:text-[#42D5AE] hover:bg-gray-50"
+                          }`}
+                          onClick={() => setIsSidebarOpen(false)}
+                        >
+                          <Icon className="w-5 h-5" />
+                          {label}
+                        </Link>
+                      </motion.div>
+                    );
+                  })}
+                </div>
 
-                {/* Mobile Logout Button */}
+                {/* Auth / Logout */}
+                {!token && (
+                  <div className="mt-8 px-6 space-y-3">
+                    <Link
+                      to="/auth"
+                      className="block w-full text-center px-4 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors font-medium"
+                      onClick={() => setIsSidebarOpen(false)}
+                    >
+                      Login
+                    </Link>
+                    <Link
+                      to="/auth"
+                      className="block w-full text-center px-4 py-3 bg-gradient-to-r from-[#42D5AE] to-[#38b28d] text-white rounded-xl hover:shadow-lg transition-all duration-300 font-medium"
+                      onClick={() => setIsSidebarOpen(false)}
+                    >
+                      Sign Up
+                    </Link>
+                  </div>
+                )}
+
                 {token && (
-                  <motion.div
-                    initial={{ opacity: 0, x: -30 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{
-                      delay: filteredLinks.length * 0.08,
-                      duration: 0.4,
-                    }}
-                    className="pt-6 border-t border-[#42D5AE]/30"
-                  >
+                  <div className="mt-8 px-6">
                     <button
-                      onClick={handleLogout}
-                      className="w-full flex items-center space-x-3 px-8 py-5 text-lg font-semibold text-red-300 hover:text-white bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 hover:border-red-400/50 rounded-2xl transition-all duration-300"
+                      onClick={() => {
+                        handleLogout();
+                        setIsSidebarOpen(false);
+                      }}
+                      className="flex items-center gap-3 w-full px-4 py-3 text-red-600 hover:bg-red-50 rounded-xl transition-colors font-medium"
                     >
                       <LogOut className="w-5 h-5" />
-                      <span>Logout</span>
+                      Logout
                     </button>
-                  </motion.div>
+                  </div>
                 )}
               </div>
             </motion.div>
@@ -479,23 +330,8 @@ export default function ImprovedNavbar() {
         )}
       </AnimatePresence>
 
-      {/* Spacer for fixed navbar */}
-      <div className="h-28" />
+      {/* Spacer */}
+      <div className="h-16" />
     </>
   );
-}
-
-// Utility function for throttling
-function throttle<T extends (...args: any[]) => any>(
-  func: T,
-  limit: number
-): T {
-  let inThrottle: boolean;
-  return ((...args: any[]) => {
-    if (!inThrottle) {
-      func.apply(this, args);
-      inThrottle = true;
-      setTimeout(() => (inThrottle = false), limit);
-    }
-  }) as T;
 }

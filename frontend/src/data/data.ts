@@ -1,3 +1,4 @@
+import { AxiosResponse } from "axios";
 import { IconType } from "react-icons";
 
 export interface Category {
@@ -28,7 +29,9 @@ import {
   FaTrophy,
   FaBolt,
   FaGlobe,
+  FaHome,
 } from "react-icons/fa";
+import { MdDashboard } from "react-icons/md";
 export interface Feature {
   title: string;
   description: string;
@@ -45,6 +48,7 @@ import {
   FaBug,
   FaProjectDiagram,
 } from "react-icons/fa";
+import { FiCompass } from "react-icons/fi";
 export const categories: Category[] = [
   {
     title: "Web Development",
@@ -144,31 +148,24 @@ export const skills = [
 interface Inav {
   path: string;
   label: string;
+  icon: IconType;
 }
+
 export const NavLinks: Inav[] = [
   {
     label: "Home",
     path: "/",
+    icon: FaHome,
   },
   {
-    label: "Learn",
-    path: "/Learn",
+    label: "Explore",
+    path: "/Explore",
+    icon: FiCompass,
   },
   {
-    label: "Sessions",
-    path: "/Sessions",
-  },
-  {
-    label: "Profile",
-    path: "/Profile",
-  },
-  {
-    label: "Login",
-    path: "/User",
-  },
-  {
-    label: "Join",
-    path: "User/Register",
+    label: "Dashboard",
+    path: "/Dashboard",
+    icon: MdDashboard,
   },
 ];
 import { SiFlutter, SiGraphql, SiKubernetes, SiSolidity } from "react-icons/si";
@@ -871,3 +868,56 @@ export const categoriess = [
     hoverBg: "group-hover:bg-red-100",
   },
 ];
+export type IFormInputRegister = {
+  name: string;
+  email: string;
+  password: string;
+};
+export type IFormInputLogin = {
+  email: string;
+  password: string;
+};
+
+export const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      duration: 0.5,
+      ease: "easeInOut",
+    },
+  },
+};
+
+export const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: "easeOut",
+    },
+  },
+};
+
+// User
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
+// Inner data
+export interface LoginData {
+  user: User;
+  token: string;
+}
+
+// Backend response body
+export interface LoginResponse {
+  data: LoginData;
+  status: number;
+  message: string;
+}
+export type LoginAxiosResponse = AxiosResponse<LoginResponse>;

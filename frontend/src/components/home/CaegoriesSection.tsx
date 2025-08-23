@@ -19,6 +19,7 @@ const CaegoriesSection = ({}: IProps) => {
           {floatingShapesBackground.map(
             ({ color, delay, duration, opacity, size, x, y }) => (
               <FloatingShape
+                key={color + delay + duration + size + x + y}
                 delay={delay}
                 duration={duration}
                 size={size}
@@ -31,6 +32,7 @@ const CaegoriesSection = ({}: IProps) => {
           )}
           {geometricShapesBackground.map(({ delay, duration, size, x, y }) => (
             <GeometricShape
+              key={delay + duration + size + x + y}
               delay={delay}
               duration={duration}
               size={size}
