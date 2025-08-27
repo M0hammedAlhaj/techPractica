@@ -9,29 +9,22 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
-
 @Entity
 @Table(name = "SOCIAL_ACCOUNTS")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
-@IdClass(SocialAccountId.class)
 public class SocialAccount {
-    @Id
-    @Enumerated(EnumType.STRING)
-    @Column(name = "platform_name")
-    private PlatformName platformName;
 
-    @Id
-    @Column(name = "user_id")
-    private UUID userId;
+    @EmbeddedId
+    private SocialAccountId id;
+
+    @MapsId("userId")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 
     @Column(name = "profile_url")
     private String profileUrl;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
 }

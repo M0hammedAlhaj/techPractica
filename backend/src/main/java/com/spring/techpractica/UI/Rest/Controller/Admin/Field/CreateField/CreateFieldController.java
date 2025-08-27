@@ -29,44 +29,33 @@ import java.time.Instant;
 @AllArgsConstructor
 @Tag(name = "Admin - Field")
 public class CreateFieldController {
+
     private final CreateFieldUseCase createFieldUseCase;
 
-    @Operation(summary = "Admin create field", description = "Admin create field and returns the data")
+    @Operation(summary = "Create new Field", description = "Admin creates a new Field and returns the created resource.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Login successful",
+            @ApiResponse(responseCode = "201", description = "Field created successfully",
                     content = @Content(schema = @Schema(implementation = FieldResources.class))),
-            @ApiResponse(responseCode = "401", description = "Invalid credentials",
-                    content = @Content),
-            @ApiResponse(responseCode = "400", description = "Invalid request payload",
-                    content = @Content),
-
+            @ApiResponse(responseCode = "400", description = "Invalid request payload", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized (invalid credentials)", content = @Content),
+            @ApiResponse(responseCode = "409", description = "Field with the same name already exists", content = @Content)
     })
     @PostMapping("/")
- //   @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createField(@RequestBody @Valid CreateFieldRequest request) {
-        try {
-            Field field =createFieldUseCase.execute(new CreateFieldCommand(request.name()));
+        Field field = createFieldUseCase.execute(new CreateFieldCommand(request.name()));
 
-            FieldResources responseData = FieldResources
-                    .builder()
-                    .id(field.getId())
-                    .name(field.getName())
-                    .build();
+        FieldResources responseData = FieldResources.builder()
+                .id(field.getId())
+                .name(field.getName())
+                .build();
 
-            return ResponseEntity.ok(StandardSuccessResponse.<FieldResources>builder()
-                    .data(responseData)
-                    .message("Field created successfully")
-                    .status(HttpStatus.OK.value())
-                    .build());
-        } catch (ResourcesDuplicateException ex) {
-            StandardErrorResponse response = StandardErrorResponse.builder()
-                    .timestamp(Instant.now())
-                    .status(HttpStatus.UNAUTHORIZED.value())
-                    .message(ex.getMessage())
-                    .code("Exists_FIELD")
-                    .build();
-
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                StandardSuccessResponse.<FieldResources>builder()
+                        .data(responseData)
+                        .message("Field created successfully")
+                        .status(HttpStatus.CREATED.value())
+                        .build()
+        );
     }
 }
+

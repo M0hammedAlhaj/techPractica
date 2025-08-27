@@ -34,38 +34,27 @@ import java.util.List;
 public class GetAllTechnologiesController {
     private final GetAllTechnologiesUseCase getAllTechnologiesUseCase;
 
-    @Operation(summary = "Create new Technology", description = "Admin creates a new Technology and optionally links existing Fields")
+    @Operation(summary = "Get all technologies", description = "Return all technologies available in the system.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Technology created",
+            @ApiResponse(responseCode = "200", description = "Technologies returned",
                     content = @Content(schema = @Schema(implementation = TechnologyCollection.class))),
-            @ApiResponse(responseCode = "409", description = "Technology name already exists", content = @Content),
-            @ApiResponse(responseCode = "404", description = "One or more Fields not found", content = @Content),
-            @ApiResponse(responseCode = "400", description = "Invalid request payload", content = @Content)
+            @ApiResponse(responseCode = "404", description = "No technologies found", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Invalid request", content = @Content)
     })
     @GetMapping("/")
-   // @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> getTechnologies(@RequestBody @Validated GetAllTechnologiesRequest request) {
-        try {
+    public ResponseEntity<?> getTechnologies() {
+
             List<Technology> technologies = getAllTechnologiesUseCase.execute(new GetAllTechnologiesCommand());
 
             TechnologyCollection responseDataList = new TechnologyCollection(technologies);
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(
+            return ResponseEntity.status(HttpStatus.OK).body(
                     StandardSuccessResponse.<TechnologyCollection>builder()
                             .data(responseDataList)
-                            .message("Technology created successfully")
-                            .status(HttpStatus.CREATED.value())
+                            .message("Technology returned successfully")
+                            .status(HttpStatus.OK.value())
                             .build()
             );
-        } catch (ResourcesNotFoundException ex) {
-            StandardErrorResponse response = StandardErrorResponse.builder()
-                    .timestamp(Instant.now())
-                    .status(HttpStatus.NOT_FOUND.value())
-                    .message(ex.getMessage())
-                    .code("FIELD_NOT_FOUND")
-                    .build();
 
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        }
     }
 }

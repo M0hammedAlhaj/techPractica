@@ -4,6 +4,7 @@ import com.spring.techpractica.Application.Admin.System.GetSystem.GetSystemsByNa
 import com.spring.techpractica.Application.Admin.System.GetSystem.GetSystemsByName.GetSystemsByNameUseCase;
 import com.spring.techpractica.Core.Shared.Exception.ResourcesNotFoundException;
 import com.spring.techpractica.Core.System.Entity.System;
+import com.spring.techpractica.UI.Rest.Resources.System.SystemCollection;
 import com.spring.techpractica.UI.Rest.Resources.System.SystemResources;
 import com.spring.techpractica.UI.Rest.Shared.StandardErrorResponse;
 import com.spring.techpractica.UI.Rest.Shared.StandardSuccessResponse;
@@ -19,6 +20,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import java.time.Instant;
 import java.util.List;
 
@@ -28,45 +32,34 @@ import java.util.List;
 @Tag(name = "Admin - System")
 @Validated
 public class GetSystemsByNameController {
-    private final GetSystemsByNameUseCase getSystemUseCase;
+    private final GetSystemsByNameUseCase getSystemsByNameUseCase;
 
-    @Operation(summary = "Create new Technology", description = "Admin creates a new Technology and optionally links existing Fields")
+    @Operation(summary = "Get systems by names", description = "Return systems that match the provided names (use query parameter `names`).")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Technology created",
-                    content = @Content(schema = @Schema(implementation = SystemResources.class))),
-            @ApiResponse(responseCode = "409", description = "Technology name already exists", content = @Content),
-            @ApiResponse(responseCode = "404", description = "One or more Fields not found", content = @Content),
-            @ApiResponse(responseCode = "400", description = "Invalid request payload", content = @Content)
+            @ApiResponse(responseCode = "200", description = "Systems returned",
+                    content = @Content(schema = @Schema(implementation = SystemCollection.class))),
+            @ApiResponse(responseCode = "404", description = "One or more Systems not found", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Invalid request (e.g. empty names)", content = @Content)
     })
     @GetMapping("/name")
-   // @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> getSystems(@RequestBody @Validated GetSystemsByNameRequest request) {
-        try {
-            List<System> systems = getSystemUseCase.execute(new GetSystemsByNameCommand(request.names()));
+    public ResponseEntity<?> getSystems(
+            @RequestParam(name = "names") @NotEmpty @Size(min = 1) List<@NotBlank String> names) {
 
-            List<SystemResources> responseDataList = systems.stream()
-                    .map(system -> SystemResources.builder()
-                            .id(system.getId())
-                            .name(system.getName())
-                            .build())
-                    .toList();
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(
+            List<System> systems = getSystemsByNameUseCase.execute(new GetSystemsByNameCommand(names));
+
+            SystemCollection responseDataList = new SystemCollection(systems);
+
+            return ResponseEntity.status(HttpStatus.OK).body(
                     StandardSuccessResponse.builder()
                             .data(responseDataList)
                             .message("Systems returned successfully")
                             .status(HttpStatus.OK.value())
                             .build()
             );
-        } catch (ResourcesNotFoundException ex) {
-            StandardErrorResponse response = StandardErrorResponse.builder()
-                    .timestamp(Instant.now())
-                    .status(HttpStatus.NOT_FOUND.value())
-                    .message(ex.getMessage())
-                    .code("FIELD_NOT_FOUND")
-                    .build();
 
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        }
+
     }
 }
+
+

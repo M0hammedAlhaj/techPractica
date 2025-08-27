@@ -1,11 +1,13 @@
 package com.spring.techpractica.infrastructure.Jwt;
 
+import com.spring.techpractica.infrastructure.Jwt.Exception.JwtValidationException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 
@@ -25,13 +27,26 @@ public class JwtExtracting {
         return claimsResolver.apply(claims);
     }
 
-    public UUID extractId(String token) {
-        String id = extractClaim(token, Claims::getSubject);
-        return UUID.fromString(id);
+    public Optional<UUID> extractId(Optional<String> tokenOpt) {
+        return tokenOpt
+                .map(header -> header.replaceFirst("^Bearer\\s+", ""))
+                .filter(t -> !t.isBlank())
+                .map(t -> {
+                    try {
+                        String subject = extractClaim(t, Claims::getSubject);
+                        return UUID.fromString(subject);
+                    } catch (Exception e) {
+                        throw new JwtValidationException("JWT token validation failed");
+                    }
+                });
     }
 
-    public String extractEmail(String token) {
-        return extractClaim(token, Claims::getIssuer);
+    public UUID extractId(String token) {
+        if (token == null || token.isEmpty()) {
+            throw new JwtValidationException("JWT token validation failed");
+        }
+        String id = extractClaim(token, Claims::getSubject);
+        return UUID.fromString(id);
     }
 
     public Date extractExpireDate(String token) {

@@ -49,7 +49,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
             if (id != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserAuthentication userDetails = userRepository.findById(id)
-                        .map(UserAuthentication::new)
+                            .map(UserAuthentication::new)
                         .orElseThrow(() -> new UserAuthenticationException("User doesn't have access"));
 
                 jwtValidation.validate(new JwtValidationContext(token, id));

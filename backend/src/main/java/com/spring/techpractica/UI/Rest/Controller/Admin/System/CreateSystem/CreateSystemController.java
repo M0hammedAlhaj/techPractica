@@ -32,40 +32,26 @@ import java.time.Instant;
 public class CreateSystemController {
     private final CreateSystemUseCase createSystemUseCase;
 
-    @Operation(summary = "Admin create system", description = "Admin create system and returns the data")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Created System successfully",
-                    content = @Content(schema = @Schema(implementation = SystemResources.class))),
-            @ApiResponse(responseCode = "401", description = "Invalid credentials",
-                    content = @Content),
-            @ApiResponse(responseCode = "400", description = "Invalid request payload",
-                    content = @Content),
 
+    @Operation(summary = "Create new System", description = "Admin creates a new System and returns the created resource.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "System created successfully",
+                    content = @Content(schema = @Schema(implementation = SystemResources.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid request payload", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized (invalid credentials)", content = @Content),
+            @ApiResponse(responseCode = "409", description = "System with the same name already exists", content = @Content)
     })
     @PostMapping("/")
-    //@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createSystem(@RequestBody @Valid CreateSystemRequest request) {
-        try {
+
             System system = createSystemUseCase.execute(new CreateSystemCommand(request.name()));
 
-            SystemResources responseData = SystemResources.builder()
-                    .id(system.getId())
-                    .name(system.getName())
-                    .build();
+            SystemResources responseData = new SystemResources(system);
             return ResponseEntity.ok(StandardSuccessResponse.<SystemResources>builder()
                     .data(responseData)
                     .message("Created System successfully")
                     .status(HttpStatus.CREATED.value())
                     .build());
-        } catch (ResourcesDuplicateException ex) {
-            StandardErrorResponse response = StandardErrorResponse.builder()
-                    .timestamp(Instant.now())
-                    .status(HttpStatus.UNAUTHORIZED.value())
-                    .message(ex.getMessage())
-                    .code("EXISTS_SYSTEM")
-                    .build();
 
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-        }
     }
 }

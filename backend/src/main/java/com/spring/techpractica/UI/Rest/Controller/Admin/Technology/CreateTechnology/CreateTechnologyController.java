@@ -33,25 +33,22 @@ import java.time.Instant;
 public class CreateTechnologyController {
     private final CreateTechnologyUseCase createTechnologyUseCase;
 
-    @Operation(summary = "Create new Technology", description = "Admin creates a new Technology and optionally links existing Fields")
+    @Operation(summary = "Create new Technology", description = "Admin creates a new Technology and optionally links existing Fields.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Technology created",
                     content = @Content(schema = @Schema(implementation = TechnologyResources.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid request payload", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized (invalid credentials)", content = @Content),
             @ApiResponse(responseCode = "409", description = "Technology name already exists", content = @Content),
-            @ApiResponse(responseCode = "404", description = "One or more Fields not found", content = @Content),
-            @ApiResponse(responseCode = "400", description = "Invalid request payload", content = @Content)
+            @ApiResponse(responseCode = "404", description = "One or more Fields not found", content = @Content)
     })
     @PostMapping("/")
     public ResponseEntity<?> createTechnology(@RequestBody @Validated CreateTechnologyRequest request) {
-        try {
+
             Technology technology = createTechnologyUseCase.execute(
                     new CreateTechnologyCommand(request.name(), request.fieldNames()));
 
-            TechnologyResources responseData = TechnologyResources.builder()
-                    .id(technology.getId())
-                    .name(technology.getName())
-                    .fields(new FieldCollection(technology.getFields()))
-                    .build();
+            TechnologyResources responseData = new TechnologyResources(technology);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(
                     StandardSuccessResponse.<TechnologyResources>builder()
@@ -60,24 +57,6 @@ public class CreateTechnologyController {
                             .status(HttpStatus.CREATED.value())
                             .build()
             );
-        } catch (ResourcesDuplicateException ex) {
-            StandardErrorResponse response = StandardErrorResponse.builder()
-                    .timestamp(Instant.now())
-                    .status(HttpStatus.CONFLICT.value())
-                    .message(ex.getMessage())
-                    .code("TECHNOLOGY_EXISTS")
-                    .build();
 
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
-        } catch (ResourcesNotFoundException ex) {
-            StandardErrorResponse response = StandardErrorResponse.builder()
-                    .timestamp(Instant.now())
-                    .status(HttpStatus.NOT_FOUND.value())
-                    .message(ex.getMessage())
-                    .code("FIELD_NOT_FOUND")
-                    .build();
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        }
     }
 }

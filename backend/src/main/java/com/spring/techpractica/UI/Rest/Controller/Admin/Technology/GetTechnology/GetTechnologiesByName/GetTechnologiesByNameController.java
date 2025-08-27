@@ -20,6 +20,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import java.time.Instant;
 import java.util.List;
 
@@ -31,46 +34,34 @@ import java.util.List;
 public class GetTechnologiesByNameController {
     private final GetTechnologiesByNameUseCase getTechnologiesByNameUseCase;
 
-    @Operation(summary = "Create new Technology", description = "Admin creates a new Technology and optionally links existing Fields")
+    @Operation(summary = "Get technologies by names", description = "Return technologies that match the provided names (use query parameter `names`).")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Technology created",
+            @ApiResponse(responseCode = "200", description = "Technologies returned",
                     content = @Content(schema = @Schema(implementation = TechnologyResources.class))),
-            @ApiResponse(responseCode = "409", description = "Technology name already exists", content = @Content),
-            @ApiResponse(responseCode = "404", description = "One or more Fields not found", content = @Content),
-            @ApiResponse(responseCode = "400", description = "Invalid request payload", content = @Content)
+            @ApiResponse(responseCode = "404", description = "One or more Technologies not found", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Invalid request (e.g. empty names)", content = @Content)
     })
     @GetMapping("/name")
-   // @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> getTechnologies(@RequestBody @Validated GetTechnologiesByNameRequest request) {
-        try {
+    public ResponseEntity<?> getTechnologies(
+            @RequestParam(name = "names") @NotEmpty @Size(min = 1) List<@NotBlank String> names) {
+
+
             List<Technology> technologies = getTechnologiesByNameUseCase.execute(
-                    new GetTechnologiesByNameCommand(request.names()));
+                    new GetTechnologiesByNameCommand(names));
 
             List<TechnologyResources> responseDataList = technologies.stream()
-                    .map(technology -> TechnologyResources.builder()
-                            .id(technology.getId())
-                            .name(technology.getName())
-                                    .fields(new FieldCollection(technology.getFields()))
-                                    .build()
-                                )
+                    .map(TechnologyResources::new
+                    )
                     .toList();
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(
+            return ResponseEntity.status(HttpStatus.OK).body(
                     StandardSuccessResponse.<List<TechnologyResources>>builder()
                             .data(responseDataList)
-                            .message("Technology created successfully")
-                            .status(HttpStatus.CREATED.value())
+                            .message("Technology returned successfully")
+                            .status(HttpStatus.OK.value())
                             .build()
             );
-        } catch (ResourcesNotFoundException ex) {
-            StandardErrorResponse response = StandardErrorResponse.builder()
-                    .timestamp(Instant.now())
-                    .status(HttpStatus.NOT_FOUND.value())
-                    .message(ex.getMessage())
-                    .code("FIELD_NOT_FOUND")
-                    .build();
 
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        }
     }
 }
+

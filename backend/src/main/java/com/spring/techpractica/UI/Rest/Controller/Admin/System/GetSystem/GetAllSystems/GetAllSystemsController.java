@@ -4,6 +4,7 @@ import com.spring.techpractica.Application.Admin.System.GetSystem.GetAllSystems.
 import com.spring.techpractica.Application.Admin.System.GetSystem.GetAllSystems.GetAllSystemsUseCase;
 import com.spring.techpractica.Core.Shared.Exception.ResourcesNotFoundException;
 import com.spring.techpractica.Core.System.Entity.System;
+import com.spring.techpractica.UI.Rest.Resources.System.SystemCollection;
 import com.spring.techpractica.UI.Rest.Resources.System.SystemResources;
 import com.spring.techpractica.UI.Rest.Shared.StandardErrorResponse;
 import com.spring.techpractica.UI.Rest.Shared.StandardSuccessResponse;
@@ -33,43 +34,27 @@ import java.util.List;
 public class GetAllSystemsController {
     private final GetAllSystemsUseCase getAllSystemsUseCase;
 
-    @Operation(summary = "Create new Technology", description = "Admin creates a new Technology and optionally links existing Fields")
+    @Operation(summary = "Get all systems", description = "Return all systems available in the system.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Technology created",
-                    content = @Content(schema = @Schema(implementation = SystemResources.class))),
-            @ApiResponse(responseCode = "409", description = "Technology name already exists", content = @Content),
-            @ApiResponse(responseCode = "404", description = "One or more Fields not found", content = @Content),
-            @ApiResponse(responseCode = "400", description = "Invalid request payload", content = @Content)
+            @ApiResponse(responseCode = "200", description = "Systems returned",
+                    content = @Content(schema = @Schema(implementation = SystemCollection.class))),
+            @ApiResponse(responseCode = "404", description = "No systems found", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Invalid request", content = @Content)
     })
     @GetMapping("/")
-   // @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> getSystems(@RequestBody @Validated GetAllSystemsRequest request) {
-        try {
+    public ResponseEntity<?> getAllSystems() {
+
             List<System> systems = getAllSystemsUseCase.execute(new GetAllSystemsCommand());
 
-            List<SystemResources> responseDataList = systems.stream()
-                    .map(system -> SystemResources.builder()
-                            .id(system.getId())
-                            .name(system.getName())
-                            .build())
-                    .toList();
+            SystemCollection responseDataList = new SystemCollection(systems);
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(
+            return ResponseEntity.status(HttpStatus.OK).body(
                     StandardSuccessResponse.builder()
                             .data(responseDataList)
                             .message("Systems returned successfully")
                             .status(HttpStatus.OK.value())
                             .build()
             );
-        } catch (ResourcesNotFoundException ex) {
-            StandardErrorResponse response = StandardErrorResponse.builder()
-                    .timestamp(Instant.now())
-                    .status(HttpStatus.NOT_FOUND.value())
-                    .message(ex.getMessage())
-                    .code("FIELD_NOT_FOUND")
-                    .build();
 
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        }
     }
 }

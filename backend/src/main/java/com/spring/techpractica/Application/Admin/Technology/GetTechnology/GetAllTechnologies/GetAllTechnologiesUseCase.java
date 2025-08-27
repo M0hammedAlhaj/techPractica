@@ -2,7 +2,7 @@ package com.spring.techpractica.Application.Admin.Technology.GetTechnology.GetAl
 
 import com.spring.techpractica.Core.Shared.Exception.ResourcesNotFoundException;
 import com.spring.techpractica.Core.Technology.Entity.Technology;
-import com.spring.techpractica.Core.Technology.Entity.TechnologyRepository;
+import com.spring.techpractica.Core.Technology.TechnologyRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

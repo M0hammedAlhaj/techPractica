@@ -1,7 +1,7 @@
 package com.spring.techpractica.UI.Rest.Controller.User.Auth.ResetPassword;
 
-import com.spring.techpractica.Application.User.ResetPassword.ResetPasswordCommand;
-import com.spring.techpractica.Application.User.ResetPassword.ResetPasswordUseCase;
+import com.spring.techpractica.Application.User.Auth.ResetPassword.ResetPasswordCommand;
+import com.spring.techpractica.Application.User.Auth.ResetPassword.ResetPasswordUseCase;
 import com.spring.techpractica.UI.Rest.Shared.StandardErrorResponse;
 import com.spring.techpractica.UI.Rest.Shared.StandardSuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/auth")
 @Tag(name = "Authentication", description = "Authentication related endpoints")
 public class ResetPasswordController {
+
     private final ResetPasswordUseCase useCase;
 
     public ResetPasswordController(ResetPasswordUseCase useCase) {
@@ -34,13 +35,12 @@ public class ResetPasswordController {
             tags = {"Authentication"}
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "202", description = "Email sent successfully",
+            @ApiResponse(responseCode = "202", description = "If this email exists, a reset link has been sent!",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StandardSuccessResponse.class))),
             @ApiResponse(responseCode = "400", description = "Validation failed",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = StandardErrorResponse.class))),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
+                            schema = @Schema(implementation = StandardErrorResponse.class)))
     })
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetPassword(@RequestBody @Valid ResetPasswordRequest request) {

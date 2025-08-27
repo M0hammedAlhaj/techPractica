@@ -1,6 +1,6 @@
 package com.spring.techpractica.Core.Session.Entity;
 
-import com.spring.techpractica.Core.SessionMembers.Entity.SessionMembers;
+import com.spring.techpractica.Core.SessionMembers.Entity.SessionMember;
 import com.spring.techpractica.Core.Field.Entity.Field;
 import com.spring.techpractica.Core.Request.Entity.Request;
 import com.spring.techpractica.Core.Requirement.Entity.Requirement;
@@ -9,38 +9,37 @@ import com.spring.techpractica.Core.System.Entity.System;
 import com.spring.techpractica.Core.Task.Entity.Task;
 import com.spring.techpractica.Core.Technology.Entity.Technology;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 @Entity
 @Builder
 @Table(name = "SESSIONS")
 @NoArgsConstructor
 public class Session extends BaseEntity {
     @Column(name = "session_name")
-    private String sessionName;
+    private String name;
 
     @Column(name = "session_description",
             length = 1000)
-    private String sessionDescription;
+    private String description;
 
     @Column(name = "is_private")
     private boolean isPrivate;
 
     @OneToMany(mappedBy = "session",
             fetch = FetchType.LAZY,
-            cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<SessionMembers> members = new ArrayList<>();
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            orphanRemoval = true)
+    private List<SessionMember> members = new ArrayList<>();
 
     @Column(name = "is_running")
-    private boolean sessionIsRunning;
+    private boolean isRunning;
 
 
     @OneToMany(mappedBy = "session",
@@ -61,7 +60,6 @@ public class Session extends BaseEntity {
                     CascadeType.REMOVE, CascadeType.MERGE})
     private List<Request> requests = new ArrayList<>();
 
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "SYSTEMS_SESSIONS",
@@ -70,20 +68,24 @@ public class Session extends BaseEntity {
     )
     private List<System> systems = new ArrayList<>();
 
+    public void addMember(SessionMember sessionMember) {
+        if (members == null) {
+            members = new ArrayList<>();
+        }
+        members.add(sessionMember);
+    }
 
-    @ManyToMany
-    @JoinTable(
-            name = "TECHNOLOGIES_SESSIONS"
-            , joinColumns = @JoinColumn(name = "technology_id", referencedColumnName = "id")
-            , inverseJoinColumns = @JoinColumn(name = "session_id", referencedColumnName = "id")
-    )
-    private List<Technology> technologies = new ArrayList<>();
+    public void addSystem(System system) {
+        if (systems == null) {
+            systems = new ArrayList<>();
+        }
+        systems.add(system);
+    }
 
-    @ManyToMany
-    @JoinTable(
-            name = "CATEGORIES_SESSIONS",
-            joinColumns = @JoinColumn(name = "field_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "session_id", referencedColumnName = "id")
-    )
-    private List<Field> fields = new ArrayList<>();
+    public void addRequirement(Requirement requirement) {
+        if (requirements == null) {
+            requirements = new ArrayList<>();
+        }
+        requirements.add(requirement);
+    }
 }

@@ -1,7 +1,9 @@
 package com.spring.techpractica.UI.Rest.Shared;
 
+import com.spring.techpractica.Core.Shared.Exception.ResourcesDuplicateException;
 import com.spring.techpractica.Core.Shared.Exception.ResourcesNotFoundException;
-import com.spring.techpractica.Core.User.Exception.UserAuthenticationException;
+import com.spring.techpractica.UI.Rest.Shared.Exception.InvalidPageRequestException;
+import com.spring.techpractica.infrastructure.Jwt.Exception.JwtValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,6 +17,28 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<StandardErrorResponse> handleIllegalArgumentException(IllegalArgumentException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(StandardErrorResponse.builder()
+                        .timestamp(Instant.now())
+                        .message(e.getMessage())
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .code("ILLEGAL_ARGUMENT")
+                        .build());
+    }
+
+    @ExceptionHandler(InvalidPageRequestException.class)
+    public ResponseEntity<StandardErrorResponse> handleInvalidPageRequestException(InvalidPageRequestException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(StandardErrorResponse.builder()
+                        .timestamp(Instant.now())
+                        .message(e.getMessage())
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .code("BAD_REQUEST")
+                        .build());
+    }
+
     @ExceptionHandler(ResourcesNotFoundException.class)
     public ResponseEntity<StandardErrorResponse> handleResourcesNotFoundException(ResourcesNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -26,14 +50,14 @@ public class GlobalExceptionHandler {
                         .build());
     }
 
-    @ExceptionHandler(UserAuthenticationException.class)
-    public ResponseEntity<StandardErrorResponse> handleUserAuthenticationException(UserAuthenticationException ex) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(ResourcesDuplicateException.class)
+    public ResponseEntity<StandardErrorResponse> handleResourcesDuplicateException(ResourcesDuplicateException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(StandardErrorResponse.builder()
                         .timestamp(Instant.now())
+                        .status(HttpStatus.CONFLICT.value())
                         .message(ex.getMessage())
-                        .status(HttpStatus.UNAUTHORIZED.value())
-                        .code("AUTHENTICATION_FAILED")
+                        .code("RESOURCE_ALREADY_EXISTS")
                         .build());
     }
 
@@ -52,5 +76,16 @@ public class GlobalExceptionHandler {
                 .build();
 
         return ResponseEntity.badRequest().body(response);
+    }
+
+    @ExceptionHandler(JwtValidationException.class)
+    public ResponseEntity<StandardErrorResponse> handleJwtValidationException(JwtValidationException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(StandardErrorResponse.builder()
+                        .timestamp(Instant.now())
+                        .message(e.getMessage())
+                        .status(HttpStatus.UNAUTHORIZED.value())
+                        .code("JWT_INVALID")
+                        .build());
     }
 }

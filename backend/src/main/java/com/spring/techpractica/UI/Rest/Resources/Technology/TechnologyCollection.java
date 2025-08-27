@@ -8,9 +8,11 @@ import java.util.List;
 
 @Getter
 public class TechnologyCollection {
+
     private final List<TechnologyResources> technologies;
 
     public TechnologyCollection(List<Technology> technologies) {
-        this.technologies = technologies.stream().map(technology -> new TechnologyResources(technology.getId(), technology.getName(),new FieldCollection(technology.getFields()))).toList();
+        this.technologies = technologies.stream().map(TechnologyResources::new)
+                .toList();
     }
 }
