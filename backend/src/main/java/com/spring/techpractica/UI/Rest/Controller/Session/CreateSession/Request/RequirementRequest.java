@@ -3,8 +3,10 @@ package com.spring.techpractica.UI.Rest.Controller.Session.CreateSession.Request
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @Getter
@@ -12,5 +14,5 @@ import java.util.List;
 public class RequirementRequest {
 
     private String fieldName;
-    private List<String> technologies;
+    private Set<String> technologies;
 }

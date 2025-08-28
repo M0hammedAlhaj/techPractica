@@ -11,15 +11,21 @@ import com.spring.techpractica.Core.Session.SessionRepository;
 import com.spring.techpractica.Core.SessionMembers.Entity.SessionMember;
 import com.spring.techpractica.Core.SessionMembers.SessionMembersFactory;
 import com.spring.techpractica.Core.SessionMembers.model.Role;
+import com.spring.techpractica.Core.Shared.Exception.DuplicateTechnologyException;
 import com.spring.techpractica.Core.Shared.Exception.ResourcesNotFoundException;
 import com.spring.techpractica.Core.System.Entity.System;
 import com.spring.techpractica.Core.System.SystemRepository;
+import com.spring.techpractica.Core.Technology.Entity.Technology;
 import com.spring.techpractica.Core.Technology.TechnologyRepository;
 import com.spring.techpractica.Core.User.User;
 import com.spring.techpractica.Core.User.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -70,10 +76,15 @@ public class CreateSessionUseCase {
             Requirement requirement = requirementFactory.create(session, field);
             session.addRequirement(requirement);
 
-            requirementRequest.getTechnologies().stream()
-                    .map(techName -> requirementTechnologyFactory.create(requirement,
-                            technologyRepository.findTechnologyByName(techName)
-                                    .orElseThrow(() -> new ResourcesNotFoundException(techName))))
+            List<Technology> technologies = technologyRepository
+                    .findAllByNameIn(requirementRequest.getTechnologies());
+
+            if (technologies.size() != requirementRequest.getTechnologies().size()) {
+                throw new ResourcesNotFoundException(requirementRequest.getTechnologies().stream().toList());
+            }
+
+            technologies.stream()
+                    .map(tech -> requirementTechnologyFactory.create(requirement, tech))
                     .forEach(requirement::addRequirementTechnology);
         }
     }

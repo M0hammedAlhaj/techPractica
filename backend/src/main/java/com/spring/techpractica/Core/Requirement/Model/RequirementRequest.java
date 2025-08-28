@@ -4,11 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @Getter
 public class RequirementRequest {
 
     private String fieldName;
-    private List<String> technologies;
+    private Set<String> technologies;
 }
