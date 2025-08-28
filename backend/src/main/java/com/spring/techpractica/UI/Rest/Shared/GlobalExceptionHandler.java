@@ -67,7 +67,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(StandardErrorResponse.builder()
                         .timestamp(Instant.now())
-                        .status(HttpStatus.CONTINUE.value())
+                        .status(HttpStatus.CONFLICT.value())
                         .code("OPERATION_DUPLICATE")
                         .message(ex.getMessage())
                         .build());
