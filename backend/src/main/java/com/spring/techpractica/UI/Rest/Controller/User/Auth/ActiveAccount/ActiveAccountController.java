@@ -15,10 +15,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -45,7 +42,7 @@ public class ActiveAccountController {
             @ApiResponse(responseCode = "400", description = "Invalid token provided"),
             @ApiResponse(responseCode = "404", description = "User not found")
     })
-    @GetMapping("/active-account")
+    @PostMapping("/active-account")
     public ResponseEntity<?> verifyToken(@RequestParam String token,
                                          @AuthenticationPrincipal UserAuthentication userAuthentication) {
         User user = useCase.execute(new ActiveAccountCommand(userAuthentication.getUserId()));
