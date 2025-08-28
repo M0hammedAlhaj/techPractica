@@ -6,7 +6,6 @@ import com.spring.techpractica.Core.User.UserRepository;
 import com.spring.techpractica.infrastructure.Jwt.Exception.JwtValidationException;
 import com.spring.techpractica.infrastructure.Jwt.JwtExtracting;
 import com.spring.techpractica.infrastructure.Jwt.Validation.JwtValidationChain;
-import com.spring.techpractica.infrastructure.Jwt.Validation.JwtValidationContext;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,6 +36,7 @@ public class JwtFilter extends OncePerRequestFilter {
             String headerAuthorization = request.getHeader("Authorization");
             String token = null;
             UUID id = null;
+
             if (headerAuthorization != null && headerAuthorization.startsWith("Bearer ")) {
                 token = headerAuthorization.substring(7);
                 id = jwtExtracting.extractId(token);
@@ -48,23 +48,23 @@ public class JwtFilter extends OncePerRequestFilter {
             }
 
             if (id != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserAuthentication userDetails = userRepository.findById(id)
-                            .map(UserAuthentication::new)
-                        .orElseThrow(() -> new UserAuthenticationException("User doesn't have access"));
+                jwtValidation.validate(token);
 
-                jwtValidation.validate(new JwtValidationContext(token, id));
+                UserAuthentication userDetails = userRepository.findById(id)
+                        .map(UserAuthentication::new)
+                        .orElseThrow(() -> new UserAuthenticationException("User doesn't have access"));
 
                 UsernamePasswordAuthenticationToken authenticationToken =
                         new UsernamePasswordAuthenticationToken(
                                 userDetails,
                                 null,
                                 userDetails.getAuthorities());
+
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
 
             filterChain.doFilter(request, response);
-
         } catch (JwtValidationException | io.jsonwebtoken.ExpiredJwtException |
                  io.jsonwebtoken.security.SignatureException |
                  io.jsonwebtoken.MalformedJwtException ex) {

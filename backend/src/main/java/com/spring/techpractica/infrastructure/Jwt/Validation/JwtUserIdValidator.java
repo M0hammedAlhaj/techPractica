@@ -13,14 +13,15 @@ import java.util.UUID;
 
 @Component
 @AllArgsConstructor
-public class JwtUserIdValidator extends AbstractHandler<JwtValidationContext> {
+public class JwtUserIdValidator extends AbstractHandler<String> {
 
     private final JwtExtracting jwtExtracting;
     private final UserRepository userRepository;
 
     @Override
-    public void process(JwtValidationContext context) {
-        UUID actualId = jwtExtracting.extractId(context.token());
+    public void process(String token) {
+        UUID actualId = jwtExtracting.extractId(token);
+
         Optional<User> user = userRepository.findById(actualId);
 
         if (user.isEmpty()) {
