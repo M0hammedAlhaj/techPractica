@@ -11,7 +11,6 @@ import com.spring.techpractica.Core.Session.SessionRepository;
 import com.spring.techpractica.Core.SessionMembers.Entity.SessionMember;
 import com.spring.techpractica.Core.SessionMembers.SessionMembersFactory;
 import com.spring.techpractica.Core.SessionMembers.model.Role;
-import com.spring.techpractica.Core.Shared.Exception.DuplicateTechnologyException;
 import com.spring.techpractica.Core.Shared.Exception.ResourcesNotFoundException;
 import com.spring.techpractica.Core.System.Entity.System;
 import com.spring.techpractica.Core.System.SystemRepository;
@@ -23,9 +22,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @AllArgsConstructor
