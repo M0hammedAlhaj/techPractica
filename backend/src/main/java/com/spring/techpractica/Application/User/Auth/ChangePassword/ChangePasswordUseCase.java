@@ -17,8 +17,7 @@ public class ChangePasswordUseCase {
 
     @Transactional
     public User execute(ChangePasswordCommand command) {
-        User user = userRepository.findById(command.id())
-                .orElseThrow(() -> new ResourcesNotFoundException(command.id()));
+        User user = userRepository.getOrThrowByID(command.id());
 
         userService.changePassword(user, command.password());
         userRepository.update(user);

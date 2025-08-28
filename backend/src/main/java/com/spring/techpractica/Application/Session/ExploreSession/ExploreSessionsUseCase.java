@@ -31,8 +31,7 @@ public class ExploreSessionsUseCase {
         }
 
         UUID userId = uuidOptional.get();
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourcesNotFoundException(userId));
+        User user = userRepository.getOrThrowByID(userId);
 
         if (user.isProfileComplete()) {
             throw new UnsupportedOperationException(

@@ -29,8 +29,7 @@ public class CompleteAccountUseCase {
     @Transactional
     public User execute(CompleteAccountCommand command) {
 
-        User user = userRepository.findById(command.userId())
-                .orElseThrow(() -> new ResourcesNotFoundException(command.userId()));
+        User user = userRepository.getOrThrowByID(command.userId());
 
         if(user.isProfileComplete()){
             throw new ResourcesDuplicateException(user.getName());
