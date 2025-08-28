@@ -1,8 +1,9 @@
 package com.spring.techpractica.infrastructure.Security.Filter;
 
-import com.spring.techpractica.Core.User.Exception.UserAuthenticationException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.techpractica.Core.User.UserAuthentication;
 import com.spring.techpractica.Core.User.UserRepository;
+import com.spring.techpractica.UI.Rest.Shared.StandardErrorResponse;
 import com.spring.techpractica.infrastructure.Jwt.Exception.JwtValidationException;
 import com.spring.techpractica.infrastructure.Jwt.JwtExtracting;
 import com.spring.techpractica.infrastructure.Jwt.Validation.JwtValidationChain;
@@ -11,6 +12,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -52,7 +54,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
                 UserAuthentication userDetails = userRepository.findById(id)
                         .map(UserAuthentication::new)
-                        .orElseThrow(() -> new UserAuthenticationException("User doesn't have access"));
+                        .get();
 
                 UsernamePasswordAuthenticationToken authenticationToken =
                         new UsernamePasswordAuthenticationToken(
@@ -68,11 +70,14 @@ public class JwtFilter extends OncePerRequestFilter {
         } catch (JwtValidationException | io.jsonwebtoken.ExpiredJwtException |
                  io.jsonwebtoken.security.SignatureException |
                  io.jsonwebtoken.MalformedJwtException ex) {
-
-            sendUnauthorizedResponse(response, "Invalid or tampered JWT token");
-
-        } catch (UserAuthenticationException ex) {
-            sendUnauthorizedResponse(response, ex.getMessage());
+            StandardErrorResponse errorResponse = StandardErrorResponse.builder()
+                    .message("Invalid or tempered Jwt token")
+                    .code("JWT_INVALID")
+                    .status(HttpStatus.UNAUTHORIZED.value())
+                    .build();
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.setContentType("application/json");
+            response.getWriter().write(new ObjectMapper().writeValueAsString(errorResponse));
         }
     }
 
