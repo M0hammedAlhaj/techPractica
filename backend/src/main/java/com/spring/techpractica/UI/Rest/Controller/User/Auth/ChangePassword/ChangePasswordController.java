@@ -30,7 +30,6 @@ import java.time.Instant;
 public class ChangePasswordController {
 
     private final ChangePasswordUseCase useCase;
-    private final JwtExtracting jwtExtracting;
 
     @Operation(
             summary = "Change password",
