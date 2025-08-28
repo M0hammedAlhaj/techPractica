@@ -46,7 +46,7 @@ public class CreateSessionUseCase {
 
         addOwner(session, owner);
         addSystem(session, command.system());
-        addRequirements(session, command);
+        addRequirementsForSession(session, command);
 
         return sessionRepository.save(session);
     }
@@ -62,7 +62,7 @@ public class CreateSessionUseCase {
         session.addSystem(system);
     }
 
-    private void addRequirements(Session session, CreateSessionCommand command) {
+    private void addRequirementsForSession(Session session, CreateSessionCommand command) {
         for (var requirementRequest : command.requirements()) {
             Field field = fieldRepository.findFieldByName(requirementRequest.getFieldName())
                     .orElseThrow(() -> new ResourcesNotFoundException(requirementRequest.getFieldName()));
