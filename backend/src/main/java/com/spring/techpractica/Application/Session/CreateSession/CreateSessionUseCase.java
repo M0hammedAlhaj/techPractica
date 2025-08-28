@@ -44,13 +44,25 @@ public class CreateSessionUseCase {
         Session session = sessionFactory.create(command);
         session = sessionRepository.save(session);
 
+        addOwner(session, owner);
+        addSystem(session, command.system());
+        addRequirements(session, command);
+
+        return sessionRepository.save(session);
+    }
+
+    private void addOwner(Session session, User owner) {
         SessionMember sessionMember = sessionMembersFactory.create(session, owner, Role.OWNER);
         session.addMember(sessionMember);
+    }
 
-        System system = systemRepository.findSystemByName(command.system())
-                .orElseThrow(() -> new ResourcesNotFoundException(command.system()));
+    private void addSystem(Session session, String systemName) {
+        System system = systemRepository.findSystemByName(systemName)
+                .orElseThrow(() -> new ResourcesNotFoundException(systemName));
         session.addSystem(system);
+    }
 
+    private void addRequirements(Session session, CreateSessionCommand command) {
         for (var requirementRequest : command.requirements()) {
             Field field = fieldRepository.findFieldByName(requirementRequest.getFieldName())
                     .orElseThrow(() -> new ResourcesNotFoundException(requirementRequest.getFieldName()));
@@ -61,9 +73,8 @@ public class CreateSessionUseCase {
             requirementRequest.getTechnologies().stream()
                     .map(techName -> requirementTechnologyFactory.create(requirement,
                             technologyRepository.findTechnologyByName(techName)
-                            .orElseThrow(() -> new ResourcesNotFoundException(techName))))
+                                    .orElseThrow(() -> new ResourcesNotFoundException(techName))))
                     .forEach(requirement::addRequirementTechnology);
         }
-        return sessionRepository.save(session);
     }
 }
