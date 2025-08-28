@@ -61,7 +61,7 @@ public class ExploreSessionsController {
 
             Optional<UUID> uuid = jwtExtracting.extractId(token);
             uuid.ifPresent(id ->
-                    jwtValidation.validate(String.valueOf(token)));
+                    jwtValidation.validate(token.get()));
 
             SessionCollection response = new SessionCollection(
                     exploreSessionsUseCase.execute(
