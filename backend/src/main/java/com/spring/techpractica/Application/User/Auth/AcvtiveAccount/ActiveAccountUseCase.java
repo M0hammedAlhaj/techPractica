@@ -24,6 +24,6 @@ public class ActiveAccountUseCase {
             userRepository.update(user);
             return user;
         }
-        throw new OperationDuplicateException("activate account");
+        throw new OperationDuplicateException("account already activate ");
     }
 }
