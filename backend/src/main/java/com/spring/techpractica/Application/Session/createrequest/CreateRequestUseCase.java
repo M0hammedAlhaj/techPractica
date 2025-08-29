@@ -7,6 +7,7 @@ import com.spring.techpractica.Core.Requirement.Entity.Requirement;
 import com.spring.techpractica.Core.Requirement.RequirementRepository;
 import com.spring.techpractica.Core.Shared.Exception.OperationDuplicateException;
 import com.spring.techpractica.Core.Shared.Exception.ResourcesNotFoundException;
+import com.spring.techpractica.Core.User.Exception.IncompleteAccountException;
 import com.spring.techpractica.Core.User.User;
 import com.spring.techpractica.Core.User.UserRepository;
 import lombok.AllArgsConstructor;
@@ -17,7 +18,7 @@ import java.util.UUID;
 
 @Service
 @AllArgsConstructor
-public class CreateRequest {
+public class CreateRequestUseCase {
 
     private final UserRepository userRepository;
     private final RequirementRepository requirementRepository;
@@ -34,6 +35,10 @@ public class CreateRequest {
 
         Requirement requirement = requirementRepository.findById(requirementId)
                 .orElseThrow(() -> new ResourcesNotFoundException(requirementId));
+
+        if (!user.isProfileComplete()) {
+            throw new IncompleteAccountException("Please complete your profile");
+        }
 
         if (requestRepository.existsByUserIdAndRequirementId(userId, requirementId)) {
             throw new OperationDuplicateException("User already request to this requirement");
