@@ -3,6 +3,7 @@ package com.spring.techpractica.UI.Rest.Controller.User.Auth.ActiveAccount;
 import com.spring.techpractica.Application.User.Auth.AcvtiveAccount.ActiveAccountCommand;
 import com.spring.techpractica.Application.User.Auth.AcvtiveAccount.ActiveAccountUseCase;
 import com.spring.techpractica.Core.User.User;
+import com.spring.techpractica.Core.User.UserAuthentication;
 import com.spring.techpractica.UI.Rest.Resources.User.UserResources;
 import com.spring.techpractica.UI.Rest.Shared.StandardSuccessResponse;
 import com.spring.techpractica.infrastructure.Jwt.JwtExtracting;
@@ -13,12 +14,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.UUID;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -45,11 +42,10 @@ public class ActiveAccountController {
             @ApiResponse(responseCode = "400", description = "Invalid token provided"),
             @ApiResponse(responseCode = "404", description = "User not found")
     })
-    @GetMapping("/active-account")
-    public ResponseEntity<?> verifyToken(@RequestParam String token) {
-
-        UUID id = jwtExtracting.extractId(token);
-        User user = useCase.execute(new ActiveAccountCommand(id));
+    @PostMapping("/active-account")
+    public ResponseEntity<?> verifyToken(@RequestParam String token,
+                                         @AuthenticationPrincipal UserAuthentication userAuthentication) {
+        User user = useCase.execute(new ActiveAccountCommand(userAuthentication.getUserId()));
 
         return ResponseEntity.status(HttpStatus.ACCEPTED.value())
                 .body(StandardSuccessResponse.builder()

@@ -1,5 +1,6 @@
 package com.spring.techpractica.UI.Rest.Shared;
 
+import com.spring.techpractica.Core.Shared.Exception.OperationDuplicateException;
 import com.spring.techpractica.Core.Shared.Exception.ResourcesDuplicateException;
 import com.spring.techpractica.Core.Shared.Exception.ResourcesNotFoundException;
 import com.spring.techpractica.UI.Rest.Shared.Exception.InvalidPageRequestException;
@@ -58,6 +59,17 @@ public class GlobalExceptionHandler {
                         .status(HttpStatus.CONFLICT.value())
                         .message(ex.getMessage())
                         .code("RESOURCE_ALREADY_EXISTS")
+                        .build());
+    }
+
+    @ExceptionHandler(OperationDuplicateException.class)
+    public ResponseEntity<StandardErrorResponse> handleOperationDuplicateException(OperationDuplicateException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(StandardErrorResponse.builder()
+                        .timestamp(Instant.now())
+                        .status(HttpStatus.CONFLICT.value())
+                        .code("OPERATION_DUPLICATE")
+                        .message(ex.getMessage())
                         .build());
     }
 

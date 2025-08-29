@@ -28,6 +28,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/api/v1/sessions/").authenticated()
                         .requestMatchers("api/v1/profile/").authenticated()
+                        .requestMatchers("api/v1/auth/active-account", "api/v1/auth/change-password").authenticated()
                         .anyRequest().permitAll())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

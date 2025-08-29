@@ -1,6 +1,6 @@
 package com.spring.techpractica.Application.User.Profile.CompleteAccount;
 
-import com.spring.techpractica.Core.Shared.Exception.ResourcesDuplicateException;
+import com.spring.techpractica.Core.Shared.Exception.OperationDuplicateException;
 import com.spring.techpractica.Core.Shared.Exception.ResourcesNotFoundException;
 import com.spring.techpractica.Core.SocialAccount.Entity.SocialAccount;
 import com.spring.techpractica.Core.SocialAccount.SocialAccountFactory;
@@ -32,7 +32,7 @@ public class CompleteAccountUseCase {
                 .orElseThrow(() -> new ResourcesNotFoundException(command.userId()));
 
         if (user.isProfileComplete()) {
-            throw new ResourcesDuplicateException(user.getName());
+            throw new OperationDuplicateException("Complete Account");
         }
 
         Set<Technology> technologies = command.skillsIds().stream()
