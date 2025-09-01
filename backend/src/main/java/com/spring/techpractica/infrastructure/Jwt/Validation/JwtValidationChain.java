@@ -8,7 +8,7 @@ public class JwtValidationChain {
     private final JwtExpireDateValidator expireDateValidator;
     private final JwtUserIdValidator userIdValidator;
 
-    private Handler<JwtValidationContext> chain;
+    private Handler<String> chain;
 
     public JwtValidationChain(JwtExpireDateValidator expireDateValidator,
                               JwtUserIdValidator userIdValidator) {
@@ -22,7 +22,7 @@ public class JwtValidationChain {
         chain = expireDateValidator;
     }
 
-    public void validate(JwtValidationContext context) {
-        chain.handle(context);
+    public void validate(String token) {
+        chain.handle(token);
     }
 }

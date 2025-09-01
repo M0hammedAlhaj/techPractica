@@ -33,7 +33,6 @@ public class CompleteAccountController {
 
     private final CompleteAccountUseCase completeAccountUseCase;
 
-
     @Operation(
             summary = "Complete user account",
             description = "Allows an authenticated user to complete their account by adding first name, last name, brief, skills, and social accounts.",

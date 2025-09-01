@@ -3,6 +3,7 @@ package com.spring.techpractica.UI.Rest.Controller.User.Auth.ChangePassword;
 import com.spring.techpractica.Application.User.Auth.ChangePassword.ChangePasswordCommand;
 import com.spring.techpractica.Application.User.Auth.ChangePassword.ChangePasswordUseCase;
 import com.spring.techpractica.Core.User.User;
+import com.spring.techpractica.Core.User.UserAuthentication;
 import com.spring.techpractica.UI.Rest.Resources.User.UserResources;
 import com.spring.techpractica.UI.Rest.Shared.StandardErrorResponse;
 import com.spring.techpractica.UI.Rest.Shared.StandardSuccessResponse;
@@ -17,10 +18,10 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -29,7 +30,6 @@ import java.util.UUID;
 public class ChangePasswordController {
 
     private final ChangePasswordUseCase useCase;
-    private final JwtExtracting jwtExtracting;
 
     @Operation(
             summary = "Change password",
@@ -49,8 +49,8 @@ public class ChangePasswordController {
     })
     @PostMapping(value = "/change-password")
     public ResponseEntity<?> changePassword(@RequestBody @Valid ChangePasswordRequest request,
-                                            @RequestParam String token) {
-        UUID id = jwtExtracting.extractId(token);
+                                            @RequestParam String token,
+                                            @AuthenticationPrincipal UserAuthentication userAuthentication) {
         String password = request.password();
         String confirmPassword = request.confirmPassword();
 
@@ -62,7 +62,7 @@ public class ChangePasswordController {
                     .status(HttpStatus.BAD_REQUEST.value())
                     .code(HttpStatus.BAD_REQUEST.getReasonPhrase()));
         }
-        User user = useCase.execute(new ChangePasswordCommand(id, password));
+        User user = useCase.execute(new ChangePasswordCommand(userAuthentication.getUserId(), password));
         return ResponseEntity.accepted()
                 .body(StandardSuccessResponse.builder()
                         .data(new UserResources(user))

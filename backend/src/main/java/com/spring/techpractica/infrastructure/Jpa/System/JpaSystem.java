@@ -1,20 +1,19 @@
-package com.spring.techpractica.Core.System;
+package com.spring.techpractica.infrastructure.Jpa.System;
 
-import com.spring.techpractica.Core.Shared.BaseRepository;
 import com.spring.techpractica.Core.System.Entity.System;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface SystemRepository extends BaseRepository<System> {
+@Repository
+public interface JpaSystem extends JpaRepository<System, UUID> {
     boolean existsByName(String name);
 
-    List<System> findAllByNames(Collection<String> names);
+    List<System> findAllByNameIn(Collection<String> names);
 
     Optional<System> findSystemByName(String system);
-
-    List<System> findAll();
 }

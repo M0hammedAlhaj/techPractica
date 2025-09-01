@@ -79,6 +79,10 @@ public class User extends BaseEntity {
         return accountStatus.equals(AccountStatus.COMPLETE_PROFILE);
     }
 
+    public boolean isInactiveAccount() {
+        return accountStatus.equals(AccountStatus.UNACTIVE_ACCOUNT);
+    }
+
     public void activate() {
         accountStatus = AccountStatus.ACTIVE_ACCOUNT;
     }
