@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -59,9 +60,9 @@ public class CreateSessionUseCase {
         session.addMember(sessionMember);
     }
 
-    private void addSystem(Session session, String systemName) {
-        System system = systemRepository.findSystemByName(systemName)
-                .orElseThrow(() -> new ResourcesNotFoundException(systemName));
+    private void addSystem(Session session, UUID systemId) {
+        System system = systemRepository
+
         session.addSystem(system);
     }
 
@@ -74,7 +75,7 @@ public class CreateSessionUseCase {
             session.addRequirement(requirement);
 
             List<Technology> technologies = technologyRepository
-                    .findAllByNameIn(requirementRequest.getTechnologies());
+                    .findAllByNames(requirementRequest.getTechnologies());
 
             if (technologies.size() != requirementRequest.getTechnologies().size()) {
                 throw new ResourcesNotFoundException(requirementRequest.getTechnologies().stream().toList());

@@ -7,12 +7,13 @@ import org.hibernate.validator.constraints.UniqueElements;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @AllArgsConstructor
 @Getter
 @NoArgsConstructor
 public class RequirementRequest {
 
-    private String fieldName;
-    private Set<String> technologies;
+    private UUID fieldName;
+    private Set<UUID> technologies;
 }
