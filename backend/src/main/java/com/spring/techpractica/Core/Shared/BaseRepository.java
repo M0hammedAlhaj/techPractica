@@ -16,4 +16,5 @@ public interface BaseRepository<T> {
         return findById(id)
                 .orElseThrow(() -> new ResourcesNotFoundException(id));
     }
+
 }

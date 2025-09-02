@@ -1,6 +1,6 @@
 package com.spring.techpractica.Application.User.Profile.CompleteAccount;
 
-import com.spring.techpractica.Core.Shared.Exception.ResourcesDuplicateException;
+import com.spring.techpractica.Core.Shared.Exception.OperationDuplicateException;
 import com.spring.techpractica.Core.Shared.Exception.ResourcesNotFoundException;
 import com.spring.techpractica.Core.SocialAccount.Entity.SocialAccount;
 import com.spring.techpractica.Core.SocialAccount.SocialAccountFactory;
@@ -28,11 +28,11 @@ public class CompleteAccountUseCase {
 
     @Transactional
     public User execute(CompleteAccountCommand command) {
+        User user = userRepository.findById(command.userId())
+                .orElseThrow(() -> new ResourcesNotFoundException(command.userId()));
 
-        User user = userRepository.getOrThrowByID(command.userId());
-
-        if(user.isProfileComplete()){
-            throw new ResourcesDuplicateException(user.getName());
+        if (user.isProfileComplete()) {
+            throw new OperationDuplicateException("Complete Account");
         }
 
         Set<Technology> technologies = command.skillsIds().stream()
@@ -45,22 +45,22 @@ public class CompleteAccountUseCase {
         List<SocialAccount> socialAccounts = command.socialAccountRequests().stream().map(
                 request -> {
 
-            SocialAccount created = socialAccountFactory
-                    .create(request.platformName(), request.profileUrl(), user);
+                    SocialAccount created = socialAccountFactory
+                            .create(request.platformName(), request.profileUrl(), user);
 
-            created.setUser(user);
+                    created.setUser(user);
 
-            return created;
-        }
+                    return created;
+                }
         ).collect(Collectors.toCollection(ArrayList::new));
 
         user.addSkills(technologies);
 
         user.addSocialAccounts(socialAccounts);
 
-        user.addInfo(command.firstName(),command.lastName(),command.brief());
+        user.addInfo(command.firstName(), command.lastName(), command.brief());
 
         user.completed();
-       return userRepository.update(user);
+        return userRepository.update(user);
     }
 }

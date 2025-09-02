@@ -29,11 +29,11 @@ public class SessionResources {
         this.isPrivate = session.isPrivate();
         this.isRunning = session.isRunning();
 
-        if (session.getSystems() != null) {
+        if (session.getSystems() != null && !session.getSystems().isEmpty()) {
             this.system = new SystemResources(session.getSystems().getLast());
         }
 
-        if (session.getRequirements() != null) {
+        if (session.getRequirements() != null && !session.getRequirements().isEmpty()) {
             this.requirements = new RequirementCollection(session.getRequirements());
         }
     }

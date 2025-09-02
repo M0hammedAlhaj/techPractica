@@ -44,6 +44,6 @@ public class JpaSessionRepository implements SessionRepository {
 
     @Override
     public List<Session> getSessionsBySystems(List<System> systems, Pageable pageable) {
-        return jpaSession.findAllBySystems(systems,pageable);
+        return jpaSession.findAllBySystems(systems, pageable);
     }
 }

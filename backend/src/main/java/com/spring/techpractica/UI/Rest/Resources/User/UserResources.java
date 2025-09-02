@@ -1,8 +1,8 @@
 package com.spring.techpractica.UI.Rest.Resources.User;
 
 import com.spring.techpractica.Core.User.User;
-import com.spring.techpractica.UI.Rest.Resources.Technology.TechnologySummaryCollection;
 import com.spring.techpractica.UI.Rest.Resources.SocailAccount.SocialAccountCollection;
+import com.spring.techpractica.UI.Rest.Resources.Technology.TechnologySummaryCollection;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -19,7 +19,6 @@ public class UserResources {
     private SocialAccountCollection socialAccounts;
     private final String brief;
 
-
     public UserResources(User user) {
         this.id = user.getId().toString();
         this.firstName = user.getFirstName();
@@ -33,5 +32,5 @@ public class UserResources {
             this.socialAccounts = new SocialAccountCollection(user.getSocialAccounts());
         }
         this.brief = user.getBrief();
-        }
+    }
 }

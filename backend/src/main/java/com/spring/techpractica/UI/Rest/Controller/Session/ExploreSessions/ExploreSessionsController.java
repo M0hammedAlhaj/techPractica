@@ -7,6 +7,7 @@ import com.spring.techpractica.UI.Rest.Shared.Exception.InvalidPageRequestExcept
 import com.spring.techpractica.UI.Rest.Shared.StandardErrorResponse;
 import com.spring.techpractica.UI.Rest.Shared.StandardSuccessResponse;
 import com.spring.techpractica.infrastructure.Jwt.JwtExtracting;
+import com.spring.techpractica.infrastructure.Jwt.Validation.JwtValidationChain;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -30,6 +31,7 @@ public class ExploreSessionsController {
 
     private final ExploreSessionsUseCase exploreSessionsUseCase;
     private final JwtExtracting jwtExtracting;
+    private final JwtValidationChain jwtValidation;
 
     @Operation(summary = "Explore sessions", description = "Retrieves a paginated list of sessions for exploration")
     @ApiResponses(value = {
@@ -54,10 +56,12 @@ public class ExploreSessionsController {
         }
 
         try {
-            Optional<String> tokenOpt = authHeader
+            Optional<String> token = authHeader
                     .map(header -> header.replaceFirst("Bearer ", ""));
 
-            Optional<UUID> uuid = jwtExtracting.extractId(tokenOpt);
+            Optional<UUID> uuid = jwtExtracting.extractId(token);
+            uuid.ifPresent(id ->
+                    jwtValidation.validate(token.get()));
 
             SessionCollection response = new SessionCollection(
                     exploreSessionsUseCase.execute(
