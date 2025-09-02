@@ -9,4 +9,5 @@ public interface BaseRepository<T> {
     T update(T t);
 
     Optional<T> findById(UUID id);
+
 }

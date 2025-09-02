@@ -1,7 +1,7 @@
 package com.spring.techpractica.UI.Rest.Controller.User.Auth.ResetPassword;
 
-import com.spring.techpractica.Application.User.ResetPassword.ResetPasswordCommand;
-import com.spring.techpractica.Application.User.ResetPassword.ResetPasswordUseCase;
+import com.spring.techpractica.Application.User.Auth.ResetPassword.ResetPasswordCommand;
+import com.spring.techpractica.Application.User.Auth.ResetPassword.ResetPasswordUseCase;
 import com.spring.techpractica.UI.Rest.Shared.StandardErrorResponse;
 import com.spring.techpractica.UI.Rest.Shared.StandardSuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;

@@ -1,7 +1,7 @@
 package com.spring.techpractica.UI.Rest.Controller.User.Auth.LoginAccount;
 
-import com.spring.techpractica.Application.User.LoginAccount.LoginAccountCommand;
-import com.spring.techpractica.Application.User.LoginAccount.LoginAccountUseCase;
+import com.spring.techpractica.Application.User.Auth.LoginAccount.LoginAccountCommand;
+import com.spring.techpractica.Application.User.Auth.LoginAccount.LoginAccountUseCase;
 import com.spring.techpractica.Core.User.Exception.UserAuthenticationException;
 import com.spring.techpractica.Core.User.User;
 import com.spring.techpractica.UI.Rest.Shared.StandardErrorResponse;

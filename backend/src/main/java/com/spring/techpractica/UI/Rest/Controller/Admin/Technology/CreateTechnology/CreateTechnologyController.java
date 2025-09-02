@@ -48,11 +48,7 @@ public class CreateTechnologyController {
             Technology technology = createTechnologyUseCase.execute(
                     new CreateTechnologyCommand(request.name(), request.fieldNames()));
 
-            TechnologyResources responseData = TechnologyResources.builder()
-                    .id(technology.getId())
-                    .name(technology.getName())
-                    .fields(new FieldCollection(technology.getFields()))
-                    .build();
+            TechnologyResources responseData = new TechnologyResources(technology);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(
                     StandardSuccessResponse.<TechnologyResources>builder()

@@ -2,8 +2,8 @@ package com.spring.techpractica.Application.Admin.System.CreateSystem;
 
 import com.spring.techpractica.Core.Shared.Exception.ResourcesDuplicateException;
 import com.spring.techpractica.Core.System.Entity.System;
-import com.spring.techpractica.Core.System.Entity.SystemFactory;
-import com.spring.techpractica.Core.System.Entity.SystemRepository;
+import com.spring.techpractica.Core.System.SystemFactory;
+import com.spring.techpractica.Core.System.SystemRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

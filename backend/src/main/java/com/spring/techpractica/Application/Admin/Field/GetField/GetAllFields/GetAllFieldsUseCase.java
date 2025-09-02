@@ -1,7 +1,7 @@
 package com.spring.techpractica.Application.Admin.Field.GetField.GetAllFields;
 
 import com.spring.techpractica.Core.Field.Entity.Field;
-import com.spring.techpractica.Core.Field.Entity.FieldRepository;
+import com.spring.techpractica.Core.Field.FieldRepository;
 import com.spring.techpractica.Core.Shared.Exception.ResourcesNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

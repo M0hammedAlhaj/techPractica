@@ -46,10 +46,7 @@ public class CreateSystemController {
 
             System system = createSystemUseCase.execute(new CreateSystemCommand(request.name()));
 
-            SystemResources responseData = SystemResources.builder()
-                    .id(system.getId())
-                    .name(system.getName())
-                    .build();
+            SystemResources responseData = new SystemResources(system);
             return ResponseEntity.ok(StandardSuccessResponse.<SystemResources>builder()
                     .data(responseData)
                     .message("Created System successfully")

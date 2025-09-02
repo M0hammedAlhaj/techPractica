@@ -50,11 +50,7 @@ public class GetTechnologiesByNameController {
                     new GetTechnologiesByNameCommand(names));
 
             List<TechnologyResources> responseDataList = technologies.stream()
-                    .map(technology -> TechnologyResources.builder()
-                            .id(technology.getId())
-                            .name(technology.getName())
-                            .fields(new FieldCollection(technology.getFields()))
-                            .build()
+                    .map(TechnologyResources::new
                     )
                     .toList();
 

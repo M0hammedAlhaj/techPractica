@@ -13,6 +13,6 @@ public class SystemCollection {
     private final List<SystemResources> systems;
 
     public SystemCollection(List<System> systems) {
-        this.systems = systems.stream().map(system -> new SystemResources(system.getId(), system.getName())).toList();
+        this.systems = systems.stream().map(SystemResources::new).toList();
     }
 }

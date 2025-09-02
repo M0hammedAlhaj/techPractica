@@ -1,7 +1,7 @@
 package com.spring.techpractica.UI.Rest.Controller.User.Auth.RegisterAccount;
 
-import com.spring.techpractica.Application.User.RegisterAccount.RegisterAccountCommand;
-import com.spring.techpractica.Application.User.RegisterAccount.RegisterAccountUseCase;
+import com.spring.techpractica.Application.User.Auth.RegisterAccount.RegisterAccountCommand;
+import com.spring.techpractica.Application.User.Auth.RegisterAccount.RegisterAccountUseCase;
 import com.spring.techpractica.Core.User.User;
 import com.spring.techpractica.UI.Rest.Resources.User.UserResources;
 import com.spring.techpractica.UI.Rest.Shared.StandardSuccessResponse;
