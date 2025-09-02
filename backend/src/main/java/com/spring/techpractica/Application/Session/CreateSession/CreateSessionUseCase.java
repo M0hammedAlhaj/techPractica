@@ -14,12 +14,17 @@ import com.spring.techpractica.Core.SessionMembers.model.Role;
 import com.spring.techpractica.Core.Shared.Exception.ResourcesNotFoundException;
 import com.spring.techpractica.Core.System.Entity.System;
 import com.spring.techpractica.Core.System.SystemRepository;
+import com.spring.techpractica.Core.Technology.Entity.Technology;
 import com.spring.techpractica.Core.Technology.TechnologyRepository;
 import com.spring.techpractica.Core.User.User;
 import com.spring.techpractica.Core.User.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -37,32 +42,45 @@ public class CreateSessionUseCase {
 
     @Transactional
     public Session execute(CreateSessionCommand command) {
-
         User owner = userRepository.getOrThrowByID(command.userId());
 
         Session session = sessionFactory.create(command);
         session = sessionRepository.save(session);
 
+        addOwner(session, owner);
+        addSystem(session, command.system());
+        addRequirementsForSession(session, command);
+
+        return sessionRepository.save(session);
+    }
+
+    private void addOwner(Session session, User owner) {
         SessionMember sessionMember = sessionMembersFactory.create(session, owner, Role.OWNER);
         session.addMember(sessionMember);
+    }
 
-        System system = systemRepository.findSystemByName(command.system())
-                .orElseThrow(() -> new ResourcesNotFoundException(command.system()));
+    private void addSystem(Session session, UUID systemId) {
+        System system = systemRepository.getOrThrowByID(systemId);
         session.addSystem(system);
+    }
 
+    private void addRequirementsForSession(Session session, CreateSessionCommand command) {
         for (var requirementRequest : command.requirements()) {
-            Field field = fieldRepository.findFieldByName(requirementRequest.getFieldName())
-                    .orElseThrow(() -> new ResourcesNotFoundException(requirementRequest.getFieldName()));
+            Field field = fieldRepository.getOrThrowByID(requirementRequest.getFieldId());
 
             Requirement requirement = requirementFactory.create(session, field);
             session.addRequirement(requirement);
 
-            requirementRequest.getTechnologies().stream()
-                    .map(techName -> requirementTechnologyFactory.create(requirement,
-                            technologyRepository.findTechnologyByName(techName)
-                            .orElseThrow(() -> new ResourcesNotFoundException(techName))))
+            List<Technology> technologies = technologyRepository
+                    .findAllByIds(new HashSet<>(requirementRequest.getTechnologies()));
+
+            if (technologies.size() != requirementRequest.getTechnologies().size()) {
+                throw new ResourcesNotFoundException(requirementRequest.getTechnologies().toString());
+            }
+
+            technologies.stream()
+                    .map(tech -> requirementTechnologyFactory.create(requirement, tech))
                     .forEach(requirement::addRequirementTechnology);
         }
-        return sessionRepository.save(session);
     }
 }

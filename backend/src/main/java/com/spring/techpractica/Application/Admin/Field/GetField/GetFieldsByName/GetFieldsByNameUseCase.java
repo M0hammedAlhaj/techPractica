@@ -14,7 +14,7 @@ public class GetFieldsByNameUseCase {
     private final FieldRepository fieldRepository;
 
     public List<Field> execute(GetFieldsByNameCommand command) {
-        List<Field> fields = fieldRepository.findAllByNameIn(command.fieldsNames());
+        List<Field> fields = fieldRepository.findAllByNames(command.fieldsNames());
 
         if (fields.size() != command.fieldsNames().size()) {
             throw new ResourcesNotFoundException(command.fieldsNames());

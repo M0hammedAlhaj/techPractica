@@ -1,5 +1,7 @@
 package com.spring.techpractica.Core.Shared.Exception;
 
+import com.spring.techpractica.Core.User.User;
+
 import java.util.UUID;
 
 public class ResourcesDuplicateException extends RuntimeException {

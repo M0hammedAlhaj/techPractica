@@ -14,7 +14,7 @@ public class GetSystemsByNameUseCase {
     private final SystemRepository systemRepository;
 
     public List<System> execute(GetSystemsByNameCommand command) {
-        List<System> systems = systemRepository.findAllByNameIn(command.systemsNames());
+        List<System> systems = systemRepository.findAllByNames(command.systemsNames());
 
         if (systems.size() != command.systemsNames().size()) {
             throw new ResourcesNotFoundException(command.systemsNames());
