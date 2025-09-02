@@ -60,24 +60,22 @@ public class CreateSessionUseCase {
     }
 
     private void addSystem(Session session, UUID systemId) {
-        System system = systemRepository
-
+        System system = systemRepository.getOrThrowByID(systemId);
         session.addSystem(system);
     }
 
     private void addRequirementsForSession(Session session, CreateSessionCommand command) {
         for (var requirementRequest : command.requirements()) {
-            Field field = fieldRepository.findFieldByName(requirementRequest.getFieldName())
-                    .orElseThrow(() -> new ResourcesNotFoundException(requirementRequest.getFieldName()));
+            Field field = fieldRepository.getOrThrowByID(requirementRequest.getFieldId());
 
             Requirement requirement = requirementFactory.create(session, field);
             session.addRequirement(requirement);
 
             List<Technology> technologies = technologyRepository
-                    .findAllByNames(requirementRequest.getTechnologies());
+                    .findAllByIds(requirementRequest.getTechnologies());
 
             if (technologies.size() != requirementRequest.getTechnologies().size()) {
-                throw new ResourcesNotFoundException(requirementRequest.getTechnologies().stream().toList());
+                throw new ResourcesNotFoundException(requirementRequest.getTechnologies().toString());
             }
 
             technologies.stream()

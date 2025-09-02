@@ -11,6 +11,6 @@ import java.util.UUID;
 @Getter
 public class RequirementRequest {
 
-    private UUID fieldName;
+    private UUID fieldId;
     private Set<UUID> technologies;
 }

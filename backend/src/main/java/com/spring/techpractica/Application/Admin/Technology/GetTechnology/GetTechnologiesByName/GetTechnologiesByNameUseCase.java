@@ -14,7 +14,7 @@ public class GetTechnologiesByNameUseCase {
     private final TechnologyRepository technologyRepository;
 
     public List<Technology> execute(GetTechnologiesByNameCommand command) {
-        List<Technology> technologies = technologyRepository.findAllByNameIn(command.names());
+        List<Technology> technologies = technologyRepository.findAllByNames(command.names());
         if (technologies.size() != command.names().size()) {
             throw new ResourcesNotFoundException(command.names());
         }

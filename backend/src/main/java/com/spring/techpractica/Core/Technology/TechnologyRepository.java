@@ -2,12 +2,8 @@ package com.spring.techpractica.Core.Technology;
 
 import com.spring.techpractica.Core.Shared.BaseRepository;
 import com.spring.techpractica.Core.Technology.Entity.Technology;
-import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 public interface TechnologyRepository extends BaseRepository<Technology> {
     boolean existsByName(String name);
@@ -17,4 +13,6 @@ public interface TechnologyRepository extends BaseRepository<Technology> {
     Optional<Technology> findTechnologyByName(String technology);
 
     List<Technology> findAll();
+
+    List<Technology> findAllByIds(Set<UUID> ids);
 }

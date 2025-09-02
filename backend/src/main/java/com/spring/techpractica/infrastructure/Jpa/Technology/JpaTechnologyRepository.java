@@ -7,10 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Repository
 @AllArgsConstructor
@@ -41,6 +38,10 @@ public class JpaTechnologyRepository implements TechnologyRepository {
         return jpaTechnology.findAll();
     }
 
+    @Override
+    public List<Technology> findAllByIds(Set<UUID> ids) {
+        return jpaTechnology.findAllById(ids);
+    }
 
     @Override
     public boolean existsByName(String name) {
