@@ -18,6 +18,7 @@ import java.util.List;
 @Builder
 @Table(name = "SESSIONS")
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class Session extends BaseEntity {
     @Column(name = "session_name")
     private String name;
@@ -78,5 +79,11 @@ public class Session extends BaseEntity {
             requirements = new ArrayList<>();
         }
         requirements.add(requirement);
+    }
+
+    public void addBasicInfo(String name, String description, boolean isPrivate) {
+        this.name = name;
+        this.description = description;
+        this.isPrivate = isPrivate;
     }
 }
