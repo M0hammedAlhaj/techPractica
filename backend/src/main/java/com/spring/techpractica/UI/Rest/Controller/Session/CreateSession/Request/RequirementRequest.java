@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.UniqueElements;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -15,5 +14,7 @@ import java.util.UUID;
 public class RequirementRequest {
 
     private UUID fieldName;
-    private Set<UUID> technologies;
+
+    @UniqueElements
+    private List<UUID> technologies;
 }

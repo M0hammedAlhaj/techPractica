@@ -22,6 +22,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -41,7 +42,6 @@ public class CreateSessionUseCase {
 
     @Transactional
     public Session execute(CreateSessionCommand command) {
-
         User owner = userRepository.getOrThrowByID(command.userId());
 
         Session session = sessionFactory.create(command);
@@ -72,7 +72,7 @@ public class CreateSessionUseCase {
             session.addRequirement(requirement);
 
             List<Technology> technologies = technologyRepository
-                    .findAllByIds(requirementRequest.getTechnologies());
+                    .findAllByIds(new HashSet<>(requirementRequest.getTechnologies()));
 
             if (technologies.size() != requirementRequest.getTechnologies().size()) {
                 throw new ResourcesNotFoundException(requirementRequest.getTechnologies().toString());
