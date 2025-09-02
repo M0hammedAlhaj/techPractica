@@ -11,4 +11,5 @@ public interface SessionRepository extends BaseRepository<Session> {
     List<Session> exploreSessions(Pageable pageable);
 
     List<Session> getSessionsBySystems(List<System> systems, Pageable pageable);
+
 }

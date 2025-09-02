@@ -42,8 +42,7 @@ public class CreateSessionUseCase {
     @Transactional
     public Session execute(CreateSessionCommand command) {
 
-        User owner = userRepository.findById(command.userId())
-                .orElseThrow(() -> new ResourcesNotFoundException(command.userId()));
+        User owner = userRepository.getOrThrowByID(command.userId());
 
         Session session = sessionFactory.create(command);
         session = sessionRepository.save(session);

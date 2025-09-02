@@ -40,6 +40,8 @@ public class CompleteAccountUseCase {
                         .orElseThrow(() -> new ResourcesNotFoundException(id)))
                 .collect(Collectors.toCollection(LinkedHashSet::new));
 
+
+
         List<SocialAccount> socialAccounts = command.socialAccountRequests().stream().map(
                 request -> {
 
