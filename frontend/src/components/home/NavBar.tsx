@@ -148,6 +148,7 @@ export default function ImprovedNavbar() {
               whileTap={{ scale: 0.98 }}
             >
               <Link to="/" className="flex items-center group">
+<<<<<<< HEAD
                 <div className="relative">
                   <motion.div
                     className="relative w-14 h-14 rounded-2xl bg-gradient-to-br from-[#42D5AE] via-[#38b28d] to-[#022639] shadow-xl shadow-[#42D5AE]/40 group-hover:shadow-2xl group-hover:shadow-[#42D5AE]/60 transition-all duration-500 flex items-center justify-center overflow-hidden"
@@ -247,10 +248,17 @@ export default function ImprovedNavbar() {
                   >
                     Learn • Build • Grow
                   </motion.div>
+=======
+                <div className="ml-3  sm:block">
+                  <span className="text-xl font-black bg-gradient-to-r from-[#022639] to-[#42D5AE] bg-clip-text text-transparent">
+                    TechPractica
+                  </span>
+>>>>>>> bbb9f77 (simple edits)
                 </div>
               </Link>
             </motion.div>
 
+<<<<<<< HEAD
             {/* Enhanced Desktop Navigation */}
             <div className="hidden lg:flex items-center">
               <div className="flex items-center space-x-2 bg-[#022639]/40 backdrop-blur-2xl rounded-full p-2 border border-[#42D5AE]/40 shadow-xl shadow-[#42D5AE]/20">
@@ -268,6 +276,25 @@ export default function ImprovedNavbar() {
                       onHoverStart={() => setHoveredItem(label)}
                       onHoverEnd={() => setHoveredItem(null)}
                       transition={{ duration: 0.2, ease: "easeOut" }}
+=======
+            {/* Desktop Nav */}
+            <div className="hidden md:flex items-center space-x-1">
+              {NavLinks.slice(0, 4).map(({ label, path, icon: Icon }) => {
+                const isActive = pathname === path;
+                return (
+                  <motion.div
+                    key={label}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <Link
+                      to={path}
+                      className={`relative flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
+                        isActive
+                          ? "text-[#42D5AE]"
+                          : "text-gray-600 hover:text-[#42D5AE] hover:bg-gray-50"
+                      }`}
+>>>>>>> bbb9f77 (simple edits)
                     >
                       <Link
                         to={linkPath}
@@ -399,6 +426,7 @@ export default function ImprovedNavbar() {
               transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
               className="fixed top-28 left-4 right-4 z-50 bg-[#022639]/50 backdrop-blur-3xl border border-[#42D5AE]/40 rounded-3xl shadow-2xl overflow-hidden"
             >
+<<<<<<< HEAD
               {/* Animated top border */}
               <motion.div
                 className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#42D5AE] via-[#38b28d] to-[#42D5AE]"
@@ -422,6 +450,20 @@ export default function ImprovedNavbar() {
                   }}
                   transition={{ duration: 5, repeat: Number.POSITIVE_INFINITY }}
                 />
+=======
+              <div className="flex items-center justify-between p-6 border-b border-gray-200">
+                <div className="flex items-center gap-3">
+                  <span className="text-xl font-black bg-gradient-to-r from-[#022639] to-[#42D5AE] bg-clip-text text-transparent">
+                    TechPractica
+                  </span>
+                </div>
+                <button
+                  onClick={() => setIsSidebarOpen(false)}
+                  className="p-2 rounded-xl hover:bg-gray-100 transition-colors"
+                >
+                  <X className="w-5 h-5 text-gray-600" />
+                </button>
+>>>>>>> bbb9f77 (simple edits)
               </div>
 
               <div className="relative z-10 p-8 space-y-3">

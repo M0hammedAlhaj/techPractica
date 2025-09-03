@@ -688,28 +688,6 @@ export const geometricShapesFeatures: IGeometricShape[] = [
     y: 80,
   },
 ];
-export const container = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.15,
-      when: "beforeChildren",
-    },
-  },
-};
-
-export const fadeInUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.8,
-      ease: [0.25, 0.1, 0.25, 1],
-    },
-  },
-};
 
 export const fadeInScale = {
   hidden: { opacity: 0, scale: 0.9, y: 20 },
@@ -871,3 +849,88 @@ export const categoriess = [
     hoverBg: "group-hover:bg-red-100",
   },
 ];
+<<<<<<< HEAD
+=======
+export type IFormInputRegister = {
+  name: string;
+  email: string;
+  password: string;
+};
+export type IFormInputLogin = {
+  email: string;
+  password: string;
+};
+
+export const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      duration: 0.5,
+      ease: "easeInOut",
+    },
+  },
+};
+
+export const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: "easeOut",
+    },
+  },
+};
+
+// User
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
+// Inner data
+export interface LoginData {
+  user: User;
+  token: string;
+}
+
+// Backend response body
+export interface LoginResponse {
+  data: LoginData;
+  status: number;
+  message: string;
+}
+export type LoginAxiosResponse = AxiosResponse<LoginResponse>;
+import { Variants } from "framer-motion";
+
+export const container: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      delayChildren: 0.3,
+      staggerChildren: 0.2,
+    },
+  },
+};
+
+export const fadeInUp: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 60,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: [0.25, 0.46, 0.45, 0.94], // أو "easeOut"
+    },
+  },
+};
+
+// ... باقي البيانات
+>>>>>>> bbb9f77 (simple edits)

@@ -1,6 +1,5 @@
 import {
   categoriess,
-  fadeInScale,
   floatingShapesBackground,
   geometricShapesBackground,
   staggerContainer,
@@ -71,7 +70,6 @@ const CaegoriesSection = ({}: IProps) => {
               ({ icon: Icon, title, color, bgColor, hoverBg }, idx) => (
                 <motion.div
                   key={idx}
-                  variants={fadeInScale}
                   whileHover={{ y: -10, scale: 1.05, rotateY: 5 }}
                   whileTap={{ scale: 0.95 }}
                   transition={{ duration: 0.3 }}
