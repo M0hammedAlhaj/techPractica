@@ -10,12 +10,13 @@ import java.util.Date;
 
 @Component
 @RequiredArgsConstructor
-public class JwtExpireDateValidator extends AbstractHandler<JwtValidationContext> {
+public class JwtExpireDateValidator extends AbstractHandler<String> {
     private final JwtExtracting jwtExtracting;
 
     @Override
-    public void process(JwtValidationContext context) {
-        Date expiration = jwtExtracting.extractExpireDate(context.token());
+    public void process(String token) {
+        Date expiration = jwtExtracting.extractExpireDate(token);
+
         if (expiration.before(new Date())) {
             throw new JwtValidationException("Token has expired.");
         }

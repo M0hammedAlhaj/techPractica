@@ -1,13 +1,10 @@
 package com.spring.techpractica.Core.Session.Entity;
 
-import com.spring.techpractica.Core.SessionMembers.Entity.SessionMember;
-import com.spring.techpractica.Core.Field.Entity.Field;
-import com.spring.techpractica.Core.Request.Entity.Request;
 import com.spring.techpractica.Core.Requirement.Entity.Requirement;
+import com.spring.techpractica.Core.SessionMembers.Entity.SessionMember;
 import com.spring.techpractica.Core.Shared.BaseEntity;
 import com.spring.techpractica.Core.System.Entity.System;
 import com.spring.techpractica.Core.Task.Entity.Task;
-import com.spring.techpractica.Core.Technology.Entity.Technology;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,6 +18,7 @@ import java.util.List;
 @Builder
 @Table(name = "SESSIONS")
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class Session extends BaseEntity {
     @Column(name = "session_name")
     private String name;
@@ -54,12 +52,6 @@ public class Session extends BaseEntity {
             cascade = CascadeType.REMOVE)
     private List<Task> tasks = new ArrayList<>();
 
-    @OneToMany(mappedBy = "session",
-            fetch = FetchType.LAZY,
-            cascade = {CascadeType.PERSIST,
-                    CascadeType.REMOVE, CascadeType.MERGE})
-    private List<Request> requests = new ArrayList<>();
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "SYSTEMS_SESSIONS",
@@ -87,5 +79,11 @@ public class Session extends BaseEntity {
             requirements = new ArrayList<>();
         }
         requirements.add(requirement);
+    }
+
+    public void addBasicInfo(String name, String description, boolean isPrivate) {
+        this.name = name;
+        this.description = description;
+        this.isPrivate = isPrivate;
     }
 }

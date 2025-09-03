@@ -1,7 +1,9 @@
 package com.spring.techpractica.UI.Rest.Shared;
 
+import com.spring.techpractica.Core.Shared.Exception.OperationDuplicateException;
 import com.spring.techpractica.Core.Shared.Exception.ResourcesDuplicateException;
 import com.spring.techpractica.Core.Shared.Exception.ResourcesNotFoundException;
+import com.spring.techpractica.Core.User.Exception.IncompleteAccountException;
 import com.spring.techpractica.UI.Rest.Shared.Exception.InvalidPageRequestException;
 import com.spring.techpractica.infrastructure.Jwt.Exception.JwtValidationException;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,17 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(IncompleteAccountException.class)
+    public ResponseEntity<StandardErrorResponse> handleIncompleteAccountException(IncompleteAccountException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(StandardErrorResponse.builder()
+                        .timestamp(Instant.now())
+                        .message(ex.getMessage())
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .code("INCOMPLETE_ACCOUNT")
+                        .build());
+    }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<StandardErrorResponse> handleIllegalArgumentException(IllegalArgumentException e) {
@@ -58,6 +71,17 @@ public class GlobalExceptionHandler {
                         .status(HttpStatus.CONFLICT.value())
                         .message(ex.getMessage())
                         .code("RESOURCE_ALREADY_EXISTS")
+                        .build());
+    }
+
+    @ExceptionHandler(OperationDuplicateException.class)
+    public ResponseEntity<StandardErrorResponse> handleOperationDuplicateException(OperationDuplicateException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(StandardErrorResponse.builder()
+                        .timestamp(Instant.now())
+                        .status(HttpStatus.CONFLICT.value())
+                        .code("OPERATION_DUPLICATE")
+                        .message(ex.getMessage())
                         .build());
     }
 
