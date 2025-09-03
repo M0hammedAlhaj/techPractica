@@ -74,7 +74,7 @@ public class UpdateSessionController {
                 request.isPrivate(),
                 request.system(),
                 request.requirements().stream().map(
-                        requirementRequest -> new RequirementRequest(requirementRequest.getFieldName()
+                        requirementRequest -> new RequirementRequest(requirementRequest.getField()
                                 , requirementRequest.getTechnologies())
                 ).toList()
         ));
