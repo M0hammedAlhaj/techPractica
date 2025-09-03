@@ -5,31 +5,31 @@ import {
   Button,
   ErrorMsg,
   CookiesService,
-} from "../imports.ts";
+} from "../../imports.ts";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { System, IErrorResponse } from "../interfaces.ts";
-import axiosInstance from "../config/axios.config.ts";
+import { IErrorResponse, ISessionRes, System } from "../../interfaces.ts";
+import axiosInstance from "../../config/axios.config.ts";
 import toast from "react-hot-toast";
 import { AxiosError } from "axios";
-import { useCategories, useSystems, useTechnologies } from "../api.ts";
+import { useCategories, useSystems, useTechnologies } from "../../api.ts";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { sessionSchema } from "../validation/index.ts";
+import { sessionSchema } from "../../validation/index.ts";
 import { InferType } from "yup";
-import TinyMCEWithForm from "./ui/RichTextEditor.tsx";
+import TinyMCEWithForm from "./../ui/RichTextEditor.tsx";
 import { useQueryClient } from "@tanstack/react-query";
 interface IProps {
+  session: ISessionRes;
   closeModal: () => void;
 }
 
-const CreateSessionForm = ({ closeModal }: IProps) => {
+const EditSessionForm = ({ session, closeModal }: IProps) => {
   const token = CookiesService.get("UserToken");
   const queryClient = useQueryClient();
 
   /*______SelectData______*/
-
+  const { data: SystemData } = useSystems();
   const { data: DataCategoryies } = useCategories();
   const { data: DataTech } = useTechnologies();
-  const { data: SystemData } = useSystems();
   const systemName = SystemData?.map(
     (tech: { systemName: string }) => tech.systemName
   );
@@ -41,23 +41,29 @@ const CreateSessionForm = ({ closeModal }: IProps) => {
   );
   /*______onSubmit______*/
   type CreateSession = InferType<typeof sessionSchema>;
-
   const methods = useForm<CreateSession>({
     resolver: yupResolver(sessionSchema),
+
+    defaultValues: {
+      nameSession: session.sessionName,
+      descriptionSession: session.sessionDescription,
+      technologies: session.technologies,
+      system: session.system,
+      categories: session.categories,
+    },
   });
   const onSubmit: SubmitHandler<CreateSession> = async (data) => {
     const formattedData = {
       ...data,
       privateSession: false,
     };
-    console.log(formattedData);
     try {
-      await axiosInstance.post("/sessions/", formattedData, {
+      await axiosInstance.put(`/sessions/${session.id}`, formattedData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      toast.success("Session created successfully", {
+      toast.success("Session edited successfully", {
         position: "top-center",
         duration: 1000,
       });
@@ -77,12 +83,7 @@ const CreateSessionForm = ({ closeModal }: IProps) => {
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-4">
         <div>
-          <label
-            htmlFor="SessionName"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Session Name
-          </label>
+          <label htmlFor="SessionName">Session Name</label>
           <Inputs
             id="SessionName"
             type="text"
@@ -99,7 +100,6 @@ const CreateSessionForm = ({ closeModal }: IProps) => {
           </label>
           <TinyMCEWithForm name="descriptionSession" />
         </div>
-
         {systemName?.length > 0 && (
           <SelectField<System>
             label="Category"
@@ -109,14 +109,6 @@ const CreateSessionForm = ({ closeModal }: IProps) => {
           />
         )}
 
-        {categoryName?.length > 0 && (
-          <MultiSelectField<string>
-            label="Fields"
-            name="categories"
-            options={categoryName}
-            getLabel={(item) => item}
-          />
-        )}
         {technologyName?.length > 0 && (
           <MultiSelectField<string>
             label="Technologies"
@@ -125,19 +117,28 @@ const CreateSessionForm = ({ closeModal }: IProps) => {
             getLabel={(item) => item}
           />
         )}
-        <SelectField<string>
+        {categoryName?.length > 0 && (
+          <MultiSelectField<string>
+            label="Fields"
+            name="categories"
+            options={categoryName}
+            getLabel={(item) => item}
+          />
+        )}
+
+        {/* <SelectField<string>
           label="Sesseion State"
           name="privateSession"
           options={["Public Session", "Private Session"]}
           getLabel={(item) => item}
-        />
+        /> */}
         <div className="flex mt-6 gap-4">
           <Button
             className="bg-[#42D5AE] hover:bg-[#38b28d] text-white font-medium transition-colors duration-200"
             width="w-full"
             type="submit"
           >
-            Create Session
+            Edit Session
           </Button>
           <Button
             className="bg-white border border-gray-300 !text-gray-600    hover:bg-gray-100 font-medium transition-colors duration-200"
@@ -156,4 +157,4 @@ const CreateSessionForm = ({ closeModal }: IProps) => {
   );
 };
 
-export default CreateSessionForm;
+export default EditSessionForm;

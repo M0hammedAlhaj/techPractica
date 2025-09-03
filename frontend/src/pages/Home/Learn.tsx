@@ -2,13 +2,14 @@ import { useEffect, useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { CookiesService, Modal, useAuthQuery } from "../../imports";
 import Paginator from "../../components/ui/Paginator";
-import SessionCard from "../../components/ui/SessionCard";
 import SessionCardDetails from "../../components/ui/SessionCardDetails";
-import ApplySessionForm from "../../components/ApplySessionForm";
+import ApplySessionForm from "../../components/Sessions/ApplySessionForm";
 import SearchFilter from "../../components/ui/SearchFilter";
 import { ISessionRes } from "../../interfaces";
 import { useSystems } from "../../api";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import SessionCard from "../../components/Sessions/SessionCard";
+import { FiFilter } from "react-icons/fi";
 
 const Learn = () => {
   document.title = "TechPractica | Learn";
@@ -137,22 +138,77 @@ const Learn = () => {
   return (
     <>
       <div className="min-h-screen flex flex-col bg-[#f9fafb]">
-        <main className="container mx-auto px-4 pt-6 pb-12 flex-1 flex flex-col">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <SearchFilter
-              onSearch={handleSearch}
-              onFilterChange={handleFilterChange}
-              filterOptions={systemName}
-              activeFilter={activeFilter}
-              searchQuery={searchQuery}
-            />
-          </motion.div>
+        {/* Hero Section */}
+        <section className="bg-gradient-to-r from-[#42D5AE] to-[#022639] py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="text-center text-white"
+            >
+              <h1 className="text-4xl md:text-5xl font-bold mb-4">
+                Discover Amazing Projects
+              </h1>
+              <p className="text-xl text-[#42D5AE]/80 max-w-2xl mx-auto">
+                Explore hands-on projects created by our community. Learn by
+                building real-world applications.
+              </p>
+            </motion.div>
+          </div>
+        </section>
 
-          <div className="flex-1 flex flex-col justify-between">
+        <main className="container mx-auto px-4 pt-6 pb-12 flex-1 flex flex-col">
+          {/* Projects Grid/List */}
+          <AnimatePresence mode="wait">
+            {Data.length > 0 ? (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+                className={
+                  "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                }
+              >
+                {Data}
+                {Data}
+                {Data}
+                {Data}
+                {Data}
+                {Data}
+                {Data}
+                {Data}
+                {Data}
+                {Data}
+                {Data}
+                {Data}
+                {Data}
+                {Data}
+              </motion.div>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-center py-12"
+              >
+                <div className="text-gray-400 mb-4">
+                  <FiFilter className="h-12 w-12 mx-auto" />
+                </div>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  No projects found
+                </h3>
+                <p className="text-gray-600 mb-4">
+                  Try adjusting your search criteria or filters to find more
+                  projects.
+                </p>
+                <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                  Clear Filters
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+          {/* <div className="flex-1 flex flex-col justify-between">
             {Data.length > 0 ? (
               <motion.div
                 variants={containerVariants}
@@ -190,7 +246,7 @@ const Learn = () => {
                 />
               </motion.div>
             )}
-          </div>
+          </div> */}
         </main>
       </div>
 

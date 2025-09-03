@@ -10,7 +10,7 @@ import useModal from "../../hooks/useModal.ts";
 import { useState, useMemo, useEffect } from "react";
 import Paginator from "../../components/ui/Paginator.tsx";
 import { IErrorResponse, ISessionRes } from "../../interfaces.ts";
-import EditSessionForm from "../../components/EditFormSession.tsx";
+import EditSessionForm from "../../components/Sessions/EditFormSession.tsx";
 import SearchFilter from "../../components/ui/SearchFilter";
 import { BiPlus } from "react-icons/bi";
 import axiosInstance from "../../config/axios.config.ts";
