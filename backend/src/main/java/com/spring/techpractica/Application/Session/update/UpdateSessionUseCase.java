@@ -56,7 +56,6 @@ public class UpdateSessionUseCase {
 
         return sessionRepository.save(session);
     }
-
     private void updateSystem(Session session, UUID systemId) {
         System system = systemRepository.getOrThrowByID(systemId);
         session.addSystem(system);

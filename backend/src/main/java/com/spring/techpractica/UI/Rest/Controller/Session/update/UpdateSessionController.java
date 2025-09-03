@@ -1,6 +1,5 @@
 package com.spring.techpractica.UI.Rest.Controller.Session.update;
 
-import com.spring.techpractica.Application.Session.CreateSession.CreateSessionCommand;
 import com.spring.techpractica.Application.Session.update.UpdateSessionCommand;
 import com.spring.techpractica.Application.Session.update.UpdateSessionUseCase;
 import com.spring.techpractica.Core.Requirement.Model.RequirementRequest;
