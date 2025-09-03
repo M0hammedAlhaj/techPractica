@@ -1,4 +1,4 @@
-package com.spring.techpractica.Application.Session.CreateSession;
+package com.spring.techpractica.Application.Session.create;
 
 import com.spring.techpractica.Core.Field.Entity.Field;
 import com.spring.techpractica.Core.Field.FieldRepository;
@@ -48,6 +48,7 @@ public class CreateSessionUseCase {
         session = sessionRepository.save(session);
 
         addOwner(session, owner);
+        session.addBasicInfo(session.getName(),session.getDescription(),session.isPrivate());
         addSystem(session, command.system());
         addRequirementsForSession(session, command);
 

@@ -1,4 +1,4 @@
-package com.spring.techpractica.UI.Rest.Controller.Session.CreateSession.Request;
+package com.spring.techpractica.UI.Rest.Controller.Session.create.Request;
 
 
 import jakarta.validation.Valid;
