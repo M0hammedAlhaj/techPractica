@@ -39,7 +39,6 @@ public class UpdateSessionUseCase {
     @Transactional
     public Session execute(UpdateSessionCommand command) {
         User user = userRepository.getOrThrowByID(command.userId());
-
         Session session = sessionRepository.getOrThrowByID(command.sessionId());
 
         boolean isOwner = session.getMembers().stream()
@@ -56,6 +55,7 @@ public class UpdateSessionUseCase {
 
         return sessionRepository.save(session);
     }
+
     private void updateSystem(Session session, UUID systemId) {
         System system = systemRepository.getOrThrowByID(systemId);
         session.addSystem(system);
@@ -81,7 +81,6 @@ public class UpdateSessionUseCase {
             technologies.stream()
                     .map(tech -> requirementTechnologyFactory.create(requirement, tech))
                     .forEach(requirement::addRequirementTechnology);
-
         }
     }
 }
