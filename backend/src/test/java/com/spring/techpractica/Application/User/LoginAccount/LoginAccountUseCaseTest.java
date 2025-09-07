@@ -79,7 +79,7 @@ class LoginAccountUseCaseTest {
         LoginAccountCommand request = new LoginAccountCommand("email", "password");
         when(userRepository.findByEmail("email")).thenReturn(Optional.empty());
 
-        assertThrows(ResourcesNotFoundException.class, () -> underTest.execute(request));
+        assertThrows(UserAuthenticationException.class, () -> underTest.execute(request));
 
         verify(userRepository).findByEmail("email");
         verify(passwordEncryptor, never()).matches(anyString(), anyString());
