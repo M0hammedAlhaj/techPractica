@@ -1,5 +1,7 @@
 package com.spring.techpractica.Application.User.RegisterAccount;
 
+import com.spring.techpractica.Application.User.Auth.RegisterAccount.RegisterAccountCommand;
+import com.spring.techpractica.Application.User.Auth.RegisterAccount.RegisterAccountUseCase;
 import com.spring.techpractica.Core.User.Exception.EmailAlreadyUsedException;
 import com.spring.techpractica.Core.User.User;
 import com.spring.techpractica.Core.User.UserFactory;
