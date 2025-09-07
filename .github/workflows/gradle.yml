@@ -44,4 +44,14 @@ jobs:
       run: |
         cd backend
         ./gradlew build -x test
+
+        
+    - name: Run targeted JUnit tests
+      run: |
+        cd backend
+        ./gradlew test \
+          --tests "com.spring.techpractica.Application.User.LoginAccount.*" \
+          --tests "com.spring.techpractica.Application.User.RegisterAccount.*"
+
+  
     
