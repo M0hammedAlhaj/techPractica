@@ -48,7 +48,8 @@ public class CreateSessionUseCase {
         addOwner(session, owner);
         session.addBasicInfo(session.getName(),session.getDescription(),session.isPrivate());
         addSystem(session, command.system());
-        addRequirementsForSession(session, command);
+
+        requirementsForSession.addRequirementsForSession(session,command);
 
         return sessionRepository.save(session);
     }
@@ -61,9 +62,5 @@ public class CreateSessionUseCase {
     private void addSystem(Session session, UUID systemId) {
         System system = systemRepository.getOrThrowByID(systemId);
         session.addSystem(system);
-    }
-
-    private void addRequirementsForSession(Session session, CreateSessionCommand command) {
-        requirementsForSession.addRequirementsForSession(session,command);
     }
 }
