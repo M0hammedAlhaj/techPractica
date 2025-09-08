@@ -1,6 +1,6 @@
 package com.spring.techpractica.Core.Session;
 
-import com.spring.techpractica.Application.Session.CreateSession.CreateSessionCommand;
+import com.spring.techpractica.Application.Session.create.CreateSessionCommand;
 import com.spring.techpractica.Core.Session.Entity.Session;
 import org.springframework.stereotype.Component;
 

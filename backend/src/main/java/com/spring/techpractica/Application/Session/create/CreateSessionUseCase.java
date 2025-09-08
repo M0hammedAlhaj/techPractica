@@ -1,4 +1,4 @@
-package com.spring.techpractica.Application.Session.CreateSession;
+package com.spring.techpractica.Application.Session.create;
 
 import com.spring.techpractica.Core.Field.Entity.Field;
 import com.spring.techpractica.Core.Field.FieldRepository;

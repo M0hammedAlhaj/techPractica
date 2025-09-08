@@ -5,7 +5,7 @@ import com.spring.techpractica.Application.Session.update.UpdateSessionUseCase;
 import com.spring.techpractica.Core.Requirement.Model.RequirementRequest;
 import com.spring.techpractica.Core.Session.Entity.Session;
 import com.spring.techpractica.Core.User.UserAuthentication;
-import com.spring.techpractica.UI.Rest.Controller.Session.CreateSession.Request.CreateSessionRequest;
+import com.spring.techpractica.UI.Rest.Controller.Session.create.Request.CreateSessionRequest;
 import com.spring.techpractica.UI.Rest.Resources.Session.SessionResources;
 import com.spring.techpractica.UI.Rest.Shared.StandardSuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -74,7 +74,7 @@ public class UpdateSessionController {
                 request.isPrivate(),
                 request.system(),
                 request.requirements().stream().map(
-                        requirementRequest -> new RequirementRequest(requirementRequest.getFieldName()
+                        requirementRequest -> new RequirementRequest(requirementRequest.getField()
                                 , requirementRequest.getTechnologies())
                 ).toList()
         ));

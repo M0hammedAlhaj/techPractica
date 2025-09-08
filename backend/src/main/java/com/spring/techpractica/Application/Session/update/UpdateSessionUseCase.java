@@ -39,15 +39,10 @@ public class UpdateSessionUseCase {
     @Transactional
     public Session execute(UpdateSessionCommand command) {
         User user = userRepository.getOrThrowByID(command.userId());
+
         Session session = sessionRepository.getOrThrowByID(command.sessionId());
 
-        boolean isOwner = session.getMembers().stream()
-                .anyMatch(member -> member.getUser().getId().equals(user.getId())
-                        && member.getRole() == Role.OWNER);
-
-        if (!isOwner) {
-            throw new UnauthorizedActionException("User must be the session owner to update it");
-        }
+        validateSessionOwner(session, user);
 
         session.addBasicInfo(command.name(),command.description(),command.isPrivate());
         updateSystem(session, command.system());
@@ -55,6 +50,15 @@ public class UpdateSessionUseCase {
 
         return sessionRepository.save(session);
     }
+
+    private void validateSessionOwner(Session session, User user) {
+        boolean isOwner = session.isOwner(user.getId());
+
+        if (!isOwner) {
+            throw new UnauthorizedActionException("User must be the session owner to update it");
+        }
+    }
+
 
     private void updateSystem(Session session, UUID systemId) {
         System system = systemRepository.getOrThrowByID(systemId);
@@ -81,6 +85,7 @@ public class UpdateSessionUseCase {
             technologies.stream()
                     .map(tech -> requirementTechnologyFactory.create(requirement, tech))
                     .forEach(requirement::addRequirementTechnology);
+
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.spring.techpractica.UI.Rest.Controller.Session.CreateSession.Request;
+package com.spring.techpractica.UI.Rest.Controller.Session.create.Request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class RequirementRequest {
 
-    private UUID fieldName;
+    private UUID field;
 
     @UniqueElements
     private List<UUID> technologies;
