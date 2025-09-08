@@ -51,9 +51,7 @@ public class UpdateSessionUseCase {
     }
 
     private void validateSessionOwner(Session session, User user) {
-        boolean isOwner = session.getMembers().stream()
-                .anyMatch(member -> member.getUser().getId().equals(user.getId())
-                        && member.getRole() == Role.OWNER);
+        boolean isOwner = session.isOwner(user.getId());
 
         if (!isOwner) {
             throw new UnauthorizedActionException("User must be the session owner to update it");
