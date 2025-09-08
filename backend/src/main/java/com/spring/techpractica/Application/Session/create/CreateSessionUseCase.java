@@ -8,6 +8,7 @@ import com.spring.techpractica.Core.RequirementTechnology.RequirementTechnologyF
 import com.spring.techpractica.Core.Session.Entity.Session;
 import com.spring.techpractica.Core.Session.SessionFactory;
 import com.spring.techpractica.Core.Session.SessionRepository;
+import com.spring.techpractica.Core.Session.service.AddRequirementsForSessionService;
 import com.spring.techpractica.Core.SessionMembers.Entity.SessionMember;
 import com.spring.techpractica.Core.SessionMembers.SessionMembersFactory;
 import com.spring.techpractica.Core.SessionMembers.model.Role;
@@ -35,10 +36,7 @@ public class CreateSessionUseCase {
     private final SessionFactory sessionFactory;
     private final SessionMembersFactory sessionMembersFactory;
     private final SystemRepository systemRepository;
-    private final FieldRepository fieldRepository;
-    private final RequirementFactory requirementFactory;
-    private final TechnologyRepository technologyRepository;
-    private final RequirementTechnologyFactory requirementTechnologyFactory;
+    private final AddRequirementsForSessionService requirementsForSession;
 
     @Transactional
     public Session execute(CreateSessionCommand command) {
@@ -66,22 +64,6 @@ public class CreateSessionUseCase {
     }
 
     private void addRequirementsForSession(Session session, CreateSessionCommand command) {
-        for (var requirementRequest : command.requirements()) {
-            Field field = fieldRepository.getOrThrowByID(requirementRequest.getFieldId());
-
-            Requirement requirement = requirementFactory.create(session, field);
-            session.addRequirement(requirement);
-
-            List<Technology> technologies = technologyRepository
-                    .findAllByIds(new HashSet<>(requirementRequest.getTechnologies()));
-
-            if (technologies.size() != requirementRequest.getTechnologies().size()) {
-                throw new ResourcesNotFoundException(requirementRequest.getTechnologies().toString());
-            }
-
-            technologies.stream()
-                    .map(tech -> requirementTechnologyFactory.create(requirement, tech))
-                    .forEach(requirement::addRequirementTechnology);
-        }
+        requirementsForSession.addRequirementsForSession(session,command);
     }
 }

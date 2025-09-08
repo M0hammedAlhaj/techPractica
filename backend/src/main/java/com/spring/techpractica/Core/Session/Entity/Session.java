@@ -94,4 +94,8 @@ public class Session extends BaseEntity {
                 .anyMatch(member -> member.getUser().getId().equals(userId)
                         && member.getRole() == Role.OWNER);
     }
+
+    public void clearRequirements() {
+        requirements.clear();
+    }
 }

@@ -66,7 +66,7 @@ public class UpdateSessionUseCase {
 
     private void updateRequirementsForSession(Session session, UpdateSessionCommand command) {
 
-        session.getRequirements().clear();
+        session.clearRequirements();
 
         for (var requirementRequest : command.requirements()) {
             Field field = fieldRepository.getOrThrowByID(requirementRequest.getFieldId());
