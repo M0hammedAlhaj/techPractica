@@ -1,7 +1,9 @@
-package com.spring.techpractica.UI.Rest.Controller.User.Profile.CompleteAccount;
+package com.spring.techpractica.UI.Rest.Controller.User.Profile.UpdateProfile;
 
 import com.spring.techpractica.Application.User.Profile.CompleteAccount.CompleteAccountCommand;
 import com.spring.techpractica.Application.User.Profile.CompleteAccount.CompleteAccountUseCase;
+import com.spring.techpractica.Application.User.Profile.UpdateProfile.UpdateProfileCommand;
+import com.spring.techpractica.Application.User.Profile.UpdateProfile.UpdateProfileUseCase;
 import com.spring.techpractica.Core.SocialAccount.model.SocialAccountRequest;
 import com.spring.techpractica.Core.User.User;
 import com.spring.techpractica.Core.User.UserAuthentication;
@@ -20,26 +22,25 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashSet;
 
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/profile")
 @Tag(name = "Profile", description = "Profile related endpoints")
-public class CompleteAccountController {
+public class UpdateProfileController {
 
-    private final CompleteAccountUseCase completeAccountUseCase;
+    private final UpdateProfileUseCase updateProfileUseCase;
 
     @Operation(
-            summary = "Complete user account",
-            description = "Allows an authenticated user to complete their account by adding first name, last name, brief, skills, and social accounts.",
+            summary = "Update user profile",
+            description = "Allows an authenticated user to update their profile information such as first name, last name, brief, skills, and social accounts.",
             tags = {"Profile"}
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "202", description = "Account completed successfully",
+            @ApiResponse(responseCode = "202", description = "Profile updated successfully",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StandardSuccessResponse.class))),
             @ApiResponse(responseCode = "400", description = "Validation failed (invalid data provided)",
@@ -49,27 +50,31 @@ public class CompleteAccountController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StandardErrorResponse.class)))
     })
-    @PostMapping("/")
-    public ResponseEntity<?> completeAccount(@RequestBody @Valid ProfileRequest request
-            , @AuthenticationPrincipal UserAuthentication userAuthentication) {
+    @PutMapping
+    public ResponseEntity<?> updateProfile(@RequestBody @Valid ProfileRequest request,
+                                           @AuthenticationPrincipal UserAuthentication userAuthentication) {
 
-
-        User user = completeAccountUseCase.execute(new CompleteAccountCommand(userAuthentication.getUserId(),
+        User user = updateProfileUseCase.execute(new UpdateProfileCommand(
+                userAuthentication.getUserId(),
                 request.firstName(),
                 request.lastName(),
                 request.brief(),
-                request.skillsIds(),
-                request.socialAccountRequests().stream().map(
-                        socialAccountRequest -> new SocialAccountRequest(socialAccountRequest.getPlatformName()
-                                , socialAccountRequest.getProfileUrl())
-                ).toList()
+                new HashSet<>(request.skillsIds()),
+                request.socialAccountRequests().stream()
+                        .map(socialAccountRequest -> new SocialAccountRequest(
+                                socialAccountRequest.getPlatformName(),
+                                socialAccountRequest.getProfileUrl())
+                        )
+                        .toList()
         ));
+
         UserResources response = new UserResources(user);
 
         return ResponseEntity.accepted().body(StandardSuccessResponse.builder()
                 .data(response)
-                .message("Account completed successfully")
+                .message("Profile updated successfully")
                 .status(HttpStatus.ACCEPTED.value())
                 .build());
     }
+
 }

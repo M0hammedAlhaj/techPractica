@@ -28,8 +28,8 @@ public class CompleteAccountUseCase {
 
     @Transactional
     public User execute(CompleteAccountCommand command) {
-        User user = userRepository.findById(command.userId())
-                .orElseThrow(() -> new ResourcesNotFoundException(command.userId()));
+
+        User user = userRepository.getOrThrowByID(command.userId());
 
         if (user.isProfileComplete()) {
             throw new OperationDuplicateException("Complete Account");
@@ -39,8 +39,6 @@ public class CompleteAccountUseCase {
                 .map(id -> technologyRepository.findById(id)
                         .orElseThrow(() -> new ResourcesNotFoundException(id)))
                 .collect(Collectors.toCollection(LinkedHashSet::new));
-
-
 
         List<SocialAccount> socialAccounts = command.socialAccountRequests().stream().map(
                 request -> {

@@ -1,4 +1,4 @@
-package com.spring.techpractica.UI.Rest.Controller.User.Profile.CompleteAccount.Request;
+package com.spring.techpractica.UI.Rest.Controller.User.Profile.Request;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -9,12 +9,12 @@ import org.hibernate.validator.constraints.UniqueElements;
 import java.util.List;
 import java.util.UUID;
 
-public record CompleteAccountRequest(
+public record ProfileRequest(
         @Size(min = 3) @NotBlank String firstName,
         @Size(min = 3) @NotBlank String lastName,
         String brief,
         @Size(min = 3) @UniqueElements @NotNull List<UUID> skillsIds,
-        @Size(min = 1, max = 4) List<@Valid SocialAccountRequest> socialAccountRequests
+        @Size(min = 1, max = 4) @UniqueElements List<@Valid SocialAccountRequest> socialAccountRequests
 ) {
 }
 

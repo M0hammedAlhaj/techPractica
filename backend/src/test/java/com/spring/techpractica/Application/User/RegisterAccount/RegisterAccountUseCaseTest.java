@@ -1,6 +1,7 @@
 package com.spring.techpractica.Application.User.RegisterAccount;
 
-import com.spring.techpractica.Core.User.Exception.EmailAlreadyUsedException;
+import com.spring.techpractica.Application.User.Auth.RegisterAccount.RegisterAccountCommand;
+import com.spring.techpractica.Application.User.Auth.RegisterAccount.RegisterAccountUseCase;
 import com.spring.techpractica.Core.User.User;
 import com.spring.techpractica.Core.User.UserFactory;
 import com.spring.techpractica.Core.User.UserRepository;
@@ -12,9 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationEventPublisher;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class RegisterAccountUseCaseTest {
@@ -33,7 +32,7 @@ public class RegisterAccountUseCaseTest {
     @Test
     public void user_should_register_account_successfully() {
         RegisterAccountCommand request =
-                new RegisterAccountCommand("name","email", "password");
+                new RegisterAccountCommand("name", "email", "password");
 
         User user = User.builder()
                 .name(request.name())
@@ -59,9 +58,9 @@ public class RegisterAccountUseCaseTest {
     }
 
     @Test
-    public void should_throw_email_already_used_exception_when_email_already_exists() {
+    public void user_should_not_save() {
         RegisterAccountCommand request =
-                new RegisterAccountCommand("name","email", "password");
+                new RegisterAccountCommand("name", "email", "password");
 
         User user = User.builder()
                 .name(request.name())
@@ -71,10 +70,9 @@ public class RegisterAccountUseCaseTest {
 
         when(userRepository.existsByEmail(user.getEmail())).thenReturn(true);
 
-        assertThrows(EmailAlreadyUsedException.class, () -> {
-            underTest.execute(request);
-        });
+        underTest.execute(request);
 
-        verify(userRepository).existsByEmail(user.getEmail());
+        verify(userRepository, never()).save(user);
+        verify(eventPublisher, never()).publishEvent(any(RegisterAccountCommand.class));
     }
 }

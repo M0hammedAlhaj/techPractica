@@ -42,3 +42,6 @@ build
 /.idea/dictionaries/
 *.iml
 .gradle*
+.gradle
+../.idea
+../.idea*
