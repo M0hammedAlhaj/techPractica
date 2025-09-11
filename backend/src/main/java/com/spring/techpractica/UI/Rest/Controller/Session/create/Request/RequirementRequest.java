@@ -13,7 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class RequirementRequest {
 
-        private UUID field;
+    private UUID field;
 
     @UniqueElements
     private List<UUID> technologies;

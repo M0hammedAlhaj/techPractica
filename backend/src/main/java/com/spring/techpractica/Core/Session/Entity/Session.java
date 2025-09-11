@@ -98,4 +98,12 @@ public class Session extends BaseEntity {
     public void clearRequirements() {
         requirements.clear();
     }
+
+    public String getOwnerFullName() {
+        return members.stream()
+                .filter(member -> isOwner(member.getUser().getId()))
+                .map(member -> member.getUser().getFullName())
+                .findFirst()
+                .orElse(null);
+    }
 }

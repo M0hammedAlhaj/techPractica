@@ -114,4 +114,8 @@ public class User extends BaseEntity {
         }
         this.socialAccounts.addAll(socialAccounts);
     }
+
+    public String getFullName(){
+        return this.firstName + " " + this.lastName;
+    }
 }
