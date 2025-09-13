@@ -6,6 +6,7 @@ import com.spring.techpractica.Core.SessionMembers.model.Role;
 import com.spring.techpractica.Core.Shared.BaseEntity;
 import com.spring.techpractica.Core.System.Entity.System;
 import com.spring.techpractica.Core.Task.Entity.Task;
+import com.spring.techpractica.Core.User.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -89,21 +90,26 @@ public class Session extends BaseEntity {
         this.isPrivate = isPrivate;
     }
 
+    public void clearRequirements() {
+        requirements.clear();
+    }
+
     public boolean isOwner(UUID userId){
         return members.stream()
                 .anyMatch(member -> member.getUser().getId().equals(userId)
                         && member.getRole() == Role.OWNER);
     }
 
-    public void clearRequirements() {
-        requirements.clear();
+    public String getOwnerFullName(List<SessionMember> members) {
+        User owner = getOwner(members);
+        return owner != null ? owner.getFullName() : null;
     }
 
-    public String getOwnerFullName() {
-        return members.stream()
-                .filter(member -> isOwner(member.getUser().getId()))
-                .map(member -> member.getUser().getFullName())
-                .findFirst()
-                .orElse(null);
+    public User getOwner(List<SessionMember> members) {
+       return members.stream()
+               .map(SessionMember::getUser)
+               .filter(user -> isOwner(user.getId()))
+               .findFirst()
+               .orElse(null);
     }
 }
