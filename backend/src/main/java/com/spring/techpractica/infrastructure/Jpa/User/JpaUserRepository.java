@@ -49,4 +49,5 @@ public class JpaUserRepository implements UserRepository {
     public void deleteAll() {
         jpaUser.deleteAll();
     }
+
 }
