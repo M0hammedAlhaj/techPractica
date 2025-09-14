@@ -1,7 +1,7 @@
-package com.spring.techpractica.UI.Rest.Controller.Session.GetSessions;
+package com.spring.techpractica.UI.Rest.Controller.Session.GetSessions.BySystem;
 
-import com.spring.techpractica.Application.Session.GetSessions.GetSessionsBySystemCommand;
-import com.spring.techpractica.Application.Session.GetSessions.GetSessionsBySystemUseCase;
+import com.spring.techpractica.Application.Session.GetSessions.BySystem.GetSessionsBySystemCommand;
+import com.spring.techpractica.Application.Session.GetSessions.BySystem.GetSessionsBySystemUseCase;
 import com.spring.techpractica.UI.Rest.Resources.Session.SessionCollection;
 import com.spring.techpractica.UI.Rest.Shared.Exception.InvalidPageRequestException;
 import com.spring.techpractica.UI.Rest.Shared.StandardSuccessResponse;

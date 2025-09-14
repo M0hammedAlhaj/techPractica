@@ -1,4 +1,4 @@
-package com.spring.techpractica.Application.Session.GetSessions;
+package com.spring.techpractica.Application.Session.GetSessions.BySystem;
 
 import java.util.UUID;
 

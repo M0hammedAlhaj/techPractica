@@ -1,6 +1,6 @@
-package com.spring.techpractica.UI.Rest.Controller.Session.GetSessions;
+package com.spring.techpractica.UI.Rest.Controller.Session.GetSessions.UserSessions;
 
-import com.spring.techpractica.Application.Session.GetSessions.GetUserSessionsUseCase;
+import com.spring.techpractica.Application.Session.GetSessions.UserSessions.GetUserSessionsUseCase;
 import com.spring.techpractica.Core.Session.Entity.Session;
 import com.spring.techpractica.Core.User.UserAuthentication;
 import com.spring.techpractica.UI.Rest.Resources.Session.SessionCollection;
