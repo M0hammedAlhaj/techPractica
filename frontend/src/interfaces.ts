@@ -169,3 +169,35 @@ export interface KanbanBoarde {
   };
   columnOrder: string[];
 }
+
+export interface ApiResponse {
+  data: {
+    data: {
+      systems: {
+        id: string;
+        name: string;
+      }[];
+    };
+    status: number;
+    message: string;
+  };
+}
+
+export interface Project {
+  id: string;
+  name: string;
+  description: string;
+  system: {
+    id: string;
+    name: string;
+  };
+  requirements: Requirement[];
+  private: boolean;
+  running: boolean;
+}
+
+export interface Requirement {
+  requirementId: string;
+  field: string;
+  technologies: string[];
+}

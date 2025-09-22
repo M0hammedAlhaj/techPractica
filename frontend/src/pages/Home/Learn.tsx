@@ -12,7 +12,6 @@ import SessionCard from "../../components/Sessions/SessionCard";
 import { FiFilter } from "react-icons/fi";
 
 const Learn = () => {
-  document.title = "TechPractica | Learn";
   const token = CookiesService.get("UserToken")
     ? CookiesService.get("UserToken")
     : null;

@@ -13,7 +13,7 @@ const FeaturesSection = ({}: IProps) => {
   return (
     <>
       {/* ENHANCED FEATURES SECTION */}
-      <section className="py-24 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden ">
+      <section className="py-24 bg-gradient-to-b from-gray-100 to-gray-50 relative overflow-hidden ">
         {/* Enhanced Background Animation */}
         <div className="absolute inset-0 overflow-hidden">
           {floatingShapesFeatures.map(
@@ -73,6 +73,7 @@ const FeaturesSection = ({}: IProps) => {
               ({ icon: Icon, title, description, color, bgColor }, idx) => (
                 <motion.div
                   key={idx}
+                  variants={staggerContainer}
                   whileHover={{ y: -10, scale: 1.02 }}
                   transition={{ duration: 0.4 }}
                 >

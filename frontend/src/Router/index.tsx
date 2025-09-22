@@ -12,22 +12,23 @@ import {
   Profile,
   ResetPass,
   ProjectsLayout,
-  Projects,
   SessionRequests,
 } from "../imports";
 import BorderLayout from "../components/Board/BorderLayout";
 import KanbanBoard from "../components/Board/KanbanBoard";
 import AuthPage from "../pages/User/Auth";
+import Explore from "../pages/Home/Explore";
+import Dashboard from "../pages/Projects/Dashboard";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="/" element={<LayoutHome />}>
         <Route index element={<Home />} />
-        <Route path="Explore" element={<Learn />} />
+        <Route path="Explore" element={<Explore />} />
         <Route path="Explore/:category" element={<Learn />} />
         <Route path="Dashboard" element={<ProjectsLayout />}>
-          <Route index element={<Projects />} />
+          <Route index element={<Dashboard />} />
         </Route>
         <Route path="/Requests/:id" element={<SessionRequests />} />
         <Route path="Profile" element={<Profile />} />

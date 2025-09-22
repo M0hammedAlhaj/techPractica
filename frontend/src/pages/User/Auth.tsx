@@ -1,5 +1,5 @@
 import { use, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import {
   Eye,
   EyeOff,
@@ -63,7 +63,6 @@ const AuthPage = () => {
         "/auth/login",
         data
       );
-      console.log();
       toast.success(response.data.message, { position: "top-center" });
       CookiesService.set("UserToken", response.data.data.token);
 
@@ -90,7 +89,7 @@ const AuthPage = () => {
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
@@ -101,26 +100,15 @@ const AuthPage = () => {
       },
     },
   };
-
-  const formVariants = {
-    hidden: { opacity: 0, x: isLogin ? -50 : 50 },
+  const formVariants: Variants = {
+    hidden: { opacity: 0, x: -50 },
     visible: {
       opacity: 1,
       x: 0,
-      transition: {
-        duration: 0.5,
-        ease: "easeOut",
-      },
+      transition: { duration: 0.5, ease: "easeOut" },
     },
-    exit: {
-      opacity: 0,
-      x: isLogin ? 50 : -50,
-      transition: {
-        duration: 0.3,
-      },
-    },
+    exit: { opacity: 0, x: 50, transition: { duration: 0.3 } },
   };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#f0fdf9] via-[#f8fafc] to-[#e0f2fe] flex items-center justify-center px-4 relative overflow-hidden">
       {/* Enhanced Background Elements */}

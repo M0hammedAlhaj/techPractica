@@ -4,7 +4,6 @@ import {
   fadeInUp,
   floatingShapes,
   geometricShapes,
-  programmingShapesData,
 } from "../../data/data";
 import ParticleField from "../ui/ParticleField";
 import GeometricShape from "../ui/GeometricShape";
@@ -37,9 +36,6 @@ const HeroSection = ({}: IProps) => {
               />
             )
           )}
-          {programmingShapesData.map((shape, index) => (
-            <ProgrammingShape key={index} {...shape} />
-          ))}
           {/* Enhanced Geometric Shapes */}
           {geometricShapes.map(({ delay, duration, size, x, y }) => (
             <GeometricShape

@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 
 const ProjectsLayout = () => {
   return (
-    <div className="min-h-screen">
+    <div>
       <Outlet />
     </div>
   );

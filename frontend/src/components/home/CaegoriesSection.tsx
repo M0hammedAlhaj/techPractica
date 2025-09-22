@@ -12,7 +12,7 @@ interface IProps {}
 const CaegoriesSection = ({}: IProps) => {
   return (
     <>
-      <section className="py-24 bg-gradient-to-b from-white to-gray-50 relative overflow-hidden ">
+      <section className="py-24 bg-gradient-to-b from-gray-50 to-gray-100 relative overflow-hidden ">
         {/* Enhanced Background Animation */}
         <div className="absolute inset-0 overflow-hidden">
           {floatingShapesBackground.map(
@@ -72,6 +72,7 @@ const CaegoriesSection = ({}: IProps) => {
               ({ icon: Icon, title, color, bgColor, hoverBg }, idx) => (
                 <motion.div
                   key={idx}
+                  variants={staggerContainer}
                   whileHover={{ y: -10, scale: 1.05, rotateY: 5 }}
                   whileTap={{ scale: 0.95 }}
                   transition={{ duration: 0.3 }}

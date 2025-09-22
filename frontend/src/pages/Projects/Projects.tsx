@@ -21,7 +21,6 @@ import { motion } from "framer-motion";
 import { useQueryClient } from "@tanstack/react-query";
 
 const Projects = () => {
-  document.title = "TechPractica | Sessions";
   const queryClient = useQueryClient();
 
   const { isOpen, openModal, closeModal } = useModal();

@@ -7,11 +7,11 @@ export const useCategories = () =>
     queryKey: ["CategoryData"],
     url: "/tech-skills/categories",
   });
-//category
+//systems
 export const useSystems = () =>
   useAuthQuery({
-    queryKey: ["fieldsData"],
-    url: "/tech-skills/systems",
+    queryKey: ["SystemsData"],
+    url: "/admin/systems/",
   });
 
 export const useTechnologies = () =>

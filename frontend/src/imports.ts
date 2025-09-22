@@ -6,7 +6,7 @@ import useAuthQuery from "../src/hooks/useAuthQuery";
 import CookiesService from "../src/service.ts";
 import Button from "../src/components/ui/Buttom";
 import Modal from "../src/components/ui/Modal";
-import Navbar from "./components/home/NavBar.tsx";
+import Navbar from "./components/NavBar/NavBar.tsx";
 import Footer from "./components/home/Footer.tsx";
 import ErrorMsg from "../src/components/ui/ErrorMsg.tsx";
 import LayoutHome from "../src/pages/Home/Layout";

@@ -722,43 +722,6 @@ export interface ProgrammingShapeProps {
   opacity?: number;
 }
 
-export const programmingShapesData: ProgrammingShapeProps[] = [
-  { x: 10, y: 20, delay: 0, duration: 5, size: 36, text: "</>" },
-  {
-    x: 80,
-    y: 30,
-    delay: 2,
-    duration: 6,
-    size: 42,
-    text: "{}",
-    color: "#022639",
-  },
-  {
-    x: 50,
-    y: 70,
-    delay: 1,
-    duration: 7,
-    size: 34,
-    text: "()",
-    color: "#38b28d",
-  },
-  { x: 30, y: 90, delay: 3, duration: 8, size: 44, text: "const", rotation: 5 },
-  {
-    x: 70,
-    y: 10,
-    delay: 1,
-    duration: 5,
-    size: 38,
-    text: "return",
-    rotation: -10,
-  },
-  { x: 20, y: 60, delay: 2, duration: 9, size: 40, text: "function" },
-  { x: 60, y: 40, delay: 4, duration: 7, size: 30, text: "=>" },
-  { x: 15, y: 15, delay: 1, duration: 6, size: 32, text: "[]" },
-  { x: 75, y: 80, delay: 0.5, duration: 6, size: 48, text: "let" },
-  { x: 40, y: 50, delay: 1.5, duration: 7, size: 35, text: "<>" },
-];
-
 export const featuress = [
   {
     icon: FaBookOpen,
@@ -926,5 +889,3 @@ export const fadeInUp: Variants = {
     },
   },
 };
-
-// ... باقي البيانات
