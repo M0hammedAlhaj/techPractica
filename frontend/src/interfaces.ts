@@ -183,7 +183,7 @@ export interface ApiResponse {
   };
 }
 
-export interface Project {
+export interface IProject {
   id: string;
   name: string;
   description: string;
