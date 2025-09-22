@@ -1,8 +1,6 @@
 package com.spring.techpractica.Application.User.Profile.CompleteAccount;
 
 import com.spring.techpractica.Core.SocialAccount.model.SocialAccountRequest;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 
 import java.util.List;
 import java.util.UUID;

@@ -5,7 +5,7 @@ import com.spring.techpractica.Application.User.Profile.CompleteAccount.Complete
 import com.spring.techpractica.Core.SocialAccount.model.SocialAccountRequest;
 import com.spring.techpractica.Core.User.User;
 import com.spring.techpractica.Core.User.UserAuthentication;
-import com.spring.techpractica.UI.Rest.Controller.User.Profile.CompleteAccount.Request.CompleteAccountRequest;
+import com.spring.techpractica.UI.Rest.Controller.User.Profile.Request.ProfileRequest;
 import com.spring.techpractica.UI.Rest.Resources.User.UserResources;
 import com.spring.techpractica.UI.Rest.Shared.StandardErrorResponse;
 import com.spring.techpractica.UI.Rest.Shared.StandardSuccessResponse;
@@ -50,7 +50,7 @@ public class CompleteAccountController {
                             schema = @Schema(implementation = StandardErrorResponse.class)))
     })
     @PostMapping("/")
-    public ResponseEntity<?> completeAccount(@RequestBody @Valid CompleteAccountRequest request
+    public ResponseEntity<?> completeAccount(@RequestBody @Valid ProfileRequest request
             , @AuthenticationPrincipal UserAuthentication userAuthentication) {
 
 

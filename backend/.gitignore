@@ -41,3 +41,7 @@ build
 /.idea/usage.statistics.xml
 /.idea/dictionaries/
 *.iml
+.gradle*
+.gradle
+../.idea
+../.idea*

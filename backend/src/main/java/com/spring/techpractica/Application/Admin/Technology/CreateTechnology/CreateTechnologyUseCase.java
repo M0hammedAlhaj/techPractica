@@ -26,7 +26,7 @@ public class CreateTechnologyUseCase {
         if (technologyRepository.existsByName(name)) {
             throw new ResourcesDuplicateException(name);
         }
-        List<Field>fields = fieldRepository.findAllByNameIn(command.fieldNames());
+        List<Field>fields = fieldRepository.findAllByNames(command.fieldNames());
 
         if (fields.size() != command.fieldNames().size()) {
           throw new ResourcesNotFoundException(command.fieldNames());

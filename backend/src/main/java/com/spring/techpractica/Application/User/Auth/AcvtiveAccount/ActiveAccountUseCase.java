@@ -16,8 +16,7 @@ public class ActiveAccountUseCase {
 
     public User execute(ActiveAccountCommand activeAccountCommand) {
         UUID id = activeAccountCommand.id();
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourcesNotFoundException(id));
+        User user = userRepository.getOrThrowByID(activeAccountCommand.id());
 
         if (user.isInactiveAccount()) {
             user.activate();
