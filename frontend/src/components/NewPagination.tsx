@@ -8,7 +8,7 @@ interface IProps {
 const Pagination = ({ totalPages, currentPage, setCurrentPage }: IProps) => {
   return (
     <>
-      {totalPages > 1 && (
+      {totalPages > 0 && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

@@ -1,33 +1,3 @@
-import { CategoryType } from "./data/data";
-
-export type FormInputRegister = "name" | "email" | "password";
-export interface IRegister {
-  name: FormInputRegister;
-  placeholder: string;
-  type: string;
-  label: string;
-}
-export const RegisterForm: IRegister[] = [
-  {
-    name: "name",
-    type: "text",
-    placeholder: "Username",
-    label: "Username",
-  },
-  {
-    name: "email",
-    type: "email",
-    placeholder: "name@example.com",
-    label: "Your email",
-  },
-  {
-    name: "password",
-    type: "password",
-    placeholder: "••••••••",
-    label: "Password",
-  },
-];
-
 export interface IErrorResponse {
   error?: {
     message?: string;
@@ -35,105 +5,6 @@ export interface IErrorResponse {
   };
   message?: string;
   [key: string]: any;
-}
-export type FormInputLogin = "userEmail" | "userPassword";
-interface ILogin {
-  name: FormInputLogin;
-  placeholder: string;
-  type: string;
-  label: string;
-}
-export const LoginForm: ILogin[] = [
-  {
-    name: "userEmail",
-    type: "email",
-    placeholder: "name@example.com",
-    label: "Your email",
-  },
-  {
-    name: "userPassword",
-    type: "password",
-    placeholder: "••••••••",
-    label: "Password",
-  },
-];
-
-export type FormInputRe = "userEmail";
-
-export interface IReset {
-  name: FormInputRe;
-  placeholder: string;
-  type: string;
-  label: string;
-}
-
-export const ResetPassword: IReset = {
-  name: "userEmail",
-  type: "email",
-  placeholder: "name@example.com",
-  label: "Your email",
-};
-
-export type FormInputReset = "password" | "confirmPassword";
-
-export interface IResetPas {
-  name: FormInputReset;
-  placeholder: string;
-  type: string;
-  label: string;
-}
-
-export const ResetinputPassword: IResetPas[] = [
-  {
-    name: "password",
-    type: "password",
-    placeholder: "••••••••",
-    label: "Password",
-  },
-  {
-    name: "confirmPassword",
-    type: "password",
-    placeholder: "••••••••",
-    label: "Confirm Password",
-  },
-];
-export type ISessionForm = {
-  sessionName: string;
-  sessionDescription: string;
-  category: string;
-  technologies: string[];
-  fields: string[];
-  privateSession: boolean;
-};
-export type FormInput = "nameSession" | "sessionDescription";
-
-export interface Iinpform {
-  name: FormInput;
-  placeholder: string;
-  type: string;
-  label: string;
-}
-export type System = {
-  systemName: string;
-};
-export interface ISession {
-  id: number;
-  sessionName: string;
-  sessionDescription: string;
-  technologies: string[];
-  system: CategoryType;
-  categories: string[];
-  privateSession: boolean;
-}
-export interface ISessionRes {
-  id: number;
-  sessionName: string;
-  sessionDescription: string;
-  technologies: string[];
-  system: CategoryType;
-  categories: string[];
-  isPrivate: boolean;
-  ownerName: string;
 }
 
 export interface User {
@@ -170,20 +41,14 @@ export interface KanbanBoarde {
   columnOrder: string[];
 }
 
-export interface ApiResponse {
-  data: {
-    data: {
-      systems: {
-        id: string;
-        name: string;
-      }[];
-    };
-    status: number;
-    message: string;
-  };
+/*-------------------------------------------------------------------------------------------------- */
+export interface SessionsResponse {
+  data: ISession[];
+  status: number;
+  message: string;
 }
 
-export interface IProject {
+export interface ISession {
   id: string;
   name: string;
   description: string;
@@ -192,6 +57,7 @@ export interface IProject {
     name: string;
   };
   requirements: Requirement[];
+  ownerFullName: string;
   private: boolean;
   running: boolean;
 }
@@ -201,3 +67,67 @@ export interface Requirement {
   field: string;
   technologies: string[];
 }
+
+export interface ISystemsResponse {
+  data: {
+    systems: ISystem[];
+  };
+  status: number;
+  message: string;
+}
+
+export interface ISystem {
+  id: string;
+  name: string;
+}
+
+export interface IFieldsResponse {
+  data: IField[];
+  status: number;
+  message: string;
+}
+export interface IField {
+  id: string;
+  name: string;
+}
+/*-------------------------------------------------------------------------------------------------- */
+export interface IFormInputRegister {
+  name: string;
+  email: string;
+  password: string;
+}
+export interface IFormInputLogin {
+  email: string;
+  password: string;
+}
+
+/*-------------------------------------------------------------------------------------------------- */
+export interface IFloatingShape {
+  delay: number;
+  duration: number;
+  size: number;
+  color: string;
+  opacity: number;
+  x: number;
+  y: number;
+}
+export interface IGeometricShape {
+  delay: number;
+  duration: number;
+  size: number;
+  rotation: number;
+  x: number;
+  y: number;
+}
+export interface ProgrammingShapeProps {
+  x: number;
+  y: number;
+  delay: number;
+  duration: number;
+  size: number;
+  text: string;
+  rotation?: number;
+  color?: string;
+  opacity?: number;
+}
+/*-------------------------------------------------------------------------------------------------- */

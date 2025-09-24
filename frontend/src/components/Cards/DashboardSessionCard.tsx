@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { categoryIcons, techIcons } from "../../data/data";
 import { FaCode } from "react-icons/fa";
 import { Edit3, Eye, Trash2 } from "lucide-react";
+import { SessionsResponse } from "../../interfaces";
 
 export function ProjectCard({
   project,
@@ -10,7 +11,7 @@ export function ProjectCard({
   onDelete,
   onView,
 }: {
-  project: (typeof mockUserProjects)[0];
+  project: SessionsResponse;
   onEdit: (project: any) => void;
   onDelete: (id: number) => void;
   onView: (id: number) => void;
@@ -20,8 +21,6 @@ export function ProjectCard({
       ? "bg-green-50 text-green-600 border-green-200"
       : "bg-orange-50 text-orange-600 border-orange-200";
   };
-
-  const CategoryIcon = categoryIcons[project.category] || FaCode;
 
   return (
     <motion.div

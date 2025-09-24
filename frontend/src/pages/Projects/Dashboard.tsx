@@ -1,10 +1,11 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Pagination from "../../components/NewPagination";
 import { ProjectCard } from "../../components/Cards/DashboardSessionCard";
 import { ProjectModal } from "../../components/NewProjectModel";
 import { Filter, FolderOpen, Plus, Search } from "lucide-react";
-import { useSystems } from "../../api";
+import { ExploreSessionsResponse, ISystem } from "../../interfaces";
+import { useSystemsx } from "../../api";
 
 const statuses = ["All", "draft", "in-progress", "completed"];
 const visibilities = ["All", "public", "private"];
@@ -33,7 +34,7 @@ function useIsDesktop(breakpoint = 1024) {
 // Create/Edit Project Modal
 
 export default function Dashboard() {
-  const [projects, setProjects] = useState(mockUserProjects);
+  const [projects, setProjects] = useState<ExploreSessionsResponse>();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedStatus, setSelectedStatus] = useState("All");
@@ -46,50 +47,7 @@ export default function Dashboard() {
 
   const isDesktop = useIsDesktop();
 
-  // Filter and sort projects
-  const filteredAndSortedProjects = useMemo(() => {
-    const filtered = projects.filter((project) => {
-      const matchesSearch =
-        project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        project.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        project.technologies.some((tech) =>
-          tech.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-
-      const matchesCategory =
-        selectedCategory === "All" || project.category === selectedCategory;
-      const matchesStatus =
-        selectedStatus === "All" || project.status === selectedStatus;
-      const matchesVisibility =
-        selectedVisibility === "All" ||
-        project.visibility === selectedVisibility;
-
-      return (
-        matchesSearch && matchesCategory && matchesStatus && matchesVisibility
-      );
-    });
-
-    return filtered;
-  }, [
-    projects,
-    searchTerm,
-    selectedCategory,
-    selectedStatus,
-    selectedVisibility,
-    sortBy,
-  ]);
-
-  // Pagination
-  const totalPages = Math.ceil(
-    filteredAndSortedProjects.length / ITEMS_PER_PAGE
-  );
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const paginatedProjects = filteredAndSortedProjects.slice(
-    startIndex,
-    startIndex + ITEMS_PER_PAGE
-  );
-
-  // Handlers
+  /*-----------Handlers--------------------------------------------------------------------*/
   const handleCreateProject = () => {
     setEditingProject(null);
     setIsModalOpen(true);
@@ -100,27 +58,6 @@ export default function Dashboard() {
     setIsModalOpen(true);
   };
 
-  const handleSaveProject = (projectData: any) => {
-    if (editingProject) {
-      setProjects(
-        projects.map((p) => (p.id === editingProject.id ? projectData : p))
-      );
-    } else {
-      setProjects([projectData, ...projects]);
-    }
-  };
-
-  const handleDeleteProject = (id: number) => {
-    if (confirm("Are you sure you want to delete this project?")) {
-      setProjects(projects.filter((p) => p.id !== id));
-    }
-  };
-
-  const handleViewProject = (id: number) => {
-    console.log("Viewing project:", id);
-    // Navigate to project detail page
-  };
-
   const clearFilters = () => {
     setSearchTerm("");
     setSelectedCategory("All");
@@ -129,7 +66,9 @@ export default function Dashboard() {
     setSortBy("updated");
     setCurrentPage(1);
   };
-
+  /*-----------Data--------------------------------------------------------------------*/
+  const System = useSystemsx();
+  const Systems = System.data?.data.systems;
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
@@ -173,7 +112,7 @@ export default function Dashboard() {
                 type="text"
                 placeholder="Search projects..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                //  onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#42D5AE] focus:border-transparent outline-none transition-all"
               />
             </div>
@@ -181,7 +120,7 @@ export default function Dashboard() {
             {/* Filter Toggle */}
             <div className="flex items-center gap-4">
               <button
-                onClick={() => setShowFilters(!showFilters)}
+                //  onClick={() => setShowFilters(!showFilters)}
                 className="lg:hidden flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
               >
                 <Filter className="h-4 w-4" />
@@ -193,7 +132,7 @@ export default function Dashboard() {
                 <span className="text-sm font-medium text-gray-700">Sort:</span>
                 <select
                   value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
+                  //  onChange={(e) => setSortBy(e.target.value)}
                   className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#42D5AE] focus:border-transparent outline-none bg-white"
                 >
                   {sortOptions.map((option) => (
@@ -221,17 +160,17 @@ export default function Dashboard() {
                   <span className="text-sm font-medium text-gray-700 mr-2">
                     Category:
                   </span>
-                  {categories.map((category) => (
+                  {Systems?.map(({ id, name }: ISystem) => (
                     <button
-                      key={category}
-                      onClick={() => setSelectedCategory(category)}
+                      key={id}
+                      onClick={() => setSelectedCategory(name)}
                       className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${
-                        selectedCategory === category
+                        selectedCategory === name
                           ? "bg-[#42D5AE] text-white border-[#42D5AE]"
                           : "bg-white text-gray-700 border-gray-300 hover:bg-[#42D5AE]/10 hover:border-[#42D5AE]/30"
                       }`}
                     >
-                      {category}
+                      {name}
                     </button>
                   ))}
                 </div>
@@ -292,18 +231,6 @@ export default function Dashboard() {
       {/* Results */}
       <section className="py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Results Count */}
-          <div className="flex justify-between items-center mb-6">
-            <p className="text-gray-600">
-              Showing {startIndex + 1}-
-              {Math.min(
-                startIndex + ITEMS_PER_PAGE,
-                filteredAndSortedProjects.length
-              )}{" "}
-              of {filteredAndSortedProjects.length} projects
-            </p>
-          </div>
-
           {/* Projects Grid */}
           <AnimatePresence mode="wait">
             {paginatedProjects.length > 0 ? (
@@ -391,7 +318,6 @@ export default function Dashboard() {
             isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)}
             project={editingProject}
-            onSave={handleSaveProject}
           />
         )}
       </AnimatePresence>

@@ -1,4 +1,4 @@
-import { use, useState } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import {
   Eye,
@@ -15,14 +15,14 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { AxiosError } from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  IFormInputLogin,
-  IFormInputRegister,
-  LoginAxiosResponse,
-} from "../../data/data";
+import { LoginAxiosResponse } from "../../data/data";
 import { loginSchema, registerSchema } from "../../validation";
 import axiosInstance from "../../config/axios.config";
-import { IErrorResponse } from "../../interfaces";
+import {
+  IErrorResponse,
+  IFormInputLogin,
+  IFormInputRegister,
+} from "../../interfaces";
 import { CookiesService } from "../../imports";
 
 const AuthPage = () => {

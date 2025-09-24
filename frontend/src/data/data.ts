@@ -480,24 +480,6 @@ export const mockProjects = [
   },
 ];
 
-export interface IFloatingShape {
-  delay: number;
-  duration: number;
-  size: number;
-  color: string;
-  opacity: number;
-  x: number;
-  y: number;
-}
-export interface IGeometricShape {
-  delay: number;
-  duration: number;
-  size: number;
-  rotation: number;
-  x: number;
-  y: number;
-}
-
 export const floatingShapes: IFloatingShape[] = [
   {
     delay: 0,
@@ -710,18 +692,6 @@ export const staggerContainer = {
   },
 };
 
-export interface ProgrammingShapeProps {
-  x: number;
-  y: number;
-  delay: number;
-  duration: number;
-  size: number;
-  text: string;
-  rotation?: number;
-  color?: string;
-  opacity?: number;
-}
-
 export const featuress = [
   {
     icon: FaBookOpen,
@@ -809,15 +779,6 @@ export const categoriess = [
     hoverBg: "group-hover:bg-red-100",
   },
 ];
-export type IFormInputRegister = {
-  name: string;
-  email: string;
-  password: string;
-};
-export type IFormInputLogin = {
-  email: string;
-  password: string;
-};
 
 export const containerVariants = {
   hidden: { opacity: 0 },
@@ -863,6 +824,7 @@ export interface LoginResponse {
 }
 export type LoginAxiosResponse = AxiosResponse<LoginResponse>;
 import { Variants } from "framer-motion";
+import { IFloatingShape, IGeometricShape } from "../interfaces";
 
 export const container: Variants = {
   hidden: { opacity: 0 },

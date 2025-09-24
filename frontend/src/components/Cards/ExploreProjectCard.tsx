@@ -1,34 +1,22 @@
 import { motion } from "framer-motion";
-import { FiArrowRight, FiClock, FiStar, FiUser } from "react-icons/fi";
-import { mockProjects } from "../../data/data";
-import { IProject } from "../../interfaces";
+import { FiArrowRight } from "react-icons/fi";
+import { ISession } from "../../interfaces";
 interface IProps {
-  project: IProject;
+  project: ISession;
   onClick: () => void;
 }
 const ExploreProjectCard = ({ onClick, project }: IProps) => {
-  //   const getDifficultyColor = (level: string) => {
-  //     switch (level) {
-  //       case "Beginner":
-  //         return "bg-green-100 text-green-700 border-green-200";
-  //       case "Intermediate":
-  //         return "bg-yellow-100 text-yellow-700 border-yellow-200";
-  //       case "Advanced":
-  //         return "bg-red-100 text-red-700 border-red-200";
-  //       default:
-  //         return "bg-gray-100 text-gray-700 border-gray-200";
-  //     }
-  //   };
-
-  //   const getInitials = (name: string) => {
-  //     return name
-  //       .split(" ")
-  //       .map((n) => n[0])
-  //       .join("")
-  //       .toUpperCase()
-  //       .slice(0, 2);
-  //   };
-
+  const getInitials = (name: string) => {
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
+  };
+  const allTechnologies = project.requirements.flatMap(
+    (req) => req.technologies
+  );
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -44,16 +32,15 @@ const ExploreProjectCard = ({ onClick, project }: IProps) => {
           <div className="flex justify-between items-start gap-3 mb-4">
             <div className="flex-1 min-w-0">
               <h3 className="text-lg font-bold text-[#022639] mb-2 line-clamp-2 group-hover:text-[#42D5AE] transition-colors">
-                {project.}
+                {project.name}
               </h3>
-
               {/* Owner info with avatar */}
               <div className="flex items-center gap-2 mb-3">
                 <div className="h-6 w-6 rounded-full bg-[#42D5AE]/10 text-[#022639] flex items-center justify-center text-xs font-medium">
-                  {/* {getInitials(project.ownerName)} */}
+                  {getInitials(project.ownerFullName)}
                 </div>
                 <span className="text-sm text-gray-600">
-                  @{project.ownerName}
+                  @{project.ownerFullName}
                 </span>
               </div>
             </div>
@@ -61,11 +48,12 @@ const ExploreProjectCard = ({ onClick, project }: IProps) => {
             {/* System badge with icon */}
             <div className="flex items-center gap-2 bg-[#42D5AE]/10 text-[#022639] border border-[#42D5AE]/30 hover:bg-[#42D5AE]/20 transition-colors shrink-0 px-3 py-1 rounded-full">
               {/* <CategoryIcon className="w-3 h-3" /> */}
-              <span className="text-xs font-medium">{project.name}</span>
+              <span className="text-xs font-medium">
+                {" "}
+                {project.system.name}
+              </span>
             </div>
           </div>
-
-         
         </div>
 
         {/* Content section */}
@@ -81,7 +69,7 @@ const ExploreProjectCard = ({ onClick, project }: IProps) => {
               Technologies
             </h4>
             <div className="flex flex-wrap gap-2">
-              {project.technologies.slice(0, 4).map((tech: any, index: any) => {
+              {allTechnologies.slice(0, 4).map((tech: any, index: any) => {
                 return (
                   <span
                     key={index}
@@ -91,9 +79,9 @@ const ExploreProjectCard = ({ onClick, project }: IProps) => {
                   </span>
                 );
               })}
-              {project.technologies.length > 4 && (
+              {project.requirements.length > 4 && (
                 <span className="text-xs bg-gray-50 border border-gray-300 text-gray-600 hover:bg-gray-100 transition-colors px-2 py-1 rounded-full">
-                  +{project.technologies.length - 4} more
+                  +{project.requirements.length - 4} more
                 </span>
               )}
             </div>

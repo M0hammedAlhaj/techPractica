@@ -6,12 +6,10 @@ export function ProjectModal({
   isOpen,
   onClose,
   project,
-  onSave,
 }: {
   isOpen: boolean;
   onClose: () => void;
   project?: any;
-  onSave: (projectData: any) => void;
 }) {
   const [formData, setFormData] = useState({
     name: "",
@@ -52,17 +50,6 @@ export function ProjectModal({
 
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    onSave({
-      ...formData,
-      id: project?.id || Date.now(),
-      createdAt: project?.createdAt || new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      starred: project?.starred || false,
-      files: project?.files || 0,
-      commits: project?.commits || 0,
-      views: project?.views || 0,
-    });
 
     setIsLoading(false);
     onClose();

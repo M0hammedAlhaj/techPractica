@@ -17,8 +17,9 @@ import {
 import BorderLayout from "../components/Board/BorderLayout";
 import KanbanBoard from "../components/Board/KanbanBoard";
 import AuthPage from "../pages/User/Auth";
-import Explore from "../pages/Home/Explore";
+// import Explore from "../pages/Home/Explore";
 import Dashboard from "../pages/Projects/Dashboard";
+import Explore from "../pages/Home/Explore";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(

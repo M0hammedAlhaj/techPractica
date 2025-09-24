@@ -7,7 +7,6 @@ import {
 } from "../../data/data";
 import ParticleField from "../ui/ParticleField";
 import GeometricShape from "../ui/GeometricShape";
-import ProgrammingShape from "../ui/ProgrammingShape";
 import FloatingShape from "../ui/FloatingShape";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";

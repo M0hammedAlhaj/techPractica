@@ -3,8 +3,6 @@ import CaegoriesSection from "../../components/home/CaegoriesSection";
 import HeroSection from "../../components/home/HeroSection";
 
 export default function HomePage() {
-  // Enhanced Animation variants
-
   return (
     <div className="min-h-screen">
       {/* ENHANCED HERO SECTION */}
