@@ -61,7 +61,7 @@ public class UpdateSessionController {
                     content = @Content
             )
     })
-    @PostMapping("/{sessionId}")
+    @PutMapping("/{sessionId}")
     public ResponseEntity<?> updateSession(@RequestBody @Valid CreateSessionRequest request,
                                            @AuthenticationPrincipal UserAuthentication userAuthentication,
                                            @PathVariable UUID sessionId) {
