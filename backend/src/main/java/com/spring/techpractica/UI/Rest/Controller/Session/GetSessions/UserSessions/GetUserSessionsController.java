@@ -1,10 +1,12 @@
 package com.spring.techpractica.UI.Rest.Controller.Session.GetSessions.UserSessions;
 
 import com.spring.techpractica.Application.Session.GetSessions.GetSessionsCount.GetSessionsCountUseCase;
+import com.spring.techpractica.Application.Session.GetSessions.UserSessions.GetUserSessionCommand;
 import com.spring.techpractica.Application.Session.GetSessions.UserSessions.GetUserSessionsUseCase;
 import com.spring.techpractica.Core.Session.Entity.Session;
 import com.spring.techpractica.Core.User.UserAuthentication;
 import com.spring.techpractica.UI.Rest.Resources.Session.SessionCollection;
+import com.spring.techpractica.UI.Rest.Shared.Exception.InvalidPageRequestException;
 import com.spring.techpractica.UI.Rest.Shared.StandardSuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -12,11 +14,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -45,12 +49,21 @@ public class GetUserSessionsController {
                     content = @Content)
     })
     @GetMapping("/by-user")
-    public ResponseEntity<?> getSessionsByUser(@AuthenticationPrincipal UserAuthentication userAuthentication) {
+    public ResponseEntity<?> getSessionsByUser(@AuthenticationPrincipal UserAuthentication userAuthentication,
+                                               @RequestParam int size,
+                                               @RequestParam int page) {
+        if (page < 0 || size < 1) {
+            throw new InvalidPageRequestException(page, size);
+        }
+
         UUID userId = userAuthentication.getUserId();
 
-        List<Session> userSessions = getUserSessionsUseCase.execute(userId);
+        Page<Session> userSessions = getUserSessionsUseCase.execute(new GetUserSessionCommand(userId, size, page));
 
-        SessionCollection sessionCollection = new SessionCollection(userSessions,getSessionsCountUseCase.execute());
+        SessionCollection sessionCollection = new SessionCollection(
+                userSessions.getContent(),
+                userSessions.getTotalElements()
+        );
 
         return ResponseEntity.ok(StandardSuccessResponse.<SessionCollection>builder()
                 .data(sessionCollection)

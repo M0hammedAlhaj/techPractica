@@ -3,6 +3,7 @@ package com.spring.techpractica.infrastructure.Jpa.Session;
 import com.spring.techpractica.Core.Session.Entity.Session;
 import com.spring.techpractica.Core.System.Entity.System;
 import com.spring.techpractica.Core.User.User;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -24,7 +25,8 @@ public interface JpaSession extends JpaRepository<Session, UUID>, JpaSpecificati
     @Query("SELECT s FROM Session s " +
             "JOIN s.members m " +
             "WHERE m.user.id = :userId")
-    List<Session> findAllByUserId(@Param("userId") UUID userId);
+    Page<Session> findAllByUserId(@Param("userId") UUID userId, Pageable pageable);
+
 
     @Query("SELECT COUNT(s) FROM Session s")
     long getAllSessionsCount();

@@ -18,7 +18,7 @@ public interface SessionRepository extends BaseRepository<Session> {
 
     List<Session> findAllWithSpecification(Specification<Session> specification, Pageable pageable);
 
-    List<Session> getSessionsByUser(UUID userID);
+    Page<Session> getSessionsByUser(UUID userID, Pageable pageable);
 
     long getSessionsCount();
 }
