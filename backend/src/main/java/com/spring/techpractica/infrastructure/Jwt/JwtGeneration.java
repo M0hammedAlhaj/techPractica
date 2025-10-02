@@ -42,7 +42,7 @@ public class JwtGeneration {
                 .compact();
     }
 
-    public String generateVerificationToken(String id, String email) {
+    public String generateVerificationToken(UUID id, String email) {
         return Jwts
                 .builder()
                 .subject(id.toString())

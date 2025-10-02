@@ -25,7 +25,7 @@ public class UserRegistration {
 
         String emailReceiver = event.email();
         UUID id = event.userId();
-        String token = jwtGeneration.generateToken(id, emailReceiver, null);
+        String token = jwtGeneration.generateVerificationToken(id, emailReceiver);
 
         mailSender.sendMail(emailReceiver, "Verify Your Account", createHtmlPage(event, token));
 
