@@ -24,7 +24,7 @@ public class JwtGeneration {
 
     }
 
-    public String generateToken(UUID id, String email, List<Role> roles) {
+    public String generateLoginToken(UUID id, String email, List<Role> roles) {
 
         List<String> rolesName = roles.stream()
                 .map(role -> role.getRoleType().toString())
@@ -39,6 +39,18 @@ public class JwtGeneration {
                 .signWith(secretKey)
                 .issuer(email)
                 .claim("roles", rolesName)
+                .compact();
+    }
+
+    public String generateVerificationToken(String id, String email) {
+        return Jwts
+                .builder()
+                .subject(id.toString())
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis()
+                        + 60 * 60 * 60 * 1000))
+                .signWith(secretKey)
+                .issuer(email)
                 .compact();
     }
 }
