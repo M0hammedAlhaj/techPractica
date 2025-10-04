@@ -1,6 +1,8 @@
 package com.spring.techpractica.infrastructure.Listener;
 
 import com.spring.techpractica.Core.User.Event.UserRegistrationEvent;
+import com.spring.techpractica.Core.User.User;
+import com.spring.techpractica.Core.User.UserRepository;
 import com.spring.techpractica.infrastructure.Jwt.JwtGeneration;
 import com.spring.techpractica.infrastructure.MailSender.MailSender;
 import jakarta.mail.MessagingException;
@@ -17,6 +19,7 @@ import java.util.UUID;
 public class UserRegistration {
     private final JwtGeneration jwtGeneration;
     private final MailSender mailSender;
+    private final UserRepository userRepository;
 
     @EventListener
     public void handleUserRegistrationEvent(UserRegistrationEvent event) throws MessagingException {
@@ -25,7 +28,8 @@ public class UserRegistration {
 
         String emailReceiver = event.email();
         UUID id = event.userId();
-        String token = jwtGeneration.generateVerificationToken(id, emailReceiver);
+        User user = userRepository.getOrThrowByID(id);
+        String token = jwtGeneration.generateToken(user);
 
         mailSender.sendMail(emailReceiver, "Verify Your Account", createHtmlPage(event, token));
 
