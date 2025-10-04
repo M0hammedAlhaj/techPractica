@@ -1,6 +1,7 @@
 package com.spring.techpractica.infrastructure.Jwt;
 
 import com.spring.techpractica.Core.Role.Entity.Role;
+import com.spring.techpractica.Core.User.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -24,33 +25,21 @@ public class JwtGeneration {
 
     }
 
-    public String generateLoginToken(UUID id, String email, List<Role> roles) {
+    public String generateToken(User  user) {
 
-        List<String> rolesName = roles.stream()
+        List<String> rolesName = user.getRoles().stream()
                 .map(role -> role.getRoleType().toString())
                 .toList();
 
         return Jwts
                 .builder()
-                .subject(id.toString())
+                .subject(user.getId().toString())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis()
                         + 60 * 60 * 60 * 1000))
                 .signWith(secretKey)
-                .issuer(email)
+                .issuer(user.getEmail())
                 .claim("roles", rolesName)
-                .compact();
-    }
-
-    public String generateVerificationToken(UUID id, String email) {
-        return Jwts
-                .builder()
-                .subject(id.toString())
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis()
-                        + 60 * 60 * 60 * 1000))
-                .signWith(secretKey)
-                .issuer(email)
                 .compact();
     }
 }

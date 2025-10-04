@@ -46,7 +46,7 @@ public class LoginAccountController {
     public ResponseEntity<?> loginAccount(@RequestBody @Valid LoginAccountRequest request) {
         try {
             User user = loginAccountUseCase.execute(new LoginAccountCommand(request.email(), request.password()));
-            String token = jwtGeneration.generateLoginToken(user.getId(), user.getName(), user.getRoles());
+            String token = jwtGeneration.generateLoginToken(user);
 
             return ResponseEntity.ok(StandardSuccessResponse.<LoginAccountResponse>builder()
                     .data(new LoginAccountResponse(user, token))
