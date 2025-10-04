@@ -1,5 +1,6 @@
 package com.spring.techpractica.Core.Session;
 
+import com.spring.techpractica.Core.Request.Entity.Request;
 import com.spring.techpractica.Core.Session.Entity.Session;
 import com.spring.techpractica.Core.Shared.BaseRepository;
 import com.spring.techpractica.Core.System.Entity.System;
@@ -20,5 +21,9 @@ public interface SessionRepository extends BaseRepository<Session> {
 
     Page<Session> getSessionsByUser(UUID userID, Pageable pageable);
 
+    List<Request> getRequestsBySession(UUID sessionID);
+
     long getSessionsCount();
+
+    long getUserSessionsCount(UUID userID);
 }

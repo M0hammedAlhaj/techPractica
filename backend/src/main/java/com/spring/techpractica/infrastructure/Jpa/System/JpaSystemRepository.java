@@ -56,6 +56,11 @@ public class JpaSystemRepository implements SystemRepository {
     }
 
     @Override
+    public void deleteById(UUID id) {
+        jpaSystem.deleteById(id);
+    }
+
+    @Override
     public Optional<System> findById(UUID id) {
         return jpaSystem.findById(id);
     }

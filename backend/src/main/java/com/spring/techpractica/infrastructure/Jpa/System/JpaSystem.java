@@ -16,4 +16,6 @@ public interface JpaSystem extends JpaRepository<System, UUID> {
     List<System> findAllByNameIn(Collection<String> names);
 
     Optional<System> findSystemByName(String system);
+
+    void deleteById(UUID id);
 }

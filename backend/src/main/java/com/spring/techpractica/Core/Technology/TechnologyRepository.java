@@ -20,5 +20,7 @@ public interface TechnologyRepository extends BaseRepository<Technology> {
     List<Technology> findAllByIds(Set<UUID> ids);
 
     List<Technology> findAllByFieldId(UUID fieldId);
+
+    void deleteById(UUID id);
 }
 

@@ -50,6 +50,11 @@ public class JpaTechnologyRepository implements TechnologyRepository {
     }
 
     @Override
+    public void deleteById(UUID id) {
+        jpaTechnology.deleteById(id);
+    }
+
+    @Override
     public boolean existsByName(String name) {
         return jpaTechnology.existsByName(name);
     }

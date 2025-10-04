@@ -2,6 +2,7 @@ package com.spring.techpractica.Core.Field;
 
 import com.spring.techpractica.Core.Field.Entity.Field;
 import com.spring.techpractica.Core.Shared.BaseRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Collection;
@@ -17,4 +18,6 @@ public interface FieldRepository extends BaseRepository<Field> {
     Optional<Field> findFieldByName(String fieldName);
 
     List<Field> findAll();
+
+    void deleteById(UUID id);
 }

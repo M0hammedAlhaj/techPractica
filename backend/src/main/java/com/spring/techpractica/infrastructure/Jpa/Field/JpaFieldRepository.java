@@ -56,4 +56,9 @@ public class JpaFieldRepository implements FieldRepository {
     public List<Field> findAll() {
         return jpaField.findAll();
     }
+
+    @Override
+    public void deleteById(UUID id) {
+        jpaField.deleteById(id);
+    }
 }

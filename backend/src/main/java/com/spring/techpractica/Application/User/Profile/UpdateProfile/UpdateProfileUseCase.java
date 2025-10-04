@@ -50,8 +50,8 @@ public class UpdateProfileUseCase {
             if (requestByPlatform.containsKey(platform)) {
                 account.setProfileUrl(requestByPlatform.get(platform));
                 requestByPlatform.remove(platform);
+                mergedAccounts.add(account);
             }
-            mergedAccounts.add(account);
         }
 
         requestByPlatform.forEach((platform, url) -> {
@@ -62,7 +62,7 @@ public class UpdateProfileUseCase {
 
         user.setSocialAccounts(mergedAccounts);
 
-        user.addSkills(technologies);
+        user.setSkills(technologies);
 
         user.addInfo(command.firstName(), command.lastName(), command.brief());
 

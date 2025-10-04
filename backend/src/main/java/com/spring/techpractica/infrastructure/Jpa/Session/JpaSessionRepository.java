@@ -1,5 +1,6 @@
 package com.spring.techpractica.infrastructure.Jpa.Session;
 
+import com.spring.techpractica.Core.Request.Entity.Request;
 import com.spring.techpractica.Core.Session.Entity.Session;
 import com.spring.techpractica.Core.Session.SessionRepository;
 import com.spring.techpractica.Core.Session.SessionStatus;
@@ -61,7 +62,17 @@ public class JpaSessionRepository implements SessionRepository {
     }
 
     @Override
+    public List<Request> getRequestsBySession(UUID sessionID) {
+        return jpaSession.getRequestsBySession(sessionID);
+    }
+
+    @Override
     public long getSessionsCount() {
         return jpaSession.getAllSessionsCount(List.of(SessionStatus.DELETED));
+    }
+
+    @Override
+    public long getUserSessionsCount(UUID userID) {
+        return jpaSession.getAllSessionsCountByUser(List.of(SessionStatus.DELETED),userID);
     }
 }

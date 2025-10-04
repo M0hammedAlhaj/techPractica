@@ -16,4 +16,6 @@ public interface JpaField extends JpaRepository<Field, UUID> {
     List<Field> findAllByNameIn(Collection<String> names);
 
     Optional<Field> findFieldByName(String fieldName);
+
+    void deleteById(UUID id);
 }

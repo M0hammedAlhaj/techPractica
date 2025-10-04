@@ -17,4 +17,6 @@ public interface SystemRepository extends BaseRepository<System> {
     Optional<System> findSystemByName(String system);
 
     List<System> findAll();
+
+    void deleteById(UUID id);
 }

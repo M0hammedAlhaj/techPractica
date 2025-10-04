@@ -27,4 +27,7 @@ public interface JpaTechnology extends JpaRepository<Technology, UUID> {
        where f.id = :fieldId
        """)
     List<Technology> findAllByFieldId(@Param("fieldId") UUID fieldId);
+
+
+    void deleteById(UUID id);
 }

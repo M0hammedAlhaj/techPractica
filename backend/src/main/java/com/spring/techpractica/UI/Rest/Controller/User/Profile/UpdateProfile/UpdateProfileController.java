@@ -50,7 +50,7 @@ public class UpdateProfileController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StandardErrorResponse.class)))
     })
-    @PutMapping
+    @PutMapping("/")
     public ResponseEntity<?> updateProfile(@RequestBody @Valid ProfileRequest request,
                                            @AuthenticationPrincipal UserAuthentication userAuthentication) {
 

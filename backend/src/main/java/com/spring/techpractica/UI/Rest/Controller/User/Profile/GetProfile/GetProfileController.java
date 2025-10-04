@@ -1,6 +1,8 @@
 package com.spring.techpractica.UI.Rest.Controller.User.Profile.GetProfile;
 
 import com.spring.techpractica.Application.Session.GetSessions.GetSessionsCount.GetSessionsCountUseCase;
+import com.spring.techpractica.Application.Session.GetSessions.GetUserSessionsCount.GetUserSessionsCountCommand;
+import com.spring.techpractica.Application.Session.GetSessions.GetUserSessionsCount.GetUserSessionsCountUseCase;
 import com.spring.techpractica.Application.Session.GetSessions.UserSessions.GetUserSessionCommand;
 import com.spring.techpractica.Application.Session.GetSessions.UserSessions.GetUserSessionsUseCase;
 import com.spring.techpractica.Application.User.Profile.GetProfile.GetProfileCommand;
@@ -43,7 +45,7 @@ public class GetProfileController {
 
     private final GetUserSessionsUseCase getUserSessionsUseCase;
 
-    private final GetSessionsCountUseCase getSessionsCountUseCase;
+    private final GetUserSessionsCountUseCase getUserSessionsCountUseCase;
 
 
     @Operation(
@@ -71,7 +73,7 @@ public class GetProfileController {
         List<Session> sessions =getUserSessionsUseCase.execute(new GetUserSessionCommand(user.getId(),6,0)).getContent();
 
         ProfileResources response = new ProfileResources(new UserResources(user)
-                ,new SessionCollection(sessions,getSessionsCountUseCase.execute()));
+                ,new SessionCollection(sessions,getUserSessionsCountUseCase.execute(new GetUserSessionsCountCommand(user.getId()))));
 
         return ResponseEntity.accepted().body(StandardSuccessResponse.builder()
                 .data(response)

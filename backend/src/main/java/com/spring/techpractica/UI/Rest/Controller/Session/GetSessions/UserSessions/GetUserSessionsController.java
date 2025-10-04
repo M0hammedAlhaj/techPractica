@@ -1,6 +1,8 @@
 package com.spring.techpractica.UI.Rest.Controller.Session.GetSessions.UserSessions;
 
 import com.spring.techpractica.Application.Session.GetSessions.GetSessionsCount.GetSessionsCountUseCase;
+import com.spring.techpractica.Application.Session.GetSessions.GetUserSessionsCount.GetUserSessionsCountCommand;
+import com.spring.techpractica.Application.Session.GetSessions.GetUserSessionsCount.GetUserSessionsCountUseCase;
 import com.spring.techpractica.Application.Session.GetSessions.UserSessions.GetUserSessionCommand;
 import com.spring.techpractica.Application.Session.GetSessions.UserSessions.GetUserSessionsUseCase;
 import com.spring.techpractica.Core.Session.Entity.Session;
@@ -34,7 +36,7 @@ public class GetUserSessionsController {
     private final GetUserSessionsUseCase getUserSessionsUseCase;
 
 
-    private final GetSessionsCountUseCase getSessionsCountUseCase;
+    private final GetUserSessionsCountUseCase getUserSessionsCountUseCase;
 
     @Operation(
             summary = "Get user sessions",
@@ -62,7 +64,7 @@ public class GetUserSessionsController {
 
         SessionCollection sessionCollection = new SessionCollection(
                 userSessions.getContent(),
-                userSessions.getTotalElements()
+                getUserSessionsCountUseCase.execute(new GetUserSessionsCountCommand(userId))
         );
 
         return ResponseEntity.ok(StandardSuccessResponse.<SessionCollection>builder()

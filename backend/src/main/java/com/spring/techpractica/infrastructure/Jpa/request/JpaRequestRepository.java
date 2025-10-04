@@ -6,6 +6,7 @@ import com.spring.techpractica.Core.Shared.Exception.ResourcesNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -37,4 +38,5 @@ public class JpaRequestRepository implements RequestRepository {
     public boolean existsByUserIdAndRequirementId(UUID id, UUID requirementId) {
     return jpaRequest.existsRequestByUser_IdAndRequirement_Id(id, requirementId);
     }
+
 }
