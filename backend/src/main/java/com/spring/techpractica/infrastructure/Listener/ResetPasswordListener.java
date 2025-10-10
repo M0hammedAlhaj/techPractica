@@ -1,6 +1,8 @@
 package com.spring.techpractica.infrastructure.Listener;
 
 import com.spring.techpractica.Core.User.Event.ResetPasswordEvent;
+import com.spring.techpractica.Core.User.User;
+import com.spring.techpractica.Core.User.UserRepository;
 import com.spring.techpractica.infrastructure.Jwt.JwtGeneration;
 import com.spring.techpractica.infrastructure.MailSender.MailSender;
 import jakarta.mail.MessagingException;
@@ -13,11 +15,13 @@ import org.springframework.stereotype.Component;
 public class ResetPasswordListener {
     private final MailSender mailSender;
     private final JwtGeneration jwtGeneration;
+    private final UserRepository userRepository;
 
     @EventListener
     public void sendEmail(ResetPasswordEvent event) throws MessagingException {
+        User user = userRepository.getOrThrowByID(event.id());
         String email = event.email();
-        String token = jwtGeneration.generateVerificationToken(event.id(), email);
+        String token = jwtGeneration.generateToken(user);
         mailSender.sendMail(email,"Reset Password", createHtmlPage(event, token));
     }
 
