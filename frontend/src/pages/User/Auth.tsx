@@ -1,15 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
-import {
-  Eye,
-  EyeOff,
-  Mail,
-  Lock,
-  User,
-  ArrowRight,
-  Github,
-  Chrome,
-} from "lucide-react";
+import { CiLock, CiUser } from "react-icons/ci";
 import toast from "react-hot-toast";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -23,56 +14,87 @@ import {
   IFormInputLogin,
   IFormInputRegister,
 } from "../../interfaces";
-import { CookiesService } from "../../imports";
-
+import { ErrorMsg } from "../../imports";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import { BsArrowRight } from "react-icons/bs";
+import { MdOutlineEmail } from "react-icons/md";
+import { FiChrome, FiGithub } from "react-icons/fi";
+import {
+  decodeJwtSafe,
+  getToken,
+  setRole,
+  setToken,
+} from "../../helpers/helpers";
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  ////////////////////////////////////////////////////////////////////////////////
-  const { register: registerRegister, handleSubmit: RegisterSubmit } =
-    useForm<IFormInputRegister>({
-      resolver: yupResolver(registerSchema),
-    });
+  const {
+    register: registerRegister,
+    handleSubmit: RegisterSubmit,
+    formState: RegisterFormState,
+  } = useForm<IFormInputRegister>({
+    resolver: yupResolver(registerSchema),
+  });
 
   const onSubmitRegister: SubmitHandler<IFormInputRegister> = async (data) => {
+    const { email, name, password } = data;
+    const newData = {
+      email,
+      name,
+      password,
+    };
     try {
-      await axiosInstance.post("/auth/register", data);
+      setIsLoading(true);
+      await axiosInstance.post("/auth/register", newData);
       toast.success("Registration successful!", {
-        position: "top-center",
+        position: "top-right",
         duration: 2000,
       });
     } catch (error) {
       const ErrorObj = error as AxiosError<IErrorResponse>;
       toast.error(`${ErrorObj.response?.data.message}`, {
-        position: "top-center",
+        position: "top-right",
         duration: 2000,
       });
+    } finally {
+      setIsLoading(false);
     }
   };
   ///////////////////////////////////////////////////////////////////////////////////
-  const { register: registerLogin, handleSubmit: LoginSubmit } = useForm({
+  const {
+    register: registerLogin,
+    handleSubmit: LoginSubmit,
+    formState: LoginFromState,
+  } = useForm({
     resolver: yupResolver(loginSchema),
   });
 
   const onSubmitLogin: SubmitHandler<IFormInputLogin> = async (data) => {
     try {
+      setIsLoading(true);
+
       const response: LoginAxiosResponse = await axiosInstance.post(
         "/auth/login",
         data
       );
-      toast.success(response.data.message, { position: "top-center" });
-      CookiesService.set("UserToken", response.data.data.token);
-
+      toast.success(response.data.message, { position: "top-right" });
+      setToken(response.data.data.token);
+      const token = getToken();
+      const payload = decodeJwtSafe(token);
+      setRole(payload?.roles[0] ?? null);
+      console.log(payload?.roles[0] ?? null);
       navigate("/");
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;
       toast.error(err.response?.data.message || "Login failed", {
-        position: "top-center",
+        position: "top-right",
         duration: 4000,
       });
+    } finally {
+      setIsLoading(false);
     }
   };
   ///////////////////////////////////////////////////////////////////////////////////
@@ -135,7 +157,7 @@ const AuthPage = () => {
           to="/"
           className="flex items-center gap-2 text-[#022639] hover:text-[#42D5AE] transition-colors duration-300 font-medium"
         >
-          <ArrowRight className="w-4 h-4 rotate-180" />
+          <BsArrowRight className="w-4 h-4 rotate-180" />
           Back to Home
         </Link>
       </motion.div>
@@ -216,15 +238,17 @@ const AuthPage = () => {
                       Email
                     </label>
                     <div className="relative">
-                      <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                      <MdOutlineEmail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                       <input
                         type="email"
-                        required
                         {...registerLogin("email")}
                         className="w-full pl-12 pr-4 py-4 bg-gray-50/50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#42D5AE] focus:border-transparent outline-none transition-all duration-300 text-gray-900 placeholder-gray-500"
                         placeholder="Enter your email"
                       />
                     </div>
+                    {LoginFromState.errors.email && (
+                      <ErrorMsg Msg={LoginFromState.errors.email?.message} />
+                    )}
                   </div>
 
                   {/* Password Field */}
@@ -233,10 +257,9 @@ const AuthPage = () => {
                       Password
                     </label>
                     <div className="relative">
-                      <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                      <CiLock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                       <input
                         type={showPassword ? "text" : "password"}
-                        required
                         {...registerLogin("password")}
                         className="w-full pl-12 pr-12 py-4 bg-gray-50/50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#42D5AE] focus:border-transparent outline-none transition-all duration-300 text-gray-900 placeholder-gray-500"
                         placeholder="Enter your password"
@@ -247,12 +270,15 @@ const AuthPage = () => {
                         className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                       >
                         {showPassword ? (
-                          <EyeOff className="w-5 h-5" />
+                          <FaRegEyeSlash className="w-5 h-5" />
                         ) : (
-                          <Eye className="w-5 h-5" />
+                          <FaRegEye className="w-5 h-5" />
                         )}
                       </button>
                     </div>
+                    {LoginFromState.errors.password && (
+                      <ErrorMsg Msg={LoginFromState.errors.password?.message} />
+                    )}
                   </div>
 
                   {/* Forgot Password */}
@@ -286,7 +312,7 @@ const AuthPage = () => {
                     ) : (
                       <>
                         Sign In
-                        <ArrowRight className="w-5 h-5" />
+                        <BsArrowRight className="w-5 h-5" />
                       </>
                     )}
                   </motion.button>
@@ -316,15 +342,17 @@ const AuthPage = () => {
                       Username
                     </label>
                     <div className="relative">
-                      <User className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                      <CiUser className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                       <input
                         type="text"
-                        required
                         {...registerRegister("name")}
                         className="w-full pl-12 pr-4 py-4 bg-gray-50/50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#42D5AE] focus:border-transparent outline-none transition-all duration-300 text-gray-900 placeholder-gray-500"
                         placeholder="Choose a username"
                       />
                     </div>
+                    {RegisterFormState.errors.name && (
+                      <ErrorMsg Msg={RegisterFormState.errors.name?.message} />
+                    )}
                   </div>
 
                   {/* Email Field */}
@@ -333,15 +361,17 @@ const AuthPage = () => {
                       Email
                     </label>
                     <div className="relative">
-                      <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                      <MdOutlineEmail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                       <input
                         type="email"
-                        required
                         {...registerRegister("email")}
                         className="w-full pl-12 pr-4 py-4 bg-gray-50/50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#42D5AE] focus:border-transparent outline-none transition-all duration-300 text-gray-900 placeholder-gray-500"
                         placeholder="Enter your email"
                       />
                     </div>
+                    {RegisterFormState.errors.email && (
+                      <ErrorMsg Msg={RegisterFormState.errors.email?.message} />
+                    )}
                   </div>
 
                   {/* Password Field */}
@@ -350,10 +380,9 @@ const AuthPage = () => {
                       Password
                     </label>
                     <div className="relative">
-                      <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                      <CiLock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                       <input
                         type={showPassword ? "text" : "password"}
-                        required
                         {...registerRegister("password")}
                         className="w-full pl-12 pr-12 py-4 bg-gray-50/50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#42D5AE] focus:border-transparent outline-none transition-all duration-300 text-gray-900 placeholder-gray-500"
                         placeholder="Create a password"
@@ -364,33 +393,31 @@ const AuthPage = () => {
                         className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                       >
                         {showPassword ? (
-                          <EyeOff className="w-5 h-5" />
+                          <FaRegEyeSlash className="w-5 h-5" />
                         ) : (
-                          <Eye className="w-5 h-5" />
+                          <FaRegEye className="w-5 h-5" />
                         )}
                       </button>
                     </div>
+                    {RegisterFormState.errors.password && (
+                      <ErrorMsg
+                        Msg={RegisterFormState.errors.password?.message}
+                      />
+                    )}
                   </div>
 
                   {/* Confirm Password Field */}
-                  {/* <div className="space-y-2">
+                  <div className="space-y-2">
                     <label className="text-sm font-semibold text-gray-700">
                       Confirm Password
                     </label>
                     <div className="relative">
-                      <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                      <CiLock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                       <input
                         type={showConfirmPassword ? "text" : "password"}
-                        required
-                        value={registerForm.confirmPassword}
-                        onChange={(e) =>
-                          setRegisterForm({
-                            ...registerForm,
-                            confirmPassword: e.target.value,
-                          })
-                        }
                         className="w-full pl-12 pr-12 py-4 bg-gray-50/50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#42D5AE] focus:border-transparent outline-none transition-all duration-300 text-gray-900 placeholder-gray-500"
                         placeholder="Confirm your password"
+                        {...registerRegister("confirmPassword")}
                       />
                       <button
                         type="button"
@@ -400,30 +427,17 @@ const AuthPage = () => {
                         className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                       >
                         {showConfirmPassword ? (
-                          <EyeOff className="w-5 h-5" />
+                          <FaRegEyeSlash className="w-5 h-5" />
                         ) : (
-                          <Eye className="w-5 h-5" />
+                          <FaRegEye className="w-5 h-5" />
                         )}
                       </button>
                     </div>
-                  </div> */}
-
-                  {/* Terms */}
-                  <div className="text-sm text-gray-600 text-center">
-                    By creating an account, you agree to our{" "}
-                    <Link
-                      to="/terms"
-                      className="text-[#42D5AE] hover:text-[#38b28d] transition-colors"
-                    >
-                      Terms of Service
-                    </Link>{" "}
-                    and{" "}
-                    <Link
-                      to="/privacy"
-                      className="text-[#42D5AE] hover:text-[#38b28d] transition-colors"
-                    >
-                      Privacy Policy
-                    </Link>
+                    {RegisterFormState.errors.confirmPassword && (
+                      <ErrorMsg
+                        Msg={RegisterFormState.errors.confirmPassword?.message}
+                      />
+                    )}
                   </div>
 
                   {/* Submit Button */}
@@ -447,7 +461,7 @@ const AuthPage = () => {
                     ) : (
                       <>
                         Create Account
-                        <ArrowRight className="w-5 h-5" />
+                        <BsArrowRight className="w-5 h-5" />
                       </>
                     )}
                   </motion.button>
@@ -471,7 +485,7 @@ const AuthPage = () => {
                 whileTap={{ scale: 0.98 }}
                 className="flex items-center justify-center gap-3 py-3 px-4 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-xl transition-all duration-300 text-gray-700 font-medium"
               >
-                <Github className="w-5 h-5" />
+                <FiGithub className="w-5 h-5" />
                 GitHub
               </motion.button>
               <motion.button
@@ -479,7 +493,7 @@ const AuthPage = () => {
                 whileTap={{ scale: 0.98 }}
                 className="flex items-center justify-center gap-3 py-3 px-4 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-xl transition-all duration-300 text-gray-700 font-medium"
               >
-                <Chrome className="w-5 h-5" />
+                <FiChrome className="w-5 h-5" />
                 Google
               </motion.button>
             </div>

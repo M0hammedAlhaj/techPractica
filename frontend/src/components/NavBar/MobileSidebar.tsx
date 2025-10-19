@@ -1,7 +1,8 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { LogOut, X } from "lucide-react";
 import { Link } from "react-router-dom";
-import { NavLinks } from "../../data/data";
+import { NavLinks } from "../../Router/route";
+import { MdLogout } from "react-icons/md";
+import { GoX } from "react-icons/go";
 
 interface IProps {
   isSidebarOpen: boolean;
@@ -51,13 +52,15 @@ const MobileSidebar = ({
                   onClick={() => setIsSidebarOpen(false)}
                   className="p-2 rounded-xl hover:bg-gray-100 transition-colors"
                 >
-                  <X className="w-5 h-5 text-gray-600" />
+                  <GoX className="w-5 h-5 text-gray-600" />
                 </button>
               </div>
 
               <div className="flex-1 overflow-y-auto py-6">
                 <div className="space-y-2 px-6">
-                  {NavLinks.map(({ label, path, icon: Icon }, index) => {
+                  {NavLinks.filter(
+                    (x) => x.label !== "Workspace" || !!token
+                  ).map(({ label, path, icon: Icon }, index) => {
                     const isActive = pathname === path;
                     return (
                       <motion.div
@@ -112,7 +115,7 @@ const MobileSidebar = ({
                       }}
                       className="flex items-center gap-3 w-full px-4 py-3 text-red-600 hover:bg-red-50 rounded-xl transition-colors font-medium"
                     >
-                      <LogOut className="w-5 h-5" />
+                      <MdLogout className="w-5 h-5" />
                       Logout
                     </button>
                   </div>

@@ -1,29 +1,37 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { useLocation, useNavigate } from "react-router-dom";
-import { CookiesService } from "../../imports";
 import Desktop from "./Desktop";
 import RightSection from "./RightSection";
 import MobileSidebar from "./MobileSidebar";
+import { clearRole, clearToken, getToken } from "../../helpers/helpers";
+import { useAuthQuery } from "../../imports";
+import { IProfileResponse } from "../../interfaces";
 
 export default function Navbar() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [token, setToken] = useState<string | null>(null);
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const pathname = useLocation().pathname;
-  // Get token
-  useEffect(() => {
-    setToken(CookiesService.get("UserToken"));
-  }, []);
-
-  const handleLogout = () => {
-    CookiesService.remove("UserToken");
-    setToken(null);
-    setShowUserMenu(false);
-  };
   const navigate = useNavigate();
   const location = useLocation();
+  const pathname = useLocation().pathname;
+  const token = getToken();
+  const handleLogout = () => {
+    clearToken();
+    clearRole();
+    setShowUserMenu(false);
+  };
 
+  const { data: Data } = useAuthQuery<IProfileResponse>({
+    queryKey: [`profile-data-${token}`],
+    url: "/profile/",
+    config: {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  });
+  const userInfo = Data?.data?.user;
+  const fullName = userInfo?.firstName.concat(userInfo?.lastName);
   const handleClick = () => {
     if (location.pathname === "/" || location.pathname === "/home") {
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -65,6 +73,8 @@ export default function Navbar() {
               isSidebarOpen={isSidebarOpen}
               setIsSidebarOpen={setIsSidebarOpen}
               token={token}
+              fullname={fullName!}
+              userEmail={userInfo?.email!}
             />
           </div>
         </div>
