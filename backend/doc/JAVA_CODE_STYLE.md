@@ -20,14 +20,12 @@ This guide defines coding standards for Java projects to ensure consistency, rea
 ```java
 package com.example.account.controller;
 
-import java.util.UUID;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import com.spring.techpractica.Core.User.User;
-import com.spring.techpractica.UI.Rest.Resources.User.UserResources;
+import com.spring.techpractica.core.user.User;
+import User.Resources.com.spring.techpractica.ui.rest.UserResources;
 ```
 
 ---

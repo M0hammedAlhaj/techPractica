@@ -18,3 +18,8 @@ Thumbs.db
 db-init/insert-data.sql
 *.idea*
 *idea*
+
+
+./backend/.idea
+./backend/build
+./backend/.gradle

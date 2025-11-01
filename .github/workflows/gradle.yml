@@ -50,8 +50,8 @@ jobs:
       run: |
         cd backend
         ./gradlew test \
-          --tests "com.spring.techpractica.Application.User.LoginAccount.*" \
-          --tests "com.spring.techpractica.Application.User.RegisterAccount.*"
+          --tests "com.spring.techpractica.application.user.login.*" \
+          --tests "com.spring.techpractica.application.user.register.*"
 
   
     
