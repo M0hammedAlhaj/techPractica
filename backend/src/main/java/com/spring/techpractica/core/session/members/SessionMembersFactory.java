@@ -11,7 +11,10 @@ import org.springframework.stereotype.Component;
 public class SessionMembersFactory {
 
     public SessionMember create(Session session, User owner, Role role) {
+        UserSessionId id = new UserSessionId(session.getId(), owner.getId());
+
         return SessionMember.builder()
+                .userSessionId(id)
                 .user(owner)
                 .session(session)
                 .role(role)
