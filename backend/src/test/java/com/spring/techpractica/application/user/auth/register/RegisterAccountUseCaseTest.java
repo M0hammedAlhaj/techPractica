@@ -1,4 +1,4 @@
-package com.spring.techpractica.application.user.register;
+package com.spring.techpractica.application.user.auth.register;
 
 import com.spring.techpractica.application.user.auth.register.RegisterAccountCommand;
 import com.spring.techpractica.application.user.auth.register.RegisterAccountUseCase;

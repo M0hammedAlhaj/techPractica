@@ -1,4 +1,4 @@
-package com.spring.techpractica.ui.rest.resources.request;
+package com.spring.techpractica.ui.rest.resources.request.Request;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.spring.techpractica.core.request.entity.Request;

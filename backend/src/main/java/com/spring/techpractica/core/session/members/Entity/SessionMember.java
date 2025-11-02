@@ -17,7 +17,7 @@ import lombok.*;
 public class SessionMember {
 
     @EmbeddedId
-    private UserSessionId userSessionId;
+    private UserSessionId userSessionId=new UserSessionId();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("userId")

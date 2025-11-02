@@ -1,4 +1,4 @@
-package com.spring.techpractica.ui.rest.resources.request;
+package com.spring.techpractica.ui.rest.resources.request.Request;
 
 import com.spring.techpractica.core.request.entity.Request;
 import com.spring.techpractica.core.request.model.RequestState;

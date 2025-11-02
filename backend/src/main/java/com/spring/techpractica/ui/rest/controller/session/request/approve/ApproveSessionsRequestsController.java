@@ -4,7 +4,7 @@ import com.spring.techpractica.application.session.request.approve.ApproveSessio
 import com.spring.techpractica.application.session.request.approve.ApproveSessionsRequestsUseCase;
 import com.spring.techpractica.core.request.entity.Request;
 import com.spring.techpractica.core.user.UserAuthentication;
-import com.spring.techpractica.ui.rest.resources.request.RequestResources;
+import com.spring.techpractica.ui.rest.resources.request.Request.RequestResources;
 import com.spring.techpractica.ui.rest.shared.StandardErrorResponse;
 import com.spring.techpractica.ui.rest.shared.StandardSuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;

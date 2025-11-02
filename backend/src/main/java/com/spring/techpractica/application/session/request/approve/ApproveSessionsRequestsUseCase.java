@@ -13,6 +13,7 @@ import com.spring.techpractica.core.user.User;
 import com.spring.techpractica.core.user.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -23,6 +24,7 @@ public class ApproveSessionsRequestsUseCase {
     private final RequestRepository requestRepository;
     private final SessionMembersFactory sessionMembersFactory;
 
+    @Transactional
     public Request execute(ApproveSessionsRequestsCommand command) {
 
         User owner = userRepository.findById(command.ownerId())

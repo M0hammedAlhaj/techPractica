@@ -36,7 +36,7 @@ public class Session extends BaseEntity {
 
     @OneToMany(mappedBy = "session",
             fetch = FetchType.LAZY,
-            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE , CascadeType.MERGE},
             orphanRemoval = true)
     private List<SessionMember> members = new ArrayList<>();
 
@@ -67,6 +67,7 @@ public class Session extends BaseEntity {
         if (members == null) {
             members = new ArrayList<>();
         }
+        sessionMember.setSession(this);
         members.add(sessionMember);
     }
 

@@ -1,11 +1,11 @@
 package com.spring.techpractica.ui.rest.controller.session.request.get;
 
+import com.spring.techpractica.application.session.get.user.sessions.count.GetUserSessionsCountUseCase;
 import com.spring.techpractica.application.session.request.get.sessions.requests.GetSessionsRequestsCommand;
 import com.spring.techpractica.application.session.request.get.sessions.requests.GetSessionsRequestsUseCase;
 import com.spring.techpractica.core.request.entity.Request;
 import com.spring.techpractica.core.user.UserAuthentication;
-import com.spring.techpractica.ui.rest.resources.request.RequestCollection;
-import com.spring.techpractica.ui.rest.resources.request.RequestResources;
+import com.spring.techpractica.ui.rest.resources.request.FullRequest.FullRequestCollection;
 import com.spring.techpractica.ui.rest.shared.StandardErrorResponse;
 import com.spring.techpractica.ui.rest.shared.StandardSuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,6 +30,7 @@ import java.util.UUID;
 public class GetSessionsRequestsController {
 
     private final GetSessionsRequestsUseCase getSessionsRequestsUseCase;
+    private final GetUserSessionsCountUseCase getUserSessionsCountUseCase;
 
     @Operation(
             summary = "return requests for a specific session",
@@ -39,7 +40,7 @@ public class GetSessionsRequestsController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Request returned successfully",
-                    content = @Content(schema = @Schema(implementation = RequestResources.class))
+                    content = @Content(schema = @Schema(implementation = FullRequestCollection.class))
             ),
             @ApiResponse(
                     responseCode = "400",
@@ -68,12 +69,11 @@ public class GetSessionsRequestsController {
                 )
         );
 
-
-        RequestCollection responseData = new RequestCollection(requests);
+        FullRequestCollection responseData = new FullRequestCollection(requests, getUserSessionsCountUseCase);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(
-                        StandardSuccessResponse.<RequestCollection>builder()
+                        StandardSuccessResponse.<FullRequestCollection>builder()
                                 .data(responseData)
                                 .message("Requests returned successfully")
                                 .status(HttpStatus.OK.value())
