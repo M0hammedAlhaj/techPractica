@@ -10,4 +10,8 @@ public interface RequestRepository extends BaseRepository<Request> {
     boolean existsByUserIdAndRequirementId(UUID id, UUID requirementId);
 
     Optional<Request> findByIdAndSessionId(UUID requestId, UUID sessionId);
+
+    boolean existsByRequirementId(UUID requirementId);
+
+    void deleteAllByRequirementId(UUID id);
 }

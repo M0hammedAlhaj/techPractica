@@ -3,6 +3,9 @@ package com.spring.techpractica.ui.rest.resources.request.FullRequest;
 import com.spring.techpractica.core.request.entity.Request;
 import com.spring.techpractica.core.request.model.RequestState;
 import com.spring.techpractica.core.technology.entity.Technology;
+import com.spring.techpractica.core.user.User;
+import com.spring.techpractica.ui.rest.resources.technology.TechnologyCollection;
+import com.spring.techpractica.ui.rest.resources.technology.TechnologyResources;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -14,7 +17,7 @@ public class FullRequestResources {
 
     private final UUID userId;
     private final String fullName;
-    private final Set<Technology> skills;
+    private final TechnologyCollection skills;
     private final String brief;
     private final String email;
     private final long totalSessions;
@@ -23,13 +26,14 @@ public class FullRequestResources {
     private final UUID requestId;
 
     public FullRequestResources(Request request, long totalSessions) {
-        this.userId = request.getUser().getId();
+        User user = request.getUser();
+        this.userId = user.getId();
         this.requestId = request.getId();
         this.brief = request.getBrief();
         this.state = request.getRequestStatus();
-        this.fullName = request.getUser().getFullName();
-        this.email = request.getUser().getEmail();
-        this.skills = request.getUser().getSkills();
+        this.fullName = user.getFullName();
+        this.email = user.getEmail();
+        this.skills = new TechnologyCollection(user.getSkills().stream().toList());
         this.totalSessions = totalSessions;
         this.requestDate = request.getAtCreated();
     }

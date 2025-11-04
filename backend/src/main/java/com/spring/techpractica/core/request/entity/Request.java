@@ -16,7 +16,7 @@ import lombok.Data;
 @Table(name = "REQUESTS")
 public class Request extends BaseEntity {
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "requirement_id")
     private Requirement requirement;
 

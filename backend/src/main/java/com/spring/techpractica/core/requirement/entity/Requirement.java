@@ -38,4 +38,8 @@ public class Requirement extends BaseEntity {
         requirementTechnologies.add(requirementTechnology);
         requirementTechnology.setRequirement(this);
     }
+
+    public void clearRequirementTechnologies() {
+        this.requirementTechnologies.clear();
+    }
 }

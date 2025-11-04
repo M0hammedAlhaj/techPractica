@@ -45,8 +45,14 @@ public interface JpaSession extends JpaRepository<Session, UUID>, JpaSpecificati
     @Query("SELECT COUNT(s) FROM Session s JOIN s.members m WHERE s.status NOT IN :statuses  AND m.user.id = :userId ")
     long getAllSessionsCountByUser(@Param("statuses") List<SessionStatus> statuses,@Param("userId") UUID userId);
 
-    @Query("SELECT Request FROM Session s where s.id =:sessionId")
-    List<Request> getRequestsBySession(@Param("sessionId") UUID sessionId);
+    @Query("""
+    SELECT r
+    FROM Request r
+    JOIN r.requirement req
+    JOIN req.session s
+    WHERE s.id = :sessionId""")
+    List<Request> getRequestsBySessionId(@Param("sessionId") UUID sessionId);
+
     @Query("SELECT s FROM Session s " +
             "JOIN s.requirements r " +
             "WHERE r.field.id = :fieldId " +

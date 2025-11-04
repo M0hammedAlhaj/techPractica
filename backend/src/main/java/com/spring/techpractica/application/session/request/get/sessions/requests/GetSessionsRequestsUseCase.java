@@ -33,7 +33,7 @@ public class GetSessionsRequestsUseCase {
             throw new UserAuthenticationException("You are not owner of this session");
         }
 
-        List<Request> requests = sessionRepository.getRequestsBySession(command.sessionId());
+        List<Request> requests = sessionRepository.getRequestsBySessionId(command.sessionId());
 
         if(requests.isEmpty()){
             requests = new ArrayList<>();

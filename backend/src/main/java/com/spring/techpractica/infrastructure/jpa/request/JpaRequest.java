@@ -22,4 +22,8 @@ public interface JpaRequest extends JpaRepository<Request, UUID> {
                            \s""")
     Optional<Request> findByIdAndSessionId(@Param("requestId") UUID requestId,
                                   @Param("sessionId") UUID sessionId);
+
+    boolean existsByRequirementId(UUID requirementId);
+
+    void deleteAllByRequirementId(UUID id);
 }
