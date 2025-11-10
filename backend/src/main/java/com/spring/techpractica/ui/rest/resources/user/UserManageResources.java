@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class UserResources {
+public class UserManageResources {
 
     private final String id;
     private final String firstName;
@@ -21,17 +21,19 @@ public class UserResources {
     private SocialAccountCollection socialAccounts;
     private final String brief;
     private final List<String> roles;
+    private final long totalSessions;
 
 
     //Count of Sessions
 
-    public UserResources(User user) {
+    public UserManageResources(User user, long totalSessions) {
         this.id = user.getId().toString();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.name = user.getName();
         this.email = user.getEmail();
-        if (user.getSocialAccounts() != null) {
+        this.totalSessions = totalSessions;
+        if (user.getSkills() != null) {
             this.skills = new TechnologySummaryCollection(user.getSkills().stream().toList());
         }
         if (user.getSocialAccounts() != null) {

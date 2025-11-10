@@ -2,8 +2,10 @@ package com.spring.techpractica.ui.rest.controller.admin.manage;
 
 import com.spring.techpractica.application.admin.manage.get.user.by.specification.GetUserBySpecificationsCommand;
 import com.spring.techpractica.application.admin.manage.get.user.by.specification.GetUserBySpecificationsUseCase;
+import com.spring.techpractica.application.session.get.user.sessions.count.GetUserSessionsCountUseCase;
 import com.spring.techpractica.core.user.User;
 import com.spring.techpractica.ui.rest.resources.user.UserCollection;
+import com.spring.techpractica.ui.rest.resources.user.UserManageCollection;
 import com.spring.techpractica.ui.rest.shared.exception.InvalidPageRequestException;
 import com.spring.techpractica.ui.rest.shared.StandardSuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,7 +31,7 @@ import java.util.List;
 public class GetUserBySpecificationsController {
 
     private final GetUserBySpecificationsUseCase getUserBySpecificationsUseCase;
-
+    private final GetUserSessionsCountUseCase getUserSessionsCountUseCase;
     @Operation(
             summary = "Get users by specifications",
             description = "Fetch users filtered by optional username and role, with pagination support."
@@ -53,9 +55,9 @@ public class GetUserBySpecificationsController {
         List<User> users = getUserBySpecificationsUseCase
                 .execute(new GetUserBySpecificationsCommand(userName, role, page, size));
 
-        UserCollection responseData = new UserCollection(users);
+        UserManageCollection responseData = new UserManageCollection(users, getUserSessionsCountUseCase);
 
-        return ResponseEntity.ok(StandardSuccessResponse.<UserCollection>builder()
+        return ResponseEntity.ok(StandardSuccessResponse.<UserManageCollection>builder()
                 .data(responseData)
                 .message("Get User By Specifications Successfully executed")
                 .status(HttpStatus.OK.value())
