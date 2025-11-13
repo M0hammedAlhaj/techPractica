@@ -1,5 +1,6 @@
 package com.spring.techpractica.ui.rest.resources.field;
 
+import com.spring.techpractica.core.field.entity.Field;
 import lombok.*;
 
 import java.util.UUID;
@@ -12,4 +13,5 @@ import java.util.UUID;
 public class FieldResources {
     private UUID id;
     private String name;
+
 }

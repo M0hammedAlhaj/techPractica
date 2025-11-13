@@ -7,6 +7,7 @@ import com.spring.techpractica.application.session.get.user.sessions.GetUserSess
 import com.spring.techpractica.core.session.entity.Session;
 import com.spring.techpractica.core.user.UserAuthentication;
 import com.spring.techpractica.ui.rest.resources.session.SessionCollection;
+import com.spring.techpractica.ui.rest.resources.session.UserSessionCollection;
 import com.spring.techpractica.ui.rest.shared.exception.InvalidPageRequestException;
 import com.spring.techpractica.ui.rest.shared.StandardSuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,7 +34,6 @@ public class GetUserSessionsController {
 
     private final GetUserSessionsUseCase getUserSessionsUseCase;
 
-
     private final GetUserSessionsCountUseCase getUserSessionsCountUseCase;
 
     @Operation(
@@ -42,7 +42,7 @@ public class GetUserSessionsController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User sessions retrieved successfully",
-                    content = @Content(schema = @Schema(implementation = SessionCollection.class))),
+                    content = @Content(schema = @Schema(implementation = UserSessionCollection.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized - User not authenticated",
                     content = @Content),
             @ApiResponse(responseCode = "404", description = "No sessions found for the user",
@@ -60,12 +60,13 @@ public class GetUserSessionsController {
 
         Page<Session> userSessions = getUserSessionsUseCase.execute(new GetUserSessionCommand(userId, size, page));
 
-        SessionCollection sessionCollection = new SessionCollection(
+        UserSessionCollection sessionCollection = new UserSessionCollection(
                 userSessions.getContent(),
                 getUserSessionsCountUseCase.execute(new GetUserSessionsCountCommand(userId))
+                        ,userId
         );
 
-        return ResponseEntity.ok(StandardSuccessResponse.<SessionCollection>builder()
+        return ResponseEntity.ok(StandardSuccessResponse.<UserSessionCollection>builder()
                 .data(sessionCollection)
                 .message("Get User Sessions Successfully executed")
                 .status(HttpStatus.OK.value())
