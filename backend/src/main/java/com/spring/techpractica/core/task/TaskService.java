@@ -25,6 +25,16 @@ public class TaskService {
             throw new UnauthorizedActionException("User must be the session owner to perform this action.");
         }
     }
+    public void validateSessionParticipant(Session session, UUID ownerId) {
+        boolean exists = session.getMembers()
+                .stream()
+                .anyMatch(member -> member.getUser().getId().equals(ownerId));
+
+        if (!exists) {
+            throw new UnauthorizedActionException("User is not part of this session.");
+        }
+    }
+
 
     public List<Field> validateAndGetFields(Set<String> tagNames) {
         List<Field> fields = fieldRepository.findAllByNames(tagNames);
