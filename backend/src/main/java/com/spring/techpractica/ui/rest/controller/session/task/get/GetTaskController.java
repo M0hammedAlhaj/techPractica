@@ -18,6 +18,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/sessions/tasks")
@@ -61,11 +62,11 @@ public class GetTaskController {
     @GetMapping("/")
     public ResponseEntity<?> getTask(
             @AuthenticationPrincipal UserAuthentication userAuthentication,
-            @RequestBody GetTaskRequest request) {
+            @RequestParam UUID sessionId) {
 
         List<Task> tasks = getTaskUseCase.execute(new GetTaskCommand(
                 userAuthentication.getUserId(),
-                request.sessionId()));
+                sessionId));
 
         TaskCollection responseData = new TaskCollection(tasks);
 
