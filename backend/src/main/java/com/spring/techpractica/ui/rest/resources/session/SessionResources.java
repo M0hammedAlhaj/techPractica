@@ -3,11 +3,13 @@ package com.spring.techpractica.ui.rest.resources.session;
 import com.spring.techpractica.core.session.entity.Session;
 import com.spring.techpractica.core.session.SessionStatus;
 import com.spring.techpractica.ui.rest.resources.requirement.RequirementCollection;
+import com.spring.techpractica.ui.rest.resources.session.member.SessionMemberResources;
 import com.spring.techpractica.ui.rest.resources.system.SystemResources;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -24,6 +26,7 @@ public class SessionResources {
     private RequirementCollection requirements;
     private UUID ownerId;
     private String ownerFullName;
+    private List<SessionMemberResources> members;
 
 
     public SessionResources(Session session) {
@@ -41,6 +44,13 @@ public class SessionResources {
 
         if (session.getRequirements() != null && !session.getRequirements().isEmpty()) {
             this.requirements = new RequirementCollection(session.getRequirements());
+        }
+
+        if (session.getMembers() != null && !session.getMembers().isEmpty()) {
+            this.members = session.getMembers()
+                    .stream()
+                    .map(SessionMemberResources::new)
+                    .toList();
         }
     }
 }
