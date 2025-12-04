@@ -29,7 +29,6 @@ public class UserSessionCollection {
                         (s.getOwner().getId().equals(userId))
                                 ? Role.OWNER
                                 : Role.PARTICIPATE
-                        , userId
                 ))
                 .collect(Collectors.toList());
 

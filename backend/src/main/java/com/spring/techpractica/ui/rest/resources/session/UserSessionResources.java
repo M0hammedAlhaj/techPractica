@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -29,9 +30,9 @@ public class UserSessionResources {
     private UUID ownerId;
     private String ownerFullName;
     private Role role;
-    private MinimalUserResources user;
+    private List<MinimalUserResources> users;
 
-    public UserSessionResources(Session session, Role role, UUID userId) {
+    public UserSessionResources(Session session, Role role) {
         this.id = session.getId();
         this.name = session.getName();
         this.description = session.getDescription();
@@ -49,12 +50,9 @@ public class UserSessionResources {
             this.requirements = new RequirementCollection(session.getRequirements());
         }
 
-        session.getMembers().stream()
-                .filter(member -> member.getUser().getId().equals(userId))
-                .findFirst()
-                .ifPresent(member -> {
-                    this.user = new MinimalUserResources(member.getUser());
-                    this.role = member.getRole(); // optional: set role from the member
-                });
+        this.users = session.getMembers()
+                .stream()
+                .map(member -> new MinimalUserResources(member.getUser()))
+                .collect(Collectors.toList());
     }
 }
