@@ -1,9 +1,13 @@
 package com.spring.techpractica.application.session.request.approve;
 
+import com.spring.techpractica.application.notification.CreateNotificationUseCase;
+import com.spring.techpractica.application.session.request.create.ApproveSessionResponse;
+import com.spring.techpractica.core.notification.entity.Notification;
 import com.spring.techpractica.core.request.entity.Request;
 import com.spring.techpractica.core.request.RequestRepository;
 import com.spring.techpractica.core.session.entity.Session;
 import com.spring.techpractica.core.session.SessionRepository;
+import com.spring.techpractica.core.session.event.UserAcceptedToSessionEvent;
 import com.spring.techpractica.core.session.members.Entity.SessionMember;
 import com.spring.techpractica.core.session.members.SessionMembersFactory;
 import com.spring.techpractica.core.session.members.model.Role;
@@ -12,6 +16,7 @@ import com.spring.techpractica.core.user.exception.UserAuthenticationException;
 import com.spring.techpractica.core.user.User;
 import com.spring.techpractica.core.user.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,16 +28,18 @@ public class ApproveSessionsRequestsUseCase {
     private final SessionRepository sessionRepository;
     private final RequestRepository requestRepository;
     private final SessionMembersFactory sessionMembersFactory;
+    private final CreateNotificationUseCase  createNotificationUseCase;
+    private final ApplicationEventPublisher eventPublisher; // ← أضفنا
+
 
     @Transactional
-    public Request execute(ApproveSessionsRequestsCommand command) {
+    public ApproveSessionResponse execute(ApproveSessionsRequestsCommand command) {
 
         User owner = userRepository.findById(command.ownerId())
                 .orElseThrow(() -> new ResourcesNotFoundException(command.ownerId()));
 
         Session session = sessionRepository.findById(command.sessionId())
                 .orElseThrow(() -> new ResourcesNotFoundException(command.sessionId()));
-
 
         if (!session.isOwner(owner.getId())) {
             throw new UserAuthenticationException("You are not owner of this session");
@@ -47,8 +54,23 @@ public class ApproveSessionsRequestsUseCase {
 
         SessionMember sessionMember = sessionMembersFactory.create(session, user, Role.PARTICIPATE);
 
+        String title = "Session Request Status";
+        String content = "Congratulations! You have been accepted to the session: " + session.getName();
+
+        Notification notification = createNotificationUseCase.execute(user, title, content);
+
+        eventPublisher.publishEvent(new UserAcceptedToSessionEvent(
+                user.getId(),
+                user.getEmail(),
+                user.getName(),
+                session.getId(),
+                session.getName()
+        ));
+
         session.addMember(sessionMember);
         sessionRepository.save(session);
-        return requestRepository.save(request);
+        Request approvedRequest = requestRepository.save(request);
+
+        return new ApproveSessionResponse(notification, approvedRequest);
     }
 }

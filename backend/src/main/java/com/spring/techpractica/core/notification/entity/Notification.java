@@ -15,8 +15,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @Table(name = "Notifications")
 public class Notification extends BaseEntity {
-    @Column(name = "notfication_content")
-    private String NotificationsContent;
+
+    @Column(name = "notification_title")
+    private String title;
+
+    @Column(name = "notification_content")
+    private String content;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
