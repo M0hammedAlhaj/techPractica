@@ -122,4 +122,10 @@ public class Session extends BaseEntity {
     public void runSession(){
         this.status = SessionStatus.RUNNING;
     }
+
+    public boolean isMember(UUID userId) {
+        return this.members.stream()
+                .anyMatch(member -> member.getUser().getId().equals(userId));
+    }
+
 }

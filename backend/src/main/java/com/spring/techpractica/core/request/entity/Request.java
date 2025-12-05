@@ -16,7 +16,7 @@ import lombok.Data;
 @Table(name = "REQUESTS")
 public class Request extends BaseEntity {
 
-    @OneToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "requirement_id")
     private Requirement requirement;
 
@@ -41,5 +41,9 @@ public class Request extends BaseEntity {
     }
     public void reject() {
         requestStatus = RequestState.REJECTED;
+    }
+
+    public boolean isApproved() {
+        return this.requestStatus == RequestState.APPROVE;
     }
 }
