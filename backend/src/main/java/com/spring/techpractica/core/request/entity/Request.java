@@ -46,4 +46,8 @@ public class Request extends BaseEntity {
     public boolean isApproved() {
         return this.requestStatus == RequestState.APPROVE;
     }
+
+    public boolean isRejected() {
+        return this.requestStatus == RequestState.REJECTED;
+    }
 }

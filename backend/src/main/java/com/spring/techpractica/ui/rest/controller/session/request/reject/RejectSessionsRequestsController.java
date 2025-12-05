@@ -1,9 +1,11 @@
 package com.spring.techpractica.ui.rest.controller.session.request.reject;
 
+import com.spring.techpractica.application.session.request.RequestSessionResponse;
 import com.spring.techpractica.application.session.request.reject.RejectSessionsRequestsCommand;
 import com.spring.techpractica.application.session.request.reject.RejectSessionsRequestsUseCase;
 import com.spring.techpractica.core.request.entity.Request;
 import com.spring.techpractica.core.user.UserAuthentication;
+import com.spring.techpractica.ui.rest.resources.request.Request.ApproveSessionResources;
 import com.spring.techpractica.ui.rest.resources.request.Request.RequestResources;
 import com.spring.techpractica.ui.rest.shared.StandardErrorResponse;
 import com.spring.techpractica.ui.rest.shared.StandardSuccessResponse;
@@ -62,7 +64,7 @@ public class RejectSessionsRequestsController {
     public ResponseEntity<?> rejectSessionRequests(@AuthenticationPrincipal UserAuthentication userAuthentication
             , @PathVariable("sessionId") UUID sessionId, @PathVariable("requestId") UUID requestId) {
 
-        Request request = rejectSessionsRequestsUseCase.execute(
+        RequestSessionResponse request = rejectSessionsRequestsUseCase.execute(
                 new RejectSessionsRequestsCommand(
                         userAuthentication.getUserId(),
                         sessionId,
@@ -71,11 +73,11 @@ public class RejectSessionsRequestsController {
         );
 
 
-        RequestResources responseData = new RequestResources(request);
+        ApproveSessionResources responseData = new ApproveSessionResources(request.getRequest(), request.getNotification());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(
-                        StandardSuccessResponse.<RequestResources>builder()
+                        StandardSuccessResponse.<ApproveSessionResources>builder()
                                 .data(responseData)
                                 .message("Request rejected successfully")
                                 .status(HttpStatus.OK.value())

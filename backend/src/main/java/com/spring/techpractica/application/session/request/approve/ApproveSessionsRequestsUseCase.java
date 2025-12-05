@@ -1,21 +1,20 @@
 package com.spring.techpractica.application.session.request.approve;
 
 import com.spring.techpractica.application.notification.CreateNotificationUseCase;
-import com.spring.techpractica.application.session.request.create.ApproveSessionResponse;
+import com.spring.techpractica.application.session.request.RequestSessionResponse;
 import com.spring.techpractica.core.notification.entity.Notification;
-import com.spring.techpractica.core.request.entity.Request;
 import com.spring.techpractica.core.request.RequestRepository;
-import com.spring.techpractica.core.session.entity.Session;
+import com.spring.techpractica.core.request.entity.Request;
 import com.spring.techpractica.core.session.SessionRepository;
+import com.spring.techpractica.core.session.entity.Session;
 import com.spring.techpractica.core.session.event.UserAcceptedToSessionEvent;
 import com.spring.techpractica.core.session.members.Entity.SessionMember;
 import com.spring.techpractica.core.session.members.SessionMembersFactory;
 import com.spring.techpractica.core.session.members.model.Role;
 import com.spring.techpractica.core.shared.Exception.ResourcesNotFoundException;
-import com.spring.techpractica.core.shared.Exception.UserAlreadyMemberException;
-import com.spring.techpractica.core.user.exception.UserAuthenticationException;
 import com.spring.techpractica.core.user.User;
 import com.spring.techpractica.core.user.UserRepository;
+import com.spring.techpractica.core.user.exception.UserAuthenticationException;
 import lombok.AllArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -33,7 +32,7 @@ public class ApproveSessionsRequestsUseCase {
     private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
-    public ApproveSessionResponse execute(ApproveSessionsRequestsCommand command) {
+    public RequestSessionResponse execute(ApproveSessionsRequestsCommand command) {
 
         User owner = userRepository.getOrThrowByID(command.ownerId());
         Session session = sessionRepository.getOrThrowByID(command.sessionId());
@@ -80,6 +79,6 @@ public class ApproveSessionsRequestsUseCase {
             ));
         }
 
-        return new ApproveSessionResponse(notification, request);
+        return new RequestSessionResponse(notification, request);
     }
 }

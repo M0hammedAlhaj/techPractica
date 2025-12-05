@@ -2,8 +2,7 @@ package com.spring.techpractica.ui.rest.controller.session.request.approve;
 
 import com.spring.techpractica.application.session.request.approve.ApproveSessionsRequestsCommand;
 import com.spring.techpractica.application.session.request.approve.ApproveSessionsRequestsUseCase;
-import com.spring.techpractica.application.session.request.create.ApproveSessionResponse;
-import com.spring.techpractica.core.request.entity.Request;
+import com.spring.techpractica.application.session.request.RequestSessionResponse;
 import com.spring.techpractica.core.user.UserAuthentication;
 import com.spring.techpractica.ui.rest.resources.request.Request.ApproveSessionResources;
 import com.spring.techpractica.ui.rest.resources.request.Request.RequestResources;
@@ -61,7 +60,7 @@ public class ApproveSessionsRequestsController {
     public ResponseEntity<?> ApproveSessionRequests(@AuthenticationPrincipal UserAuthentication userAuthentication
             , @PathVariable("sessionId") UUID sessionId, @PathVariable("requestId") UUID requestId) {
 
-        ApproveSessionResponse approvedRequest = approveSessionsRequestsUseCase.execute(
+        RequestSessionResponse approvedRequest = approveSessionsRequestsUseCase.execute(
                 new ApproveSessionsRequestsCommand(
                         userAuthentication.getUserId(),
                         sessionId,
