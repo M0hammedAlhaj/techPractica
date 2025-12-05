@@ -1,6 +1,7 @@
 package com.spring.techpractica.ui.rest.resources.task;
 
 
+import ch.qos.logback.core.status.Status;
 import com.spring.techpractica.core.field.entity.Field;
 import com.spring.techpractica.core.shared.BaseEntity;
 import com.spring.techpractica.core.task.entity.Task;
@@ -20,6 +21,7 @@ public class TaskResources {
     private final LocalDateTime dueDate;
     private final List<UUID> assignees;
     private final List<String> tags;
+    private final String status;
 
     public TaskResources(Task task) {
         this.id = task.getId();
@@ -27,6 +29,7 @@ public class TaskResources {
         this.description = task.getDescription();
         this.type = task.getType().name();
         this.dueDate = task.getDueDate();
+        this.status = task.getStatus().name();
 
         this.assignees = task.getUsersAssigned()
                 .stream()

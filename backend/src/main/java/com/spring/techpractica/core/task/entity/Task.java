@@ -46,7 +46,8 @@ public class Task extends BaseEntity {
     private LocalDateTime dueDate;
 
     @Column(name = "status")
-    private TaskStatus status = TaskStatus.RUNNING;
+    @Enumerated(EnumType.STRING)
+    private TaskStatus status = TaskStatus.TO_DO;
 
     @Column(name = "Task_Type")
     private TaskType type;
@@ -55,4 +56,8 @@ public class Task extends BaseEntity {
     @JoinTable(joinColumns = @JoinColumn(name = "task_id"),
                 inverseJoinColumns = @JoinColumn(name = "field_id", referencedColumnName = "id"))
     private List<Field> fields;
+
+    public void updateStatus(TaskStatus status) {
+        this.status = status;
+    }
 }

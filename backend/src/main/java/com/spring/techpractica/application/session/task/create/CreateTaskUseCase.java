@@ -1,11 +1,8 @@
 package com.spring.techpractica.application.session.task.create;
 
-import com.spring.techpractica.core.field.FieldRepository;
 import com.spring.techpractica.core.field.entity.Field;
 import com.spring.techpractica.core.session.SessionRepository;
 import com.spring.techpractica.core.session.entity.Session;
-import com.spring.techpractica.core.shared.Exception.ResourcesNotFoundException;
-import com.spring.techpractica.core.shared.Exception.UnauthorizedActionException;
 import com.spring.techpractica.core.task.TaskRepository;
 import com.spring.techpractica.core.task.TaskService;
 import com.spring.techpractica.core.task.entity.Task;
@@ -17,8 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -45,7 +40,7 @@ public class CreateTaskUseCase {
                 session,
                 assignees,
                 command.dueDate(),
-                TaskStatus.RUNNING,
+                TaskStatus.TO_DO,
                 command.type(),
                 fields
         );
