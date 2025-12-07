@@ -8,6 +8,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,7 +55,7 @@ public class AssignRoleController {
             }
     )
     @PutMapping("/assign")
-    public ResponseEntity<?> assignRole(@RequestBody AssignRoleRequest request) {
+    public ResponseEntity<?> assignRole(@org.springframework.web.bind.annotation.RequestBody AssignRoleRequest request) {
         String result = assignRoleUseCase.execute(new AssignRoleCommand(request.id(), request.roleIds()));
 
         return ResponseEntity.ok(StandardSuccessResponse.<String>builder()

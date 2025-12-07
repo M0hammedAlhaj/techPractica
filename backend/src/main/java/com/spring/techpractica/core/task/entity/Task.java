@@ -50,6 +50,7 @@ public class Task extends BaseEntity {
     private TaskStatus status = TaskStatus.TO_DO;
 
     @Column(name = "Task_Type")
+    @Enumerated(EnumType.STRING)
     private TaskType type;
 
     @ManyToMany(fetch = FetchType.LAZY)
