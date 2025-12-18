@@ -120,6 +120,9 @@ public class Session extends BaseEntity {
     }
 
     public void runSession(){
+        if (status.equals(SessionStatus.RUNNING)) {
+            throw new UnsupportedOperationException("The session is already running.");
+        }
         this.status = SessionStatus.RUNNING;
     }
 

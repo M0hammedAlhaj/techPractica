@@ -26,10 +26,10 @@ public class TaskService {
         }
     }
 
-    public void validateSessionParticipant(Session session, UUID ownerId) {
+    public void validateSessionParticipant(Session session, UUID userId) {
         boolean exists = session.getMembers()
                 .stream()
-                .anyMatch(member -> member.getUser().getId().equals(ownerId));
+                .anyMatch(member -> member.getUser().getId().equals(userId));
 
         if (!exists) {
             throw new UnauthorizedActionException("User is not part of this session.");

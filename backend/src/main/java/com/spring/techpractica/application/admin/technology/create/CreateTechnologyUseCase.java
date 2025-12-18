@@ -31,12 +31,14 @@ public class CreateTechnologyUseCase {
         if (fields.size() != command.fieldNames().size()) {
           throw new ResourcesNotFoundException(command.fieldNames());
         }
+        if (fields.isEmpty()) {
+            throw new ResourcesNotFoundException("there is no field");
+        }
 
         Technology technology = technologyFactory.create(name);
 
-        if (!fields.isEmpty()) {
-           technology.setFields(fields);
-       }
+        technology.setFields(fields);
+
 
         return technologyRepository.save(technology);
     }

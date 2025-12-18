@@ -27,16 +27,16 @@ public class CreateTaskUseCase {
     @Transactional
     public Task execute(CreateTaskCommand command) {
         Session session = sessionRepository.getOrThrowByID(command.sessionId());
-        taskService.validateSessionOwnership(session, command.ownerId());
+        taskService.validateSessionParticipant(session, command.userId());
 
         List<Field> fields = taskService.validateAndGetFields(command.tags());
-        User owner = userRepository.getOrThrowByID(command.ownerId());
+        User user = userRepository.getOrThrowByID(command.userId());
         List<User> assignees = taskService.validateAndGetAssignees(command.assignees());
 
         Task task = new Task(
                 command.title(),
                 command.description(),
-                owner,
+                user,
                 session,
                 assignees,
                 command.dueDate(),

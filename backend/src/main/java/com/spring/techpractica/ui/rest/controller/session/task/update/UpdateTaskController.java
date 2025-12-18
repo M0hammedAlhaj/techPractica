@@ -41,11 +41,11 @@ public class UpdateTaskController {
     @PutMapping("/")
     public ResponseEntity<?> updateTask(@RequestBody UpdateTaskRequest request,
                                         @AuthenticationPrincipal UserAuthentication userAuthentication) {
-        UUID ownerId = userAuthentication.getUserId();
+        UUID userId = userAuthentication.getUserId();
 
         Task task = updateTaskUseCase.execute(
                 new UpdateTaskCommand(
-                        ownerId,
+                        userId,
                         request.sessionId(),
                         request.taskId(),
                         request.title(),

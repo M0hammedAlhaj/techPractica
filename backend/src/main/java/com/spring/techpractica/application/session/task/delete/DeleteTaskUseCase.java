@@ -30,7 +30,7 @@ public class DeleteTaskUseCase {
 
         Session session = sessionRepository.getOrThrowByID(command.sessionId());
 
-        taskService.validateSessionOwnership(session, user.getId());
+        taskService.validateSessionParticipant(session, user.getId());
 
         Task task = taskRepository.getOrThrowByID(command.taskId());
 
