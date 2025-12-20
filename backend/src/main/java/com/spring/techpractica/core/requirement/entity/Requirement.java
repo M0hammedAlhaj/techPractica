@@ -40,6 +40,7 @@ public class Requirement extends BaseEntity {
     }
 
     public void clearRequirementTechnologies() {
-        this.requirementTechnologies.clear();
+        requirementTechnologies.forEach(rt -> rt.setRequirement(null));
+        requirementTechnologies.clear();
     }
 }

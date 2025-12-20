@@ -83,6 +83,7 @@ public class Session extends BaseEntity {
             requirements = new ArrayList<>();
         }
         requirements.add(requirement);
+        requirement.setSession(this);
     }
 
     public void addBasicInfo(String name, String description, boolean isPrivate) {
@@ -130,5 +131,4 @@ public class Session extends BaseEntity {
         return this.members.stream()
                 .anyMatch(member -> member.getUser().getId().equals(userId));
     }
-
 }
