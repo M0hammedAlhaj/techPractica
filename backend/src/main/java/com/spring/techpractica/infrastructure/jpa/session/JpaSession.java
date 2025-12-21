@@ -72,4 +72,23 @@ public interface JpaSession extends JpaRepository<Session, UUID>, JpaSpecificati
             "AND (:statuses IS NULL OR s.status NOT IN :statuses)")
     List<Session> getSessionsByTechnology_Id(@Param("technologyId") UUID technologyId,@Param("statuses") List<SessionStatus> statuses);
 
+    @Query("""
+    SELECT s
+    FROM Session s
+    WHERE s.isPrivate = false
+      AND s.status NOT IN :statuses
+      AND NOT EXISTS (
+          SELECT sm
+          FROM SessionMember sm
+          WHERE sm.session = s
+            AND sm.user.id = :userId
+            AND sm.role = com.spring.techpractica.core.session.members.model.Role.OWNER
+      )
+""")
+    Page<Session> exploreSessionsExcludeOwner(
+            @Param("userId") UUID userId,
+            @Param("statuses") List<SessionStatus> statuses,
+            Pageable pageable
+    );
+
 }

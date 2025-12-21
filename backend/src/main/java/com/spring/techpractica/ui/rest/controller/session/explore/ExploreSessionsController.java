@@ -3,6 +3,7 @@ package com.spring.techpractica.ui.rest.controller.session.explore;
 import com.spring.techpractica.application.session.explore.ExploreSessionsCommand;
 import com.spring.techpractica.application.session.explore.ExploreSessionsUseCase;
 import com.spring.techpractica.application.session.get.sessions.count.GetSessionsCountUseCase;
+import com.spring.techpractica.core.user.UserAuthentication;
 import com.spring.techpractica.ui.rest.resources.session.SessionCollection;
 import com.spring.techpractica.ui.rest.shared.exception.InvalidPageRequestException;
 import com.spring.techpractica.ui.rest.shared.StandardErrorResponse;
@@ -18,6 +19,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
@@ -86,4 +88,23 @@ public class ExploreSessionsController {
                             .build());
         }
     }
+
+//    public ResponseEntity<?> exploreSessions(@AuthenticationPrincipal UserAuthentication user,
+//                                             @RequestParam int size,
+//                                             @RequestParam int page){
+//        if (page < 0 || size < 1) {
+//            throw new InvalidPageRequestException(page, size);
+//        }
+//
+//        SessionCollection response = new SessionCollection(
+//                exploreSessionsUseCase.execute(
+//                        new ExploreSessionsCommand(Optional.of(), page, size)
+//                ),getSessionsCountUseCase.execute()
+//        );
+//        return ResponseEntity.ok(StandardSuccessResponse.<SessionCollection>builder()
+//                .data(response)
+//                .message("Explore sessions successfully executed")
+//                .status(HttpStatus.OK.value())
+//                .build());
+//    }
 }

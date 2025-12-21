@@ -41,10 +41,21 @@ public class JpaSessionRepository implements SessionRepository {
         return jpaSession.findById(id);
     }
 
-        @Override
-        public List<Session> exploreSessions(Pageable pageable) {
-            return jpaSession.findAllByStatusNotInAndIsPrivateFalse(List.of(SessionStatus.DELETED, SessionStatus.ENDED), pageable).getContent();
-        }
+    @Override
+    public List<Session> exploreSessions(Pageable pageable) {
+        return jpaSession.findAllByStatusNotInAndIsPrivateFalse(List.of(SessionStatus.DELETED, SessionStatus.ENDED), pageable).getContent();
+    }
+
+//    @Override
+//    public List<Session> exploreSessions(UUID userId, Pageable pageable) {
+//        return jpaSession
+//                .exploreSessionsExcludeOwner(
+//                        userId,
+//                        List.of(SessionStatus.DELETED, SessionStatus.ENDED),
+//                        pageable
+//                )
+//                .getContent();
+//    }
 
     @Override
     public List<Session> getSessionsBySystems(List<System> systems, Pageable pageable) {
