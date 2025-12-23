@@ -32,7 +32,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/",
-                                "/login**",
                                 "/oauth2/**",
                                 "/login/oauth2/**"
                         ).permitAll()
@@ -48,10 +47,10 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/sessions/requests/**").authenticated()
                         .anyRequest().permitAll())
                 .oauth2Login(oauth -> oauth
-                        .successHandler(oAuth2SuccessHandler)
                         .userInfoEndpoint(userInfo ->
                                 userInfo.userService(customOAuth2UserService)
                         )
+                        .successHandler(oAuth2SuccessHandler)
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
