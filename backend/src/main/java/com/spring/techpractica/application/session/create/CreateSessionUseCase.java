@@ -1,5 +1,6 @@
 package com.spring.techpractica.application.session.create;
 
+import com.spring.techpractica.application.session.create.github.repo.CreateGithubRepositoryUseCase;
 import com.spring.techpractica.core.session.entity.Session;
 import com.spring.techpractica.core.session.SessionFactory;
 import com.spring.techpractica.core.session.SessionRepository;
@@ -27,6 +28,7 @@ public class CreateSessionUseCase {
     private final SessionMembersFactory sessionMembersFactory;
     private final SystemRepository systemRepository;
     private final AddRequirementsForSessionService requirementsForSession;
+    private final CreateGithubRepositoryUseCase createGithubRepositoryUseCase;
 
     @Transactional
     public Session execute(CreateSessionCommand command) {
@@ -40,6 +42,8 @@ public class CreateSessionUseCase {
         addSystem(session, command.system());
 
         requirementsForSession.addRequirementsForSession(session,command);
+
+        createGithubRepositoryUseCase.createRepository(owner.getGithubAccessToken(), command.name(), command.isPrivate());
 
         return sessionRepository.save(session);
     }

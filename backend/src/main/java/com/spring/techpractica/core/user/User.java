@@ -42,6 +42,18 @@ public class User extends BaseEntity {
     @Column(name = "email")
     private String email;
 
+    @Column(length = 1000, name = "github_access_token")
+    private String githubAccessToken;
+
+    @Column(name = "github_connected")
+    private Boolean githubConnected;
+
+    @Enumerated(EnumType.STRING)
+    private Provider provider;
+
+    @Column(name = "provider_id", nullable = false)
+    private String providerId;
+
     @Builder.Default
     @Enumerated(EnumType.STRING)
     private AccountStatus accountStatus = AccountStatus.UNACTIVE_ACCOUNT;

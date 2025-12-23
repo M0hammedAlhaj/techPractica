@@ -1,6 +1,7 @@
 package com.spring.techpractica.infrastructure.jpa.user;
 
 import com.spring.techpractica.core.shared.Exception.ResourcesNotFoundException;
+import com.spring.techpractica.core.user.Provider;
 import com.spring.techpractica.core.user.User;
 import com.spring.techpractica.core.user.UserRepository;
 import lombok.AllArgsConstructor;
@@ -62,5 +63,10 @@ public class JpaUserRepository implements UserRepository {
     @Override
     public List<User> findAllByIds(Set<UUID> ids) {
         return jpaUser.findAllById(ids);
+    }
+
+    @Override
+    public Optional<User> findByProviderAndProviderId(Provider provider, String providerId) {
+        return jpaUser.findByProviderAndProviderId(provider, providerId);
     }
 }
