@@ -15,15 +15,21 @@ public class HandleOAuth2LoginUseCase {
     public void handle(OAuth2Command command) {
 
         userRepository.findByEmail(command.email())
-                .orElseGet(() -> {
-                    User user = new User();
-                    user.setName(command.name());
-                    user.setEmail(command.email());
-                    user.setGithubAccessToken(command.githubToken());
-                    user.setGithubConnected(true);
-                    user.setProvider(Provider.GITHUB);
-                    user.setProviderId(command.providerId());
-                    return userRepository.save(user);
-                });
+                .ifPresentOrElse(
+                        user -> {
+                            user.setGithubAccessToken(command.githubToken());
+                            userRepository.save(user);
+                        },
+                        () -> {
+                            User user = new User();
+                            user.setName(command.name());
+                            user.setEmail(command.email());
+                            user.setGithubAccessToken(command.githubToken());
+                            user.setGithubConnected(true);
+                            user.setProvider(Provider.GITHUB);
+                            user.setProviderId(command.providerId());
+                            userRepository.save(user);
+                        }
+                );
     }
 }

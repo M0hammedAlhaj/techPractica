@@ -55,7 +55,7 @@ public class SecurityConfig {
                         )
                         .successHandler(oAuth2SuccessHandler)
                         .failureHandler((request, response, exception) -> {
-                            response.sendRedirect("http://localhost:3000/login");
+                            response.sendRedirect("http://localhost:3000/auth");
                         })
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
