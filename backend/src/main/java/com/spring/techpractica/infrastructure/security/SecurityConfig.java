@@ -54,6 +54,9 @@ public class SecurityConfig {
                                 userInfo.userService(customOAuth2UserService)
                         )
                         .successHandler(oAuth2SuccessHandler)
+                        .failureHandler((request, response, exception) -> {
+                            response.sendRedirect("http://localhost:3000/login");
+                        })
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
