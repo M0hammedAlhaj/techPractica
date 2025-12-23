@@ -29,6 +29,8 @@ public class SecurityConfig {
         return http
                 .cors(cors -> cors.configurationSource(corsConfig.corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/",
@@ -47,6 +49,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/sessions/requests/**").authenticated()
                         .anyRequest().permitAll())
                 .oauth2Login(oauth -> oauth
+                        .loginPage("/oauth2/authorization/github")
                         .userInfoEndpoint(userInfo ->
                                 userInfo.userService(customOAuth2UserService)
                         )
