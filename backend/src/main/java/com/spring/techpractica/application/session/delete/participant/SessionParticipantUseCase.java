@@ -31,17 +31,9 @@ public class SessionParticipantUseCase {
             throw new UnauthorizedActionException("Owner cannot be removed from session");
         }
 
-        User participant = userRepository.getOrThrowByID(command.participantId());
+        Request request = requestRepository.getOrThrowByID(command.requestId());
 
-        List<Request> requests =
-                requestRepository.findByUserAndRequirement_Session_Id(
-                        participant,
-                        command.sessionId()
-                );
-
-        requests.stream()
-                .filter(Request::isApproved)
-                .forEach(Request::delete);
+        request.delete();
 
         session.removeMember(command.participantId());
 

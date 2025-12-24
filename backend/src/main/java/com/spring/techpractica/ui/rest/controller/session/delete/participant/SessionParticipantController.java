@@ -48,13 +48,14 @@ public class SessionParticipantController {
             )
     })
 
-    @DeleteMapping("/{sessionId}/participants/{participantId}")
+    @DeleteMapping("/{requestId}/{sessionId}/participants/{participantId}")
     public ResponseEntity<?> deleteSessionParticipant(@AuthenticationPrincipal UserAuthentication  user,
+                                                      @PathVariable UUID requestId,
                                                       @PathVariable UUID sessionId,
                                                       @PathVariable UUID participantId) {
         UUID ownerId = user.getUserId();
 
-        sessionParticipantUseCase.execute(new DeleteSessionParticipantCommand(ownerId, participantId, sessionId));
+        sessionParticipantUseCase.execute(new DeleteSessionParticipantCommand(ownerId, participantId, sessionId, requestId));
 
         return ResponseEntity.ok("Delete Session participant executed successfully")
                 .status(HttpStatus.OK)
