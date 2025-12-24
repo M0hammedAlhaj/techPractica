@@ -5,12 +5,10 @@ import com.spring.techpractica.core.request.entity.Request;
 import com.spring.techpractica.core.session.SessionRepository;
 import com.spring.techpractica.core.session.entity.Session;
 import com.spring.techpractica.core.shared.Exception.UnauthorizedActionException;
-import com.spring.techpractica.core.user.User;
 import com.spring.techpractica.core.user.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -20,6 +18,7 @@ public class SessionParticipantUseCase {
     private final RequestRepository requestRepository;
     private final UserRepository userRepository;
 
+    @Transactional
     public void execute(DeleteSessionParticipantCommand command) {
         Session session = sessionRepository.getOrThrowByID(command.sessionId());
 
@@ -34,6 +33,8 @@ public class SessionParticipantUseCase {
         Request request = requestRepository.getOrThrowByID(command.requestId());
 
         request.delete();
+
+        requestRepository.save(request);
 
         session.removeMember(command.participantId());
 
