@@ -50,4 +50,9 @@ public class Request extends BaseEntity {
     public boolean isRejected() {
         return this.requestStatus == RequestState.REJECTED;
     }
+
+    public void delete() {
+        this.requestStatus = RequestState.DELETED;
+    }
+
 }

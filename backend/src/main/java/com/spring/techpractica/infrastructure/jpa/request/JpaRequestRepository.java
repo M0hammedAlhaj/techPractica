@@ -3,9 +3,11 @@ package com.spring.techpractica.infrastructure.jpa.request;
 import com.spring.techpractica.core.request.entity.Request;
 import com.spring.techpractica.core.request.RequestRepository;
 import com.spring.techpractica.core.shared.Exception.ResourcesNotFoundException;
+import com.spring.techpractica.core.user.User;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -53,4 +55,8 @@ public class JpaRequestRepository implements RequestRepository {
         jpaRequest.deleteAllByRequirementId(id);
     }
 
+    @Override
+    public List<Request> findByUserAndRequirement_Session_Id(User user, UUID requirementSessionId) {
+        return jpaRequest.findByUserAndRequirement_Session_Id(user, requirementSessionId);
+    }
 }

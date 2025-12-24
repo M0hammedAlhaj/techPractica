@@ -1,16 +1,24 @@
 package com.spring.techpractica.application.session.delete.participant;
 
+import com.spring.techpractica.core.request.RequestRepository;
+import com.spring.techpractica.core.request.entity.Request;
 import com.spring.techpractica.core.session.SessionRepository;
 import com.spring.techpractica.core.session.entity.Session;
 import com.spring.techpractica.core.shared.Exception.UnauthorizedActionException;
+import com.spring.techpractica.core.user.User;
+import com.spring.techpractica.core.user.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class SessionParticipantUseCase {
 
     private final SessionRepository sessionRepository;
+    private final RequestRepository requestRepository;
+    private final UserRepository userRepository;
 
     public void execute(DeleteSessionParticipantCommand command) {
         Session session = sessionRepository.getOrThrowByID(command.sessionId());
@@ -22,6 +30,18 @@ public class SessionParticipantUseCase {
         if (command.ownerId().equals(command.participantId())) {
             throw new UnauthorizedActionException("Owner cannot be removed from session");
         }
+
+        User participant = userRepository.getOrThrowByID(command.participantId());
+
+        List<Request> requests =
+                requestRepository.findByUserAndRequirement_Session_Id(
+                        participant,
+                        command.sessionId()
+                );
+
+        requests.stream()
+                .filter(Request::isApproved)
+                .forEach(Request::delete);
 
         session.removeMember(command.participantId());
 

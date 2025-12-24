@@ -1,10 +1,13 @@
 package com.spring.techpractica.infrastructure.jpa.request;
 
 import com.spring.techpractica.core.request.entity.Request;
+import com.spring.techpractica.core.session.entity.Session;
+import com.spring.techpractica.core.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -26,4 +29,6 @@ public interface JpaRequest extends JpaRepository<Request, UUID> {
     boolean existsByRequirementId(UUID requirementId);
 
     void deleteAllByRequirementId(UUID id);
+
+    List<Request> findByUserAndRequirement_Session_Id(User user, UUID requirementSessionId);
 }
