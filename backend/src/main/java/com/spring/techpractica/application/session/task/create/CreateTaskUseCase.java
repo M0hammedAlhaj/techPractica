@@ -1,6 +1,8 @@
 package com.spring.techpractica.application.session.task.create;
 
+import com.spring.techpractica.application.notification.CreateNotificationUseCase;
 import com.spring.techpractica.core.field.entity.Field;
+import com.spring.techpractica.core.notification.NotificationRepository;
 import com.spring.techpractica.core.session.SessionRepository;
 import com.spring.techpractica.core.session.entity.Session;
 import com.spring.techpractica.core.task.TaskRepository;
@@ -23,6 +25,9 @@ public class CreateTaskUseCase {
     private final SessionRepository sessionRepository;
     private final TaskRepository taskRepository;
     private final TaskService taskService;
+    private final CreateNotificationUseCase createNotificationUseCase;
+    private final NotificationRepository notificationRepository;
+
 
     @Transactional
     public Task execute(CreateTaskCommand command) {
@@ -44,6 +49,21 @@ public class CreateTaskUseCase {
                 command.type(),
                 fields
         );
-        return taskRepository.save(task);
+
+        Task savedTask = taskRepository.save(task);
+
+        String title = "New Task Assigned";
+        String content = "You have been assigned a new task: " + task.getTitle()
+                + " in session: " + session.getName();
+
+        assignees.forEach(assignee -> {
+            if (!user.getId().equals(assignee.getId())) {
+                notificationRepository.save(
+                        createNotificationUseCase.execute(assignee, title, content)
+                );
+            }
+        });
+
+        return savedTask;
     }
 }

@@ -30,6 +30,7 @@ public class CreateSessionUseCase {
     private final AddRequirementsForSessionService requirementsForSession;
     private final CreateGithubRepositoryUseCase createGithubRepositoryUseCase;
 
+
     @Transactional
     public Session execute(CreateSessionCommand command) {
         User owner = userRepository.getOrThrowByID(command.userId());

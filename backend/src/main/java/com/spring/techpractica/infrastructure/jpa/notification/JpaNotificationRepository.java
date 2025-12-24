@@ -2,9 +2,12 @@ package com.spring.techpractica.infrastructure.jpa.notification;
 
 import com.spring.techpractica.core.notification.NotificationRepository;
 import com.spring.techpractica.core.notification.entity.Notification;
+import com.spring.techpractica.core.user.User;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -27,5 +30,10 @@ public class JpaNotificationRepository implements NotificationRepository {
     @Override
     public Optional<Notification> findById(UUID id) {
         return Optional.empty();
+    }
+
+    @Override
+    public List<Notification> findByUserAndAtCreatedAfterOrderByAtCreatedAsc(User user, LocalDateTime lastSeen) {
+        return jpaNotification.findByUserAndAtCreatedAfterOrderByAtCreatedAsc(user, lastSeen);
     }
 }

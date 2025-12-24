@@ -3,6 +3,7 @@ package com.spring.techpractica.ui.rest.controller.session.request.approve;
 import com.spring.techpractica.application.session.request.approve.ApproveSessionsRequestsCommand;
 import com.spring.techpractica.application.session.request.approve.ApproveSessionsRequestsUseCase;
 import com.spring.techpractica.application.session.request.RequestSessionResponse;
+import com.spring.techpractica.core.request.entity.Request;
 import com.spring.techpractica.core.user.UserAuthentication;
 import com.spring.techpractica.ui.rest.resources.request.Request.ApproveSessionResources;
 import com.spring.techpractica.ui.rest.resources.request.Request.RequestResources;
@@ -60,7 +61,7 @@ public class ApproveSessionsRequestsController {
     public ResponseEntity<?> ApproveSessionRequests(@AuthenticationPrincipal UserAuthentication userAuthentication
             , @PathVariable("sessionId") UUID sessionId, @PathVariable("requestId") UUID requestId) {
 
-        RequestSessionResponse approvedRequest = approveSessionsRequestsUseCase.execute(
+        Request approvedRequest = approveSessionsRequestsUseCase.execute(
                 new ApproveSessionsRequestsCommand(
                         userAuthentication.getUserId(),
                         sessionId,
@@ -68,11 +69,11 @@ public class ApproveSessionsRequestsController {
                 )
         );
 
-        ApproveSessionResources responseData = new ApproveSessionResources(approvedRequest.getRequest(), approvedRequest.getNotification());
+        RequestResources responseData = new RequestResources(approvedRequest);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(
-                        StandardSuccessResponse.<ApproveSessionResources>builder()
+                        StandardSuccessResponse.<RequestResources>builder()
                                 .data(responseData)
                                 .message("Requests approved successfully")
                                 .status(HttpStatus.OK.value())
