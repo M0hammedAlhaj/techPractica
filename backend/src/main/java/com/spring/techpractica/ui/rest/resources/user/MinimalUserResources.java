@@ -13,6 +13,6 @@ public class MinimalUserResources {
 
     public MinimalUserResources(User user) {
         this.id = user.getId().toString();
-        this.fullName = user.getFirstName();
+        this.fullName = user.getFirstName() + " " + user.getLastName();
     }
 }
