@@ -5,6 +5,7 @@ import com.spring.techpractica.core.session.SessionStatus;
 import com.spring.techpractica.core.session.members.Entity.SessionMember;
 import com.spring.techpractica.core.session.members.model.Role;
 import com.spring.techpractica.core.shared.BaseEntity;
+import com.spring.techpractica.core.shared.Exception.ResourcesNotFoundException;
 import com.spring.techpractica.core.system.entity.System;
 import com.spring.techpractica.core.task.entity.Task;
 import com.spring.techpractica.core.user.User;
@@ -137,5 +138,15 @@ public class Session extends BaseEntity {
 
     public void generateSessionCode(String code) {
         this.sessionCode = code;
+    }
+
+    public void removeMember(UUID participantId) {
+        boolean removed = members.removeIf(member ->
+                member.getUser().getId().equals(participantId)
+        );
+
+        if (!removed) {
+            throw new ResourcesNotFoundException(participantId);
+        }
     }
 }
