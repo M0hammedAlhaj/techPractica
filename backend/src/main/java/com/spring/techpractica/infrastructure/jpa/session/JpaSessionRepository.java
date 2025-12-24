@@ -101,4 +101,9 @@ public class JpaSessionRepository implements SessionRepository {
     public long getUserSessionsCount(UUID userID) {
         return jpaSession.getAllSessionsCountByUser(List.of(SessionStatus.DELETED),userID);
     }
+
+    @Override
+    public Session findBySessionCode(String sessionCode) {
+        return jpaSession.findBySessionCode(sessionCode);
+    }
 }

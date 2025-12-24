@@ -91,4 +91,5 @@ public interface JpaSession extends JpaRepository<Session, UUID>, JpaSpecificati
             Pageable pageable
     );
 
+    Session findBySessionCode(String sessionCode);
 }

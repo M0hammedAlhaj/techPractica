@@ -31,4 +31,6 @@ public interface SessionRepository extends BaseRepository<Session> {
     long getSessionsCount();
 
     long getUserSessionsCount(UUID userID);
+
+    Session findBySessionCode(String sessionCode);
 }

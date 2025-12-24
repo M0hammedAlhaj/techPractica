@@ -34,6 +34,9 @@ public class Session extends BaseEntity {
     @Column(name = "is_private")
     private boolean isPrivate;
 
+    @Column(name = "session_code", unique = true)
+    private String sessionCode;
+
     @OneToMany(mappedBy = "session",
             fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE , CascadeType.MERGE},
@@ -130,5 +133,9 @@ public class Session extends BaseEntity {
     public boolean isMember(UUID userId) {
         return this.members.stream()
                 .anyMatch(member -> member.getUser().getId().equals(userId));
+    }
+
+    public void generateSessionCode(String code) {
+        this.sessionCode = code;
     }
 }

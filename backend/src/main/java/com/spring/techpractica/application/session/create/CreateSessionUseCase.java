@@ -8,6 +8,7 @@ import com.spring.techpractica.core.session.service.AddRequirementsForSessionSer
 import com.spring.techpractica.core.session.members.Entity.SessionMember;
 import com.spring.techpractica.core.session.members.SessionMembersFactory;
 import com.spring.techpractica.core.session.members.model.Role;
+import com.spring.techpractica.core.session.service.SessionCodeGenerator;
 import com.spring.techpractica.core.system.entity.System;
 import com.spring.techpractica.core.system.SystemRepository;
 import com.spring.techpractica.core.user.User;
@@ -46,6 +47,8 @@ public class CreateSessionUseCase {
 
         createGithubRepositoryUseCase.createRepository(owner.getGithubAccessToken(), command.name(), command.isPrivate());
 
+        session.generateSessionCode(generateSessionCode(session));
+
         return sessionRepository.save(session);
     }
 
@@ -57,5 +60,16 @@ public class CreateSessionUseCase {
     private void addSystem(Session session, UUID systemId) {
         System system = systemRepository.getOrThrowByID(systemId);
         session.addSystem(system);
+    }
+
+    private String generateSessionCode(Session session) {
+        String sessionCode;
+        if (session.isPrivate()) {
+            sessionCode = SessionCodeGenerator.generate();
+        }
+        else {
+            sessionCode = "PUBLIC";
+        }
+        return sessionCode;
     }
 }
