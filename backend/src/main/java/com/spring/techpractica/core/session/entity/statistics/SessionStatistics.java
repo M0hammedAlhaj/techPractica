@@ -5,6 +5,7 @@ import com.spring.techpractica.core.shared.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,5 +34,10 @@ public class SessionStatistics extends BaseEntity {
     )
     private List<UserTaskStatistics> userStats;
 
+    @Column(name = "session_duration")
+    private Duration sessionDuration;
 
+    public void duration(Duration duration) {
+        this.sessionDuration = duration;
+    }
 }

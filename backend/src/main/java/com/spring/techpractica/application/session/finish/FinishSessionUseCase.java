@@ -3,7 +3,6 @@ package com.spring.techpractica.application.session.finish;
 import com.spring.techpractica.core.session.SessionCannotBeFinishedException;
 import com.spring.techpractica.core.session.SessionRepository;
 import com.spring.techpractica.core.session.SessionStatisticsRepository;
-import com.spring.techpractica.core.session.SessionStatus;
 import com.spring.techpractica.core.session.entity.Session;
 import com.spring.techpractica.core.session.entity.statistics.SessionStatistics;
 import com.spring.techpractica.core.session.entity.statistics.UserTaskStatistics;
@@ -14,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -64,14 +65,14 @@ public class FinishSessionUseCase {
                         Collectors.counting()
                 ));
 
-        long totalDoneTasks = session.getTasks().stream()
-                .filter(task -> task.getStatus() == TaskStatus.DONE)
-                .count();
+//        long totalDoneTasks = session.getTasks().stream()
+//                .filter(task -> task.getStatus() == TaskStatus.DONE)
+//                .count();
 
         SessionStatistics statistics = SessionStatistics.builder()
                 .session(session)
                 .totalTasks(totalTasksInSession)
-                .totalDoneTasks(totalDoneTasks)
+//                .totalDoneTasks(totalDoneTasks)
                 .build();
 
         List<UserTaskStatistics> userStats =
@@ -89,9 +90,16 @@ public class FinishSessionUseCase {
 
         statistics.setUserStats(userStats);
 
+        Duration duration = Duration.between(
+                session.getAtCreated(),
+                LocalDateTime.now()
+        );
+
+        statistics.duration(duration);
+
         sessionStatisticsRepository.save(statistics);
 
-        session.setStatus(SessionStatus.ENDED);
+        session.endSession();
 
         return sessionRepository.save(session);
     }

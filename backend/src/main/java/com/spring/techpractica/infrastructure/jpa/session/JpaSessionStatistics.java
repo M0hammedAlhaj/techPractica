@@ -8,4 +8,5 @@ import java.util.UUID;
 
 @Repository
 public interface JpaSessionStatistics extends JpaRepository<SessionStatistics, UUID> {
+    SessionStatistics findBySession_Id(UUID sessionId);
 }

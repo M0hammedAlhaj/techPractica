@@ -29,4 +29,9 @@ public class JpaSessionStatisticsRepository implements SessionStatisticsReposito
     public Optional<SessionStatistics> findById(UUID id) {
         return Optional.empty();
     }
+
+    @Override
+    public SessionStatistics findBySessionId(UUID sessionId) {
+        return jpaSessionStatistics.findBySession_Id(sessionId);
+    }
 }

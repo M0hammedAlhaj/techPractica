@@ -3,7 +3,6 @@ package com.spring.techpractica.ui.rest.controller.session.explore;
 import com.spring.techpractica.application.session.explore.ExploreSessionsCommand;
 import com.spring.techpractica.application.session.explore.ExploreSessionsUseCase;
 import com.spring.techpractica.application.session.get.sessions.count.GetSessionsCountUseCase;
-import com.spring.techpractica.core.user.UserAuthentication;
 import com.spring.techpractica.ui.rest.resources.session.SessionCollection;
 import com.spring.techpractica.ui.rest.shared.exception.InvalidPageRequestException;
 import com.spring.techpractica.ui.rest.shared.StandardErrorResponse;
@@ -19,7 +18,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;

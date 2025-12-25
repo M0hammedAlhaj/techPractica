@@ -26,7 +26,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/sessions")
 @AllArgsConstructor
-@Tag(name = "Sessions")
+@Tag(name = "Session")
 public class FinishSessionController {
 
     private final FinishSessionUseCase finishSessionUseCase;

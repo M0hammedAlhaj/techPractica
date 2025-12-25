@@ -149,4 +149,11 @@ public class Session extends BaseEntity {
             throw new ResourcesNotFoundException(participantId);
         }
     }
+
+    public void endSession() {
+        if (status.equals(SessionStatus.ENDED)) {
+            throw new UnsupportedOperationException("The session is already ending.");
+        }
+        this.status = SessionStatus.ENDED;
+    }
 }
