@@ -10,10 +10,7 @@ import com.spring.techpractica.core.technology.entity.Technology;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @NoArgsConstructor
@@ -81,6 +78,11 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
     private List<SocialAccount> socialAccounts = new ArrayList<>();
+
+    public User(UUID id) {
+        super();
+        super.setId(id);
+    }
 
     public void addInfo(String firstName, String lastName, String brief) {
         this.firstName = firstName;

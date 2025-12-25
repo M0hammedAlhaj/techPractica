@@ -1,5 +1,5 @@
 package com.spring.techpractica.core.request.model;
 
 public enum RequestState {
-    PENDING, APPROVE, REJECTED, DELETED
+    PENDING, APPROVED, REJECTED, DELETED
 }

@@ -2,6 +2,7 @@ package com.spring.techpractica.core.shared;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -11,6 +12,7 @@ import java.util.UUID;
 @Getter
 public abstract class BaseEntity {
     @Id
+    @Setter
     private UUID id;
 
     @Column(name = "at_created")
