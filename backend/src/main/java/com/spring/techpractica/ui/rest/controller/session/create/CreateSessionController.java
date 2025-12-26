@@ -52,17 +52,10 @@ public class CreateSessionController {
     @PostMapping("/")
     public ResponseEntity<?> createSession(@RequestBody @Valid CreateSessionRequest request,
                                            @AuthenticationPrincipal UserAuthentication userAuthentication) {
-        User user = userRepository.getOrThrowByID(userAuthentication.getUserId());
 
-        if (!Boolean.TRUE.equals(user.getGithubConnected()) || user.getGithubAccessToken() == null
-                || user.getGithubAccessToken().isBlank()) {
-            return ResponseEntity.status(HttpStatus.TEMPORARY_REDIRECT)
-                    .header(HttpHeaders.LOCATION, "/api/v1/auth/github?mode=link")
-                    .build();
-        }
 
         Session session = createSessionUseCase.execute(new CreateSessionCommand(
-                user.getId(),
+                userAuthentication.getUserId(),
                 request.name(),
                 request.description(),
                 request.isPrivate(),
