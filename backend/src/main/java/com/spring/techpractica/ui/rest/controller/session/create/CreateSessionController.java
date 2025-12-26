@@ -4,7 +4,9 @@ import com.spring.techpractica.application.session.create.CreateSessionCommand;
 import com.spring.techpractica.application.session.create.CreateSessionUseCase;
 import com.spring.techpractica.core.requirement.model.RequirementRequest;
 import com.spring.techpractica.core.session.entity.Session;
+import com.spring.techpractica.core.user.User;
 import com.spring.techpractica.core.user.UserAuthentication;
+import com.spring.techpractica.core.user.UserRepository;
 import com.spring.techpractica.ui.rest.controller.session.create.request.CreateSessionRequest;
 import com.spring.techpractica.ui.rest.resources.session.SessionResources;
 import com.spring.techpractica.ui.rest.shared.StandardSuccessResponse;
@@ -16,6 +18,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -31,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CreateSessionController {
 
     private final CreateSessionUseCase createSessionUseCase;
+    private final UserRepository userRepository;
 
     @Operation(
             summary = "Create new Session",
@@ -48,8 +52,17 @@ public class CreateSessionController {
     @PostMapping("/")
     public ResponseEntity<?> createSession(@RequestBody @Valid CreateSessionRequest request,
                                            @AuthenticationPrincipal UserAuthentication userAuthentication) {
+        User user = userRepository.getOrThrowByID(userAuthentication.getUserId());
+
+        if (!Boolean.TRUE.equals(user.getGithubConnected()) || user.getGithubAccessToken() == null
+                || user.getGithubAccessToken().isBlank()) {
+            return ResponseEntity.status(HttpStatus.TEMPORARY_REDIRECT)
+                    .header(HttpHeaders.LOCATION, "/api/v1/auth/github?mode=link")
+                    .build();
+        }
+
         Session session = createSessionUseCase.execute(new CreateSessionCommand(
-                userAuthentication.getUserId(),
+                user.getId(),
                 request.name(),
                 request.description(),
                 request.isPrivate(),
