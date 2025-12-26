@@ -35,13 +35,11 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         OAuth2AuthenticationToken token =
                 (OAuth2AuthenticationToken) authentication;
 
-        Provider provider = Provider.GITHUB;
-
         String providerId =
                 token.getPrincipal().getAttribute("id").toString();
 
         User user = userRepository
-                .findByProviderAndProviderId(provider, providerId)
+                .findByProviderId(providerId)
                 .orElseThrow(() ->
                         new ResourcesNotFoundException("User not found after OAuth2 login")
                 );
