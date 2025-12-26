@@ -4,6 +4,7 @@ import com.spring.techpractica.application.session.create.github.repo.CreateGith
 import com.spring.techpractica.core.session.entity.Session;
 import com.spring.techpractica.core.session.SessionFactory;
 import com.spring.techpractica.core.session.SessionRepository;
+import com.spring.techpractica.core.session.event.CreateRepoEvent;
 import com.spring.techpractica.core.session.service.AddRequirementsForSessionService;
 import com.spring.techpractica.core.session.members.Entity.SessionMember;
 import com.spring.techpractica.core.session.members.SessionMembersFactory;
@@ -14,6 +15,7 @@ import com.spring.techpractica.core.system.SystemRepository;
 import com.spring.techpractica.core.user.User;
 import com.spring.techpractica.core.user.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +32,7 @@ public class CreateSessionUseCase {
     private final SystemRepository systemRepository;
     private final AddRequirementsForSessionService requirementsForSession;
     private final CreateGithubRepositoryUseCase createGithubRepositoryUseCase;
+    private final ApplicationEventPublisher eventPublisher;
 
 
     @Transactional
@@ -48,7 +51,12 @@ public class CreateSessionUseCase {
         createGithubRepositoryUseCase.createRepository(owner.getGithubAccessToken(), command.name(), command.isPrivate());
 
         session.generateSessionCode(generateSessionCode(session));
-
+        eventPublisher.publishEvent(new CreateRepoEvent(
+                owner.getId(),
+                owner.getEmail(),
+                owner.getName(),
+                String.format("https://github.com/%s/%s",owner.getName(),command.name())
+        ));
         return sessionRepository.save(session);
     }
 
