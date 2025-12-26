@@ -33,36 +33,32 @@ public class JoinSessionUseCase {
         User user = userRepository.getOrThrowByID(command.userId());
         Session session = sessionRepository.getOrThrowByID(command.sessionId());
 
-
         Notification notification;
         String title = "Session Join";
         String content;
 
+        if (!session.isMember(user.getId())) {
+            SessionMember sessionMember = sessionMembersFactory.create(session, user, Role.PARTICIPATE);
+            session.addMember(sessionMember);
+        }
+
+        sessionRepository.save(session);
+
+        content = "User with name "+ user.getName()+ " joined the session";
 
 
-            if (!session.isMember(user.getId())) {
-                SessionMember sessionMember = sessionMembersFactory.create(session, user, Role.PARTICIPATE);
-                session.addMember(sessionMember);
-            }
+        notification = createNotificationUseCase.execute(session.getOwner(), title, content);
 
+        notificationRepository.save(notification);
 
-            sessionRepository.save(session);
+//            eventPublisher.publishEvent(new UserAcceptedToSessionEvent(
+//                    user.getId(),
+//                    user.getEmail(),
+//                    user.getName(),
+//                    session.getId(),
+//                    session.getName()
+//            ));
 
-            content = "Congratulations! You have been joined to the session: " + session.getName();
-
-
-            notification = createNotificationUseCase.execute(user, title, content);
-
-            notificationRepository.save(notification);
-
-
-                eventPublisher.publishEvent(new UserAcceptedToSessionEvent(
-                        user.getId(),
-                        user.getEmail(),
-                        user.getName(),
-                        session.getId(),
-                        session.getName()
-                ));
         return session;
     }
 }
