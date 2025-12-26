@@ -32,4 +32,8 @@ public class UserAuthentication implements UserDetails {
     public UUID getUserId() {
         return user.getId();
     }
+
+    public User getUser() {
+        return user;
+    }
 }

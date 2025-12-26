@@ -41,7 +41,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                 token.getPrincipal().getAttribute("id").toString();
 
         User user = userRepository
-                .findByProviderAndProviderId(provider, providerId)
+                .findByProviderId(providerId)
                 .orElseThrow(() ->
                         new ResourcesNotFoundException("User not found after OAuth2 login")
                 );
