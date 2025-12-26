@@ -39,14 +39,11 @@ public class User extends BaseEntity {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "github_email")
+    private String githubEmail;
+
     @Column(length = 1000, name = "github_access_token")
     private String githubAccessToken;
-
-    @Column(name = "github_connected")
-    private Boolean githubConnected;
-
-    @Enumerated(EnumType.STRING)
-    private Provider provider;
 
     @Column(name = "provider_id")
     private String providerId;
@@ -68,7 +65,7 @@ public class User extends BaseEntity {
     @JoinTable(joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     @Builder.Default
-    private List<Role> roles=new ArrayList<>();
+    private List<Role> roles = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "USERS_SKILLS",
@@ -130,11 +127,11 @@ public class User extends BaseEntity {
         this.socialAccounts.addAll(socialAccounts);
     }
 
-    public String getFullName(){
+    public String getFullName() {
         return this.firstName + " " + this.lastName;
     }
 
-    public void setDeleted(){
+    public void setDeleted() {
         this.accountStatus = AccountStatus.IS_DELETED;
     }
 

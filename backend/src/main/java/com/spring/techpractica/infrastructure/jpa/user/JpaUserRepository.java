@@ -64,9 +64,14 @@ public class JpaUserRepository implements UserRepository {
     public List<User> findAllByIds(Set<UUID> ids) {
         return jpaUser.findAllById(ids);
     }
+    
+    @Override
+    public Optional<User> findByEmailGithub(String email) {
+        return jpaUser.findByGithubEmail(email);
+    }
 
     @Override
-    public Optional<User> findByProviderAndProviderId(Provider provider, String providerId) {
-        return jpaUser.findByProviderAndProviderId(provider, providerId);
+    public Optional<User> findByProviderId(String providerId) {
+        return jpaUser.findByProviderId(providerId);
     }
 }

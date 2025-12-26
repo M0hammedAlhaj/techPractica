@@ -20,5 +20,7 @@ public interface UserRepository extends BaseRepository<User> {
 
     List<User> findAllByIds(Set<UUID> ids);
 
-    Optional<User> findByProviderAndProviderId(Provider provider, String providerId);
+    Optional<User> findByEmailGithub(String email);
+
+    Optional<User> findByProviderId(String providerId);
 }
