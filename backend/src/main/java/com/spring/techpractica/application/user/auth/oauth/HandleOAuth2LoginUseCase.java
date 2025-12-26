@@ -5,14 +5,15 @@ import com.spring.techpractica.core.user.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @AllArgsConstructor
 public class HandleOAuth2LoginUseCase {
 
     private final UserRepository userRepository;
 
-    public void handle(OAuth2Command command, User userAuth) {
-
+    public void handle(OAuth2Command command, UUID linkingUserId) {
         var byProvider = userRepository.findByProviderId(command.providerId());
 
         if (byProvider.isPresent()) {
@@ -22,19 +23,22 @@ public class HandleOAuth2LoginUseCase {
             return;
         }
 
-        if (userAuth != null) {
+        if (linkingUserId != null) {
+            var optionalUser = userRepository.findById(linkingUserId);
+            if (optionalUser.isPresent()) {
+                var userAuth = optionalUser.get();
+                if (userAuth.getGithubEmail() == null) {
+                    userAuth.setGithubEmail(command.email());
+                    userAuth.setProviderId(command.providerId());
+                    userAuth.setGithubAccessToken(command.githubToken());
+                    userRepository.save(userAuth);
+                    return;
+                }
 
-            if (userAuth.getGithubEmail() == null) {
-                userAuth.setGithubEmail(command.email());
-                userAuth.setProviderId(command.providerId());
                 userAuth.setGithubAccessToken(command.githubToken());
                 userRepository.save(userAuth);
                 return;
             }
-
-            userAuth.setGithubAccessToken(command.githubToken());
-            userRepository.save(userAuth);
-            return;
         }
 
         User user = new User();
