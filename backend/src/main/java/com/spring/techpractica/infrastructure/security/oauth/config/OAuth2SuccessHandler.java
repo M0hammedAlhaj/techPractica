@@ -35,8 +35,6 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         OAuth2AuthenticationToken token =
                 (OAuth2AuthenticationToken) authentication;
 
-        Provider provider = Provider.GITHUB;
-
         String providerId =
                 token.getPrincipal().getAttribute("id").toString();
 
