@@ -48,6 +48,7 @@ public class SecurityConfig {
                         .requestMatchers("api/v1/sessions/start/**").authenticated()
                         .requestMatchers("/api/v1/sessions/requests/**").authenticated()
                         .requestMatchers("/api/v1/notifications/**").authenticated()
+                        .requestMatchers("/auth/github/connect").authenticated()
                         .anyRequest().permitAll())
                 .oauth2Login(oauth -> oauth
                         .loginPage("/oauth2/authorization/github")
