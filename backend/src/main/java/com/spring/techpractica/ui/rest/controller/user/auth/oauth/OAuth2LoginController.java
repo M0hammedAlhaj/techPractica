@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -19,6 +20,7 @@ public class OAuth2LoginController {
             summary = "Login with GitHub",
             description = "Redirects the user to GitHub OAuth2 authorization page to authenticate using GitHub account"
     )
+
     @GetMapping("/github")
     public String loginWithGithub(@RequestParam(value = "mode", required = false) String mode,
                                   Authentication authentication,
