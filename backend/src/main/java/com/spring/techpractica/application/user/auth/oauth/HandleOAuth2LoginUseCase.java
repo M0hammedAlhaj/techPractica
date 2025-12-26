@@ -13,23 +13,42 @@ public class HandleOAuth2LoginUseCase {
     private final UserRepository userRepository;
 
     public void handle(OAuth2Command command) {
+        if (command.isLinkMode()) {
+            User user = userRepository.getOrThrowByID(command.sessionUserId());
+            user.setGithubAccessToken(command.githubToken());
+            user.setGithubConnected(true);
+            user.setProviderId(command.providerId());
+            userRepository.save(user);
+            return;
+        }
 
-        userRepository.findByEmail(command.email())
+        userRepository.findByProviderAndProviderId(Provider.GITHUB, command.providerId())
+                .or(() -> userRepository.findByEmail(command.email()))
                 .ifPresentOrElse(
-                        user -> {
-                            user.setGithubAccessToken(command.githubToken());
-                            userRepository.save(user);
-                        },
-                        () -> {
-                            User user = new User();
-                            user.setName(command.name());
-                            user.setEmail(command.email());
-                            user.setGithubAccessToken(command.githubToken());
-                            user.setGithubConnected(true);
-                            user.setProvider(Provider.GITHUB);
-                            user.setProviderId(command.providerId());
-                            userRepository.save(user);
-                        }
+                        user -> updateExistingUser(command, user),
+                        () -> createNewUser(command)
                 );
+    }
+
+    private void updateExistingUser(OAuth2Command command, User user) {
+        user.setGithubAccessToken(command.githubToken());
+        user.setGithubConnected(true);
+        user.setProvider(Provider.GITHUB);
+        user.setProviderId(command.providerId());
+        if (user.getEmail() == null) {
+            user.setEmail(command.email());
+        }
+        userRepository.save(user);
+    }
+
+    private void createNewUser(OAuth2Command command) {
+        User user = new User();
+        user.setName(command.name());
+        user.setEmail(command.email());
+        user.setGithubAccessToken(command.githubToken());
+        user.setGithubConnected(true);
+        user.setProvider(Provider.GITHUB);
+        user.setProviderId(command.providerId());
+        userRepository.save(user);
     }
 }
