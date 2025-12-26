@@ -14,7 +14,7 @@ import java.util.List;
 public class SessionSpecifications {
 
 
-    public static Specification<Session> buildDynamicSpecification(String sessionName, String fieldName) {
+    public static Specification<Session> buildDynamicSpecification(String sessionName, String fieldName, String systemName) {
         return (root, query, criteriaBuilder) -> {
             query.distinct(true);
 
@@ -22,6 +22,7 @@ public class SessionSpecifications {
 
             boolean hasSessionName = sessionName != null && !sessionName.trim().isEmpty();
             boolean hasFieldName = fieldName != null && !fieldName.trim().isEmpty();
+            boolean hasSystemName = systemName != null && !systemName.trim().isEmpty();
 
             if (hasSessionName) {
                     Path<?> namePath = root.get("name");
@@ -46,6 +47,15 @@ public class SessionSpecifications {
                         ));
 
 
+            }
+
+            if (hasSystemName) {
+                var systemJoin = root.join("systems", JoinType.INNER);
+
+                predicates.add(criteriaBuilder.like(
+                        criteriaBuilder.lower(systemJoin.get("name").as(String.class)),
+                        "%" + systemName.trim().toLowerCase() + "%"
+                ));
             }
 
             if (predicates.isEmpty()) {

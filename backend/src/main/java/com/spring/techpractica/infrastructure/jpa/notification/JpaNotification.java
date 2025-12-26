@@ -11,5 +11,5 @@ import java.util.UUID;
 
 @Repository
 public interface JpaNotification extends JpaRepository<Notification, UUID> {
-    List<Notification> findByUserAndAtCreatedAfterOrderByAtCreatedAsc(User user, LocalDateTime atCreatedAfter);
+    List<Notification> findByUserAndAtCreatedAfterOrderByAtCreatedDesc(User user, LocalDateTime atCreatedAfter);
 }

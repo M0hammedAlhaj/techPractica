@@ -9,13 +9,14 @@ import java.util.UUID;
 public class UserTaskStatisticsResources {
 
     private UUID userId;
-    private String userName;
+    private String name;
     private long assignedTasksCount;
     private long onTimeTasksCount;
 
     public UserTaskStatisticsResources(UserTaskStatistics userTaskStatistics) {
         this.userId = userTaskStatistics.getUser().getId();
-        this.userName = userTaskStatistics.getUser().getName();
+        this.name = userTaskStatistics.getUser().getFirstName() + " "
+                + userTaskStatistics.getUser().getLastName();
         this.assignedTasksCount = userTaskStatistics.getAssignedTasksCount();
         this.onTimeTasksCount = userTaskStatistics.getOnTimeTasksCount();
     }

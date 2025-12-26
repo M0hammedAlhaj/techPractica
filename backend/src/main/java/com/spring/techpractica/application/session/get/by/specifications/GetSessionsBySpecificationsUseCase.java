@@ -27,7 +27,12 @@ public class GetSessionsBySpecificationsUseCase {
             return List.of(sessionRepository.findBySessionCode(command.sessionCode()));
         }
 
-        Specification<Session> specification = SessionSpecifications.buildDynamicSpecification(command.sessionName(), command.fieldName());
+        Specification<Session> specification = SessionSpecifications
+                .buildDynamicSpecification(
+                        command.sessionName(),
+                        command.fieldName(),
+                        command.systemName()
+                );
 
         Pageable pageable = buildPageable(command.page(), command.size(), command.sort());
 

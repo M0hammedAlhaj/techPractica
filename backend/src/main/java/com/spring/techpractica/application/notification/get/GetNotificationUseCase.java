@@ -19,6 +19,6 @@ public class GetNotificationUseCase {
     public List<Notification> execute(GetNotificationCommand command) {
         User user = userRepository.getOrThrowByID(command.userId());
 
-        return notificationRepository.findByUserAndAtCreatedAfterOrderByAtCreatedAsc(user, command.lastSeen());
+        return notificationRepository.findByUserAndAtCreatedAfterOrderByAtCreatedDesc(user, command.lastSeen());
     }
 }

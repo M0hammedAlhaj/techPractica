@@ -33,7 +33,7 @@ public class JpaNotificationRepository implements NotificationRepository {
     }
 
     @Override
-    public List<Notification> findByUserAndAtCreatedAfterOrderByAtCreatedAsc(User user, LocalDateTime lastSeen) {
-        return jpaNotification.findByUserAndAtCreatedAfterOrderByAtCreatedAsc(user, lastSeen);
+    public List<Notification> findByUserAndAtCreatedAfterOrderByAtCreatedDesc(User user, LocalDateTime lastSeen) {
+        return jpaNotification.findByUserAndAtCreatedAfterOrderByAtCreatedDesc(user, lastSeen);
     }
 }
