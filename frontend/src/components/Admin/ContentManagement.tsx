@@ -1,12 +1,17 @@
 import { useState } from "react";
 import { FaPlus } from "react-icons/fa";
-import { IData } from "../../interfaces";
+import { ApiError, IData } from "../../interfaces";
 import { useFields, useSystems, useTechnologies } from "../../api";
 import ContentCard from "./ContentCard";
 import { AnimatePresence } from "framer-motion";
 import { TechnologyModal } from "./TechnologyModal";
 import { SystemModal } from "./SystemModal";
 import { FieldModel } from "./FieldModel";
+import DeleteModel from "../DeleteSessionModel";
+import axiosInstance from "../../config/axios.config";
+import toast from "react-hot-toast";
+import { useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 
 // Modern Content Management Component
 export function ModernContentManagement() {
@@ -15,25 +20,133 @@ export function ModernContentManagement() {
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isTechnologyModalOpen, setIsTechnologyModalOpen] = useState(false);
   const [isFieldModalOpen, setIsFieldModalOpen] = useState(false);
+  const [selectedField, setSelectedField] = useState<any | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<any | null>(null);
+  const [selectedTechnology, setSelectedTechnology] = useState<any | null>(
+    null
+  );
+  const [deleteModal, setDeleteModal] = useState<{
+    isOpen: boolean;
+    entityType?: "category" | "field" | "technology";
+    entityId?: string;
+  }>({ isOpen: false });
+  const queryClient = useQueryClient();
   /*--Data-------------------------------------------------------------------------------------------------- */
   const { data: Systems } = useSystems();
   const technologies = useTechnologies().data?.data.technologies ?? [];
   const Fields = useFields().data?.data ?? [];
-  const techData = technologies.map((tech) => ({
-    id: tech.id,
-    name: tech.name,
-  }));
+  // Keep full technology data for editing (includes fields)
+  const techData = technologies;
   /*--Habdler------------------------------------------------------------------------------------------------ */
   const handleAddCategory = () => {
+    setSelectedCategory(null); // Clear selected category for create mode
     setIsCategoryModalOpen(true);
   };
 
   const handleAddTechnology = () => {
+    setSelectedTechnology(null); // Clear selected technology for create mode
     setIsTechnologyModalOpen(true);
   };
   const handleAddField = () => {
+    setSelectedField(null); // Clear selected field for create mode
     setIsFieldModalOpen(true);
   };
+  const openDeleteModal = (
+    id: string,
+    type: "category" | "field" | "technology"
+  ) => {
+    setDeleteModal({ isOpen: true, entityId: id, entityType: type });
+  };
+  const handleEditField = (field: any) => {
+    setSelectedField(field); // pass existing field → edit mode
+    setIsFieldModalOpen(true);
+  };
+  const handleEditCategory = (category: any) => {
+    setSelectedCategory(category); // pass existing category → edit mode
+    setIsCategoryModalOpen(true);
+  };
+  const handleEditTechnology = (technology: any) => {
+    setSelectedTechnology(technology); // pass existing technology → edit mode
+    setIsTechnologyModalOpen(true);
+  };
+  const closeDeleteModal = () => setDeleteModal({ isOpen: false });
+  const handleDelete = () => {
+    if (deleteModal.entityType === "category") onSubmitRemoveCategory();
+    else if (deleteModal.entityType === "field") onSubmitRemoveField();
+    else if (deleteModal.entityType === "technology")
+      onSubmitRemoveTechnology();
+    closeDeleteModal();
+  };
+  const onSubmitRemoveCategory = async () => {
+    try {
+      const res = await axiosInstance.delete(
+        `/admin/systems/${deleteModal.entityId}/`
+      );
+      toast.success("category deleted successfully", {
+        position: "top-right",
+        duration: 1000,
+      });
+      queryClient.invalidateQueries({
+        queryKey: [`SystemsData`],
+      });
+    } catch (error) {
+      const err = error as AxiosError<ApiError>;
+      toast.error(
+        `You cannot delete this category because it is linked to one or more sessions`,
+        {
+          position: "top-right",
+          duration: 2000,
+        }
+      );
+    }
+  };
+  const onSubmitRemoveField = async () => {
+    try {
+      const res = await axiosInstance.delete(
+        `/admin/fields/${deleteModal.entityId}/`
+      );
+      toast.success(" field deleted  successfully", {
+        position: "top-right",
+        duration: 1000,
+      });
+      queryClient.invalidateQueries({
+        queryKey: [`FieldsData`],
+      });
+    } catch (error) {
+      const err = error as AxiosError<ApiError>;
+      toast.error(
+        `You cannot delete this field because it is linked to one or more sessions.`,
+        {
+          position: "top-right",
+          duration: 2000,
+        }
+      );
+    }
+  };
+  const onSubmitRemoveTechnology = async () => {
+    try {
+      const res = await axiosInstance.delete(
+        `/admin/technologies/${deleteModal.entityId}/`
+      );
+      toast.success("technology deleted successfully", {
+        position: "top-right",
+        duration: 1000,
+      });
+      queryClient.invalidateQueries({
+        queryKey: [`technologiesData`],
+      });
+    } catch (error) {
+      const err = error as AxiosError<ApiError>;
+      toast.error(
+        `You cannot delete this technology because it is linked to one or more sessions.`,
+        {
+          position: "top-right",
+          duration: 2000,
+        }
+      );
+    }
+  };
+
   return (
     <div className="bg-white rounded-3xl shadow-sm border border-gray-100">
       <div className="p-8 border-b border-gray-100">
@@ -96,7 +209,14 @@ export function ModernContentManagement() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               {Systems?.data.systems?.map((data: IData) => (
-                <ContentCard data={data} key={data.id} />
+                <ContentCard
+                  data={data}
+                  key={data.id}
+                  onEdit={handleEditCategory}
+                  onDelete={() => {
+                    openDeleteModal(data.id, "category");
+                  }}
+                />
               ))}
             </div>
           </div>
@@ -116,8 +236,15 @@ export function ModernContentManagement() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {techData.map((data: IData) => (
-                <ContentCard data={data} key={data.id} />
+              {techData.map((tech: any) => (
+                <ContentCard
+                  data={{ id: tech.id, name: tech.name }}
+                  key={tech.id}
+                  onEdit={() => handleEditTechnology(tech)}
+                  onDelete={() => {
+                    openDeleteModal(tech.id, "technology");
+                  }}
+                />
               ))}
             </div>
           </div>
@@ -137,7 +264,14 @@ export function ModernContentManagement() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               {Fields.map((data: IData) => (
-                <ContentCard data={data} key={data.id} />
+                <ContentCard
+                  data={data}
+                  key={data.id}
+                  onEdit={handleEditField}
+                  onDelete={() => {
+                    openDeleteModal(data.id, "field");
+                  }}
+                />
               ))}
             </div>
           </div>
@@ -147,8 +281,12 @@ export function ModernContentManagement() {
         {isTechnologyModalOpen && (
           <TechnologyModal
             isOpen={isTechnologyModalOpen}
-            onClose={() => setIsTechnologyModalOpen(false)}
+            onClose={() => {
+              setIsTechnologyModalOpen(false);
+              setSelectedTechnology(null); // Reset selected technology when closing
+            }}
             Fields={Fields}
+            technology={selectedTechnology}
           />
         )}
       </AnimatePresence>
@@ -156,7 +294,11 @@ export function ModernContentManagement() {
         {isCategoryModalOpen && (
           <SystemModal
             isOpen={isCategoryModalOpen}
-            onClose={() => setIsCategoryModalOpen(false)}
+            onClose={() => {
+              setIsCategoryModalOpen(false);
+              setSelectedCategory(null); // Reset selected category when closing
+            }}
+            system={selectedCategory}
           />
         )}
       </AnimatePresence>
@@ -164,10 +306,28 @@ export function ModernContentManagement() {
         {isFieldModalOpen && (
           <FieldModel
             isOpen={isFieldModalOpen}
-            onClose={() => setIsFieldModalOpen(false)}
+            onClose={() => {
+              setIsFieldModalOpen(false);
+              setSelectedField(null); // Reset selected field when closing
+            }}
+            field={selectedField}
           />
         )}
       </AnimatePresence>
+      <DeleteModel
+        OpenDeleteModal={deleteModal.isOpen}
+        closeDeleteModal={closeDeleteModal}
+        onSubmitRemove={handleDelete}
+        title={`Delete ${
+          deleteModal.entityType
+            ? deleteModal.entityType.charAt(0).toUpperCase() +
+              deleteModal.entityType.slice(1)
+            : ""
+        }`}
+        description={`Are you sure you want to remove this ${
+          deleteModal.entityType ?? ""
+        }? This action cannot be undone.`}
+      />
     </div>
   );
 }

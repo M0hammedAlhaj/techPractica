@@ -1,0 +1,29 @@
+{
+  "family": "techpractica-frontend",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "256",
+  "memory": "512",
+  "containerDefinitions": [
+    {
+      "name": "frontend-container",
+      "image": "PLACEHOLDER",
+      "portMappings": [
+        {
+          "containerPort": 80,
+          "protocol": "tcp"
+        }
+      ],
+      "essential": true,
+      "environment": [],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/techpractica-frontend",
+          "awslogs-region": "REPLACE_AWS_REGION",
+          "awslogs-stream-prefix": "frontend"
+        }
+      }
+    }
+  ]
+}

@@ -38,11 +38,7 @@ export default function MultiSelectField<T>({
       control={control}
       rules={rules}
       render={({ field: { value = [], onChange } }) => (
-        <Listbox
-          value={value}
-          onChange={onChange}
-          multiple
-        >
+        <Listbox value={value} onChange={onChange} multiple>
           <Label className="block text-sm font-medium text-gray-700">
             {label}
           </Label>
@@ -57,7 +53,9 @@ export default function MultiSelectField<T>({
                         key={idx}
                         onClick={(e) => {
                           e.stopPropagation();
-                          onChange(value.filter((v: string | number) => v !== id));
+                          onChange(
+                            value.filter((v: string | number) => v !== id)
+                          );
                         }}
                         className="text-xs px-2 py-1 rounded-full bg-[#42D5AE]/10 text-[#022639] transition cursor-pointer"
                       >

@@ -1,5 +1,3 @@
-"use client";
-
 import { useNavigate } from "react-router-dom";
 import { IoSaveOutline } from "react-icons/io5";
 import { LuArrowLeft } from "react-icons/lu";
@@ -11,7 +9,7 @@ import {
   useAuthQuery,
 } from "../../imports";
 import type {
-  IErrorResponse,
+  ApiError,
   IField,
   IProfileResponse,
   ISystem,
@@ -26,7 +24,7 @@ import {
 import { useFields, useSystems, useTechnologies } from "../../api";
 import axiosInstance from "../../config/axios.config";
 import toast from "react-hot-toast";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 import { motion } from "framer-motion";
@@ -41,6 +39,7 @@ const CreateSession = () => {
   const Navigate = useNavigate();
   /* ------------------ Form & State ------------------ */
   const queryClient = useQueryClient();
+  const [isLoading, setIsLoading] = useState(false);
   type CrateSession = InferType<typeof SessionSchema>;
 
   const methods = useForm<CrateSession>({
@@ -91,6 +90,7 @@ const CreateSession = () => {
 
   /*-------------------------------------------------------------------------------*/
   const onSubmit: SubmitHandler<CrateSession> = async (data) => {
+    setIsLoading(true);
     const { name, description, system, isPrivate } = data;
     const requirements = data.field.map((fieldId) => {
       const techForField = Technology.filter(
@@ -114,12 +114,13 @@ const CreateSession = () => {
     };
 
     try {
-      await axiosInstance.post("/sessions/", payload, {
+      var res = await axiosInstance.post("/sessions/", payload, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       methods.reset();
+
       Navigate("/workspace");
       toast.success("Session created successfully", {
         position: "top-right",
@@ -128,19 +129,43 @@ const CreateSession = () => {
       setTimeout(() => {
         queryClient.invalidateQueries({ queryKey: ["SessionData-All"] });
       }, 500);
-    } catch (error) {
-      const err = error as AxiosError<IErrorResponse>;
+    } catch (err) {
+      const error = err as AxiosError<ApiError>;
+      const errorMessage = error.response?.data.message || "";
 
-      toast.error(`${err.message}`, {
+      if (
+        errorMessage.includes(
+          "GitHub access token is invalid or expired. User must re-authenticate"
+        )
+      ) {
+        const baseUrl = "http://localhost:8080";
+        window.location.href = `${baseUrl}/auth/github/connect`;
+        return;
+      }
+
+      toast.error(errorMessage, {
         position: "top-right",
         duration: 2000,
       });
+    } finally {
+      setIsLoading(false);
     }
   };
   return (
     <>
       {isSuccess ? (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 relative">
+          {/* Full Screen Loading Overlay */}
+          {isLoading && (
+            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+              <div className="flex items-center justify-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#42D5AE]"></div>
+                <span className="ml-3 text-white text-lg font-medium">
+                  Creating session...
+                </span>
+              </div>
+            </div>
+          )}
           <section className="relative bg-gradient-to-br from-[#42D5AE] via-[#38b28d] to-[#022639] py-24 overflow-hidden">
             {/* Decorative elements */}
             <div className="absolute inset-0 opacity-20">
@@ -428,7 +453,8 @@ const CreateSession = () => {
                         <div className="mt-10 pt-10 border-t border-gray-100">
                           <button
                             type="submit"
-                            className="w-full px-8 py-5 bg-gradient-to-r from-[#42D5AE] to-[#38b28d] hover:from-[#38b28d] hover:to-[#42D5AE] text-white rounded-2xl transition-all duration-300 font-bold text-lg flex items-center justify-center gap-3 shadow-xl shadow-[#42D5AE]/20 hover:shadow-2xl hover:shadow-[#42D5AE]/30 hover:scale-[1.02] active:scale-[0.98]"
+                            disabled={isLoading}
+                            className="w-full px-8 py-5 bg-gradient-to-r from-[#42D5AE] to-[#38b28d] hover:from-[#38b28d] hover:to-[#42D5AE] text-white rounded-2xl transition-all duration-300 font-bold text-lg flex items-center justify-center gap-3 shadow-xl shadow-[#42D5AE]/20 hover:shadow-2xl hover:shadow-[#42D5AE]/30 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100"
                           >
                             <IoSaveOutline className="w-6 h-6" />
                             Create Project

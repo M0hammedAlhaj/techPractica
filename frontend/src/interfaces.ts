@@ -54,21 +54,7 @@ export interface ISessionsData {
   totalPages: number;
   pageSize: number;
 }
-
-// export interface ISession {
-//   id: string;
-//   name: string;
-//   description: string;
-//   system: {
-//     id: string;
-//     name: string;
-//   };
-//   requirements: IRequirement[];
-//   ownerFullName: string;
-//   private: boolean;
-//   running: boolean;
-// }
-export interface ISession {
+export interface ISessionResponseProfile {
   id: string;
   name: string;
   description: string;
@@ -78,6 +64,92 @@ export interface ISession {
   ownerFullName: string;
   private: boolean;
 }
+
+export interface ISession {
+  id: string;
+  name: string;
+  description: string;
+  status: string;
+  system: ISystem;
+  role: string;
+  sessionCode: string;
+  requirements: IRequirement[];
+  ownerFullName: string;
+  members: Member[];
+  private: boolean;
+}
+
+export interface System {
+  id: string;
+  name: string;
+}
+
+export interface Requirement {
+  requirementId: string;
+  field: string;
+  technologies: string[];
+}
+
+export interface Skill {
+  name: string;
+  id: string;
+}
+
+export interface SocialAccount {
+  platform: string;
+  profileUrl: string;
+}
+
+export interface Skill {
+  id: string;
+  name: string;
+}
+
+export interface User {
+  id: string;
+  firstName: string;
+  lastName: string;
+  name: string;
+  email: string;
+  skills: Skill[];
+  socialAccounts: SocialAccount[];
+  brief: string;
+  roles: string[];
+  totalSessions: number;
+}
+
+export interface IUsersResponse {
+  data: {
+    userCollection: User[];
+  };
+  status: number;
+  message: string;
+}
+
+export interface IRole {
+  id: string;
+  type: string;
+}
+
+export interface IRolesResponse {
+  data: {
+    roleCollection: IRole[];
+  };
+  status: number;
+  message: string;
+}
+
+export interface IAssignRoleRequest {
+  id: string;
+  roleIds: string[];
+}
+
+export interface Member {
+  id: string;
+  user: User;
+  role: string;
+}
+
 export interface IRequirement {
   requirementId: string;
   field: string;
@@ -223,6 +295,7 @@ export interface SessionResponse {
       technologies: string[];
     }[];
     ownerFullName: string | null;
+    ownerId?: string;
     private: boolean;
   };
   status: number;
@@ -308,3 +381,126 @@ export interface IData {
   id: string;
   name: string;
 }
+export type RequestFormData = {
+  brief: string;
+  requirementName: string;
+};
+/*-------------------------------------------------------------------------------------------------- */
+export interface ApiError {
+  timestamp: string;
+  status: number;
+  message: string;
+  code: string;
+}
+/*-------------------------------------------------------------------------------------------------- */
+export interface Field {
+  id: string;
+  name: string;
+}
+
+export interface Technology {
+  id: string;
+  name: string;
+  fields: Field[];
+}
+
+export interface ISkills {
+  technologies: Technology[];
+}
+
+export interface Root {
+  totalSessions: number;
+  userId: string;
+  fullName: string;
+  skills: ISkills;
+  brief: string;
+  email: string;
+  field: Field;
+  requestDate: string;
+  state: string;
+  requestId: string;
+}
+export interface RequestsResponse {
+  data: {
+    totalSessions: number;
+    userId: string;
+    fullName: string;
+    skills: {
+      technologies: {
+        id: string;
+        name: string;
+        fields: {
+          id: string;
+          name: string;
+        }[];
+      }[];
+    };
+    brief: string;
+    email: string;
+    field: Field;
+    requestDate: string;
+    state: string;
+    requestId: string;
+  }[];
+  status: number;
+  message: string;
+}
+export interface IUserSession {
+  id: string;
+  fullName: string;
+}
+/*-------------------------------------------------------------------------------------------------- */
+export interface ITask {
+  id: string;
+  title: string;
+  description: string;
+  type: string;
+  dueDate: string;
+  assignees: string[];
+  tags: string[];
+  status: string;
+}
+
+export interface ITasksResponse {
+  data: {
+    tasks: ITask[];
+  };
+  status: number;
+  message: string;
+}
+
+export interface INotification {
+  notificationId: string;
+  title: string;
+  content: string;
+}
+
+export interface INotificationsResponse {
+  data: {
+    notifications: INotification[];
+  };
+  status: number;
+  message: string;
+}
+
+export interface IUserTaskStatistics {
+  userId: string;
+  name: string;
+  assignedTasksCount: number;
+  onTimeTasksCount: number;
+}
+
+export interface ISessionStatistics {
+  sessionId: string;
+  totalTasks: number;
+  duration: number;
+  userTaskStatisticsResources: IUserTaskStatistics[];
+}
+
+export interface ISessionStatisticsResponse {
+  data: ISessionStatistics;
+  message: string;
+  status: number;
+}
+
+/*-------------------------------------------------------------------------------------------------- */

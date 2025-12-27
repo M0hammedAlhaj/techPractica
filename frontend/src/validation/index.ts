@@ -62,13 +62,13 @@ export const SessionSchema = yup.object({
   name: yup
     .string()
     .required("Name is required")
-    .min(5, "Name must be at least 5 characters")
+    .min(1, "Name must be at least 1 character")
     .max(30, "Name must be at most 30 characters"),
 
   description: yup
     .string()
     .required("Description is required")
-    .min(500, "Description must be at least 500 characters")
+    .min(20, "Description must be at least 20 characters")
     .max(1000, "Description must be at most 1000 characters"),
 
   isPrivate: yup.boolean().required("isPrivate is required"),
@@ -91,12 +91,12 @@ export const SessionSchema = yup.object({
 export const userProfileSchema = yup.object({
   firstName: yup
     .string()
-    .min(5, "first Name must be at least 5 characters")
+    .min(3, "first Name must be at least 3 characters")
     .max(15, "first Name must be at most 15 characters")
     .required("First Name is required"),
   lastName: yup
     .string()
-    .min(5, "last Name must be at least 5 characters")
+    .min(3, "last Name must be at least 3 characters")
     .max(15, "last Name must be at most 15 characters")
     .required("Last Name is required"),
   brief: yup.string().required("Brief is required"),
@@ -123,3 +123,35 @@ export const userProfileSchema = yup.object({
     .required(),
 });
 export type IUserProfileRequestType = yup.InferType<typeof userProfileSchema>;
+
+export const TaskSchema = yup.object({
+  title: yup
+    .string()
+    .required("Title is required")
+    .min(3, "Title must be at least 3 characters")
+    .max(100, "Title must be at most 100 characters"),
+  description: yup
+    .string()
+    .optional()
+    .max(1000, "Description must be at most 1000 characters"),
+  type: yup.string().required("Type is required"),
+  dueDate: yup
+    .string()
+    .nullable()
+    .optional()
+    .transform((value, originalValue) => {
+      return originalValue === "" ? null : value;
+    }),
+  assignees: yup
+    .array()
+    .of(yup.string().uuid("Each assignee must be a valid UUID"))
+    .default([])
+    .optional(),
+  tags: yup
+    .array()
+    .of(yup.string().min(1, "Tag cannot be empty"))
+    .default([])
+    .optional(),
+});
+
+export type TaskFormType = yup.InferType<typeof TaskSchema>;
