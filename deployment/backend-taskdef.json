@@ -1,0 +1,34 @@
+{
+  "family": "techpractica-backend",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
+  "containerDefinitions": [
+    {
+      "name": "backend-container",
+      "image": "PLACEHOLDER",
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "protocol": "tcp"
+        }
+      ],
+      "essential": true,
+      "environment": [
+        {
+          "name": "SPRING_PROFILES_ACTIVE",
+          "value": "prod"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/techpractica-backend",
+          "awslogs-region": "REPLACE_AWS_REGION",
+          "awslogs-stream-prefix": "backend"
+        }
+      }
+    }
+  ]
+}

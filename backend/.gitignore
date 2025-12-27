@@ -31,3 +31,17 @@ build/
 
 ### VS Code ###
 .vscode/
+.gradle
+build
+
+# IntelliJ IDEA
+/.idea/workspace.xml
+/.idea/dataSources.local.xml
+/.idea/tasks.xml
+/.idea/usage.statistics.xml
+/.idea/dictionaries/
+*.iml
+.gradle*
+.gradle
+../.idea
+../.idea*

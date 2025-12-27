@@ -1,21 +1,25 @@
-import { CookiesService, useAuthQuery } from "./imports.ts";
+import { useAuthQuery } from "./imports.ts";
+import {
+  IFieldsResponse,
+  ISystemsResponse,
+  ITechnologyResponse,
+} from "./interfaces.ts";
 
-export const token = CookiesService.get("UserToken");
-//Field
-export const useCategories = () =>
-  useAuthQuery({
-    queryKey: ["CategoryData"],
-    url: "/tech-skills/categories",
-  });
-//category
-export const useSystems = () =>
-  useAuthQuery({
-    queryKey: ["fieldsData"],
-    url: "/tech-skills/systems",
-  });
-
+//Tech
 export const useTechnologies = () =>
-  useAuthQuery({
+  useAuthQuery<ITechnologyResponse>({
     queryKey: ["technologiesData"],
-    url: "/tech-skills/technologies",
+    url: "/admin/technologies/",
+  });
+//systems
+export const useSystems = () =>
+  useAuthQuery<ISystemsResponse>({
+    queryKey: ["SystemsData"],
+    url: "/admin/systems/",
+  });
+//Field
+export const useFields = () =>
+  useAuthQuery<IFieldsResponse>({
+    queryKey: ["FieldsData"],
+    url: "/admin/fields/",
   });

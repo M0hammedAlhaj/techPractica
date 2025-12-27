@@ -16,7 +16,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile-backend
-    container_name: track-ride-app
+    container_name: tech-app
     depends_on:
       - db
     ports:
@@ -32,7 +32,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile-frontend
-    container_name: track-ride-frontend
+    container_name: tech-frontend
     ports:
       - "3000:80"
     depends_on:

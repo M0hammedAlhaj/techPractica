@@ -3,46 +3,64 @@ import {
   createRoutesFromElements,
   Route,
 } from "react-router-dom";
-import {
-  LayoutHome,
-  LayoutLogin,
-  Home,
-  PageNotFound,
-  Login,
-  Learn,
-  Profile,
-  Register,
-  ResetPass,
-  ProjectsLayout,
-  Projects,
-  SessionRequests,
-} from "../imports";
-import BorderLayout from "../components/Board/BorderLayout";
-import KanbanBoard from "../components/Board/KanbanBoard";
+import { Home, LayoutHome, LayoutLogin, ProjectsLayout } from "../imports";
+import ProtectedRoute from "../pages/User/ProtectedRoute";
+import AuthRoute from "../pages/User/AuthRoute";
+import AdminRoute from "../pages/User/AdminRoute";
+import Explore from "../pages/Home/Explore";
+import CreateSession from "../components/Sessions/CreateSession";
+import EditSession from "../components/Sessions/EditSession";
+import AuthPage from "../pages/User/Auth";
+import SessionDetails from "../components/Sessions/SessionDetails";
+import ProfilePage from "../pages/Home/Profile";
+import ProfileLayout from "../components/Profile/ProfileLayout";
+import UserProfileForm from "../components/Profile/CompleteProfileForm";
+import WorkSpace from "../pages/Home/WorkSpace";
+import AdminDashboard from "../pages/Admin/AdminDashboard";
+import SessionRequest from "../components/Sessions/SessionRequest";
+import TasksPage from "../components/TaskManager/TasksPage";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="/" element={<LayoutHome />}>
         <Route index element={<Home />} />
-        <Route path="Learn" element={<Learn />} />
-        <Route path="Learn/:category" element={<Learn />} />
-        <Route path="Sessions" element={<ProjectsLayout />}>
-          <Route index element={<Projects />} />
+
+        <Route path="explore" element={<ProjectsLayout />}>
+          <Route index element={<Explore />} />
+          <Route path="session/:id" element={<SessionDetails />} />
+          <Route path="profile/:id" element={<ProfilePage />} />
         </Route>
-        <Route path="/Requests/:id" element={<SessionRequests />} />
-        <Route path="Profile" element={<Profile />} />
+
+        <Route element={<ProtectedRoute />}>
+          <Route path="workspace" element={<ProjectsLayout />}>
+            <Route index element={<WorkSpace />} />
+            <Route path="session/new" element={<CreateSession />} />
+            <Route path="session/:id/edit" element={<EditSession />} />
+            <Route path="session/:id/requests" element={<SessionRequest />} />
+            <Route path="session/:id" element={<SessionDetails />} />
+            <Route path="session/:id/task-manager" element={<TasksPage />} />
+            <Route path="profile/:id" element={<ProfilePage />} />
+          </Route>
+        </Route>
+
+        <Route element={<ProtectedRoute />}>
+          <Route path="profile" element={<ProfileLayout />}>
+            <Route index element={<ProfilePage />} />
+            <Route path="complete" element={<UserProfileForm />} />
+          </Route>
+        </Route>
       </Route>
 
-      <Route path="User" element={<LayoutLogin />}>
-        <Route index element={<Login />} />
-        <Route path="ResetPassword" element={<ResetPass />} />
-        <Route path="Register" element={<Register />} />
+      <Route element={<AuthRoute />}>
+        <Route path="auth" element={<LayoutLogin />}>
+          <Route index element={<AuthPage />} />
+        </Route>
       </Route>
-      <Route path="SessionKanban" element={<BorderLayout />}>
-        <Route index element={<KanbanBoard />} />
+
+      <Route element={<AdminRoute />}>
+        <Route path="admin" element={<AdminDashboard />} />
       </Route>
-      <Route path="*" element={<PageNotFound />} />
     </>
   )
 );

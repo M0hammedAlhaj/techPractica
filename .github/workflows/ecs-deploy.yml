@@ -1,0 +1,74 @@
+name: Deploy to AWS ECS
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  # Ensure you set AWS_REGION in repository Secrets
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build and push backend image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile-backend
+          push: true
+          tags: ${{ secrets.BACKEND_ECR_REPOSITORY }}:latest
+
+      - name: Build and push frontend image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile-frontend
+          push: true
+          tags: ${{ secrets.FRONTEND_ECR_REPOSITORY }}:latest
+
+      - name: Render backend task definition
+        id: render-backend
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: deployment/backend-taskdef.json
+          container-name: backend-container
+          image: ${{ secrets.BACKEND_ECR_REPOSITORY }}:latest
+
+      - name: Deploy backend to ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.render-backend.outputs.task-definition }}
+          service: ${{ secrets.BACKEND_ECS_SERVICE }}
+          cluster: ${{ secrets.ECS_CLUSTER }}
+
+      - name: Render frontend task definition
+        id: render-frontend
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: deployment/frontend-taskdef.json
+          container-name: frontend-container
+          image: ${{ secrets.FRONTEND_ECR_REPOSITORY }}:latest
+
+      - name: Deploy frontend to ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.render-frontend.outputs.task-definition }}
+          service: ${{ secrets.FRONTEND_ECS_SERVICE }}
+          cluster: ${{ secrets.ECS_CLUSTER }}
