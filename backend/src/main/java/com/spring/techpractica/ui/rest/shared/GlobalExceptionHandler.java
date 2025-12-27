@@ -3,6 +3,7 @@ package com.spring.techpractica.ui.rest.shared;
 import com.spring.techpractica.core.shared.Exception.OperationDuplicateException;
 import com.spring.techpractica.core.shared.Exception.ResourcesDuplicateException;
 import com.spring.techpractica.core.shared.Exception.ResourcesNotFoundException;
+import com.spring.techpractica.core.shared.Exception.UnauthorizedActionException;
 import com.spring.techpractica.core.user.exception.IncompleteAccountException;
 import com.spring.techpractica.ui.rest.shared.exception.InvalidPageRequestException;
 import com.spring.techpractica.infrastructure.jwt.exception.JwtValidationException;
@@ -110,6 +111,17 @@ public class GlobalExceptionHandler {
                         .message(e.getMessage())
                         .status(HttpStatus.UNAUTHORIZED.value())
                         .code("JWT_INVALID")
+                        .build());
+    }
+
+    @ExceptionHandler(UnauthorizedActionException.class)
+    public ResponseEntity<StandardErrorResponse> handleUnauthorizedActionException(UnauthorizedActionException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(StandardErrorResponse.builder()
+                        .timestamp(Instant.now())
+                        .status(HttpStatus.FORBIDDEN.value())
+                        .message(ex.getMessage())
+                        .code("UNAUTHORIZED_ACTION")
                         .build());
     }
 }
