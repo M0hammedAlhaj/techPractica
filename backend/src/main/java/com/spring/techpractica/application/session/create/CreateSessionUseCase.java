@@ -53,8 +53,8 @@ public class CreateSessionUseCase {
         session.generateSessionCode(generateSessionCode(session));
         eventPublisher.publishEvent(new CreateRepoEvent(
                 owner.getId(),
-                owner.getEmail(),
                 owner.getName(),
+                owner.getEmail(),
                 String.format("https://github.com/%s/%s",owner.getName(),command.name())
         ));
         return sessionRepository.save(session);
