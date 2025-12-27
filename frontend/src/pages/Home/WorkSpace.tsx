@@ -15,7 +15,7 @@ import { IoFilterOutline } from "react-icons/io5";
 import { WorkSpaceSessionCard } from "../../components/Cards/WorkSpaceSessionCard";
 import DeleteSessionModel from "../../components/DeleteSessionModel";
 import Pagination from "../../components/Pagination";
-import { getToken } from "../../helpers/helpers";
+import { decodeJwtSafe, getToken } from "../../helpers/helpers";
 const statuses = ["All", "draft", "in-progress", "completed"];
 const visibilities = ["All", "public", "private"];
 const sortOptions = [

@@ -27,7 +27,7 @@ export default function Explore() {
   const router = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [, setSortBy] = useState("newest");
+  const [sortBy, setSortBy] = useState("newest");
   const [currentPage, setCurrentPage] = useState(1);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState(false);
@@ -57,7 +57,6 @@ export default function Explore() {
     setCurrentPage(1);
   };
   console.log(Session.data);
-  // @ts-ignore
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
@@ -170,7 +169,25 @@ export default function Explore() {
                   })}
                 </div>
 
+                {/* Sort */}
+                {/* <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-gray-700">
+                    Sort by:
+                  </span>
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#42D5AE] focus:border-transparent outline-none bg-white"
+                  >
+                    {sortOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div> */}
 
+                {/* Clear Filters */}
                 <button
                   onClick={clearFilters}
                   className="text-sm text-gray-600 hover:text-gray-800 transition-colors"

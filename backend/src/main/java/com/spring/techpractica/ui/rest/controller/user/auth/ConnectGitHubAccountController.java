@@ -1,21 +1,25 @@
 package com.spring.techpractica.ui.rest.controller.user.auth;
 
-import com.spring.techpractica.core.user.UserAuthentication;
+import com.spring.techpractica.infrastructure.jwt.JwtExtracting;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 
 @Controller
 @Tag(name = "OAuth2 - GitHub", description = "Connect an existing account with GitHub")
 public class ConnectGitHubAccountController {
+
+    private final JwtExtracting jwtExtracting;
+
+    public ConnectGitHubAccountController(JwtExtracting jwtExtracting) {
+        this.jwtExtracting = jwtExtracting;
+    }
 
     @Operation(
             summary = "Connect GitHub account",
@@ -25,13 +29,26 @@ public class ConnectGitHubAccountController {
                     """
     )
     @GetMapping("/github/connect")
-    public void connect(@AuthenticationPrincipal UserAuthentication currentUser,
+    public void connect(@RequestParam String token,
+                        HttpServletRequest request,
                         HttpServletResponse response) throws IOException {
 
-        String userId = currentUser.getUser().getId().toString();
+        String userId = String.valueOf(jwtExtracting.extractId(token));
+        request.getSession().setAttribute("LINKING_USER_ID", userId.toString());
 
-        String state = URLEncoder.encode(userId, StandardCharsets.UTF_8);
-
-        response.sendRedirect("/oauth2/authorization/github?state=" + state);
+        response.sendRedirect("/oauth2/authorization/github");
     }
+
+
+//    @GetMapping("/github/connect")
+//    public void connect(@RequestParam("token") String token,
+//                        HttpServletResponse response) throws IOException {
+//
+//        String userId = token;
+//
+//        String state = URLEncoder.encode(userId, StandardCharsets.UTF_8);
+//
+//        response.sendRedirect("/oauth2/authorization/github?state=" + state);
+//    }
+
 }

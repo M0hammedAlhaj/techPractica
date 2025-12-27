@@ -1,6 +1,7 @@
 import { FiAward } from "react-icons/fi";
 import { MdOutlineCode } from "react-icons/md";
 import { ISkill } from "../../interfaces";
+import { FaCode } from "react-icons/fa";
 import { VscSymbolNamespace } from "react-icons/vsc";
 
 interface IProps {

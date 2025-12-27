@@ -5,22 +5,15 @@ import type { SessionResponse } from "../../interfaces"
 import { getInitials } from "../../data/data"
 import { GoArrowLeft } from "react-icons/go"
 import { PiBookOpenTextLight } from "react-icons/pi"
-import { getToken } from "../../helpers/helpers"
 
 export default function ProjectDetailPage() {
   /* ------------------ Fetch Data ------------------ */
-  const token = getToken()
   const { id } = useParams()
   const location = useLocation()
   const page = location.pathname.split("/")[1] ?? ""
   const UserSession = useAuthQuery<SessionResponse>({
     queryKey: [`UserSession`],
     url: `/sessions/by-id/${id}`,
-    config: {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    },
   })
   const session = UserSession ?? []
   const SessionData = session?.data?.data
