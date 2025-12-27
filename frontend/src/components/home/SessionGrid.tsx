@@ -31,11 +31,11 @@ export default function SessionGrid() {
               <h2 className="text-5xl md:text-6xl  font-bold text-gray-900 mb-8">
                 Featured
                 <span className="bg-gradient-to-r from-[#42D5AE] to-[#022639] bg-clip-text text-transparent">
-                  Projects
+                  Sessions
                 </span>
               </h2>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Discover hands-on projects created by our community of learners
+                Discover hands-on sessions created by our community of learners
                 and experts
               </p>
             </motion.div>

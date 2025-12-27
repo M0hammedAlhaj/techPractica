@@ -1,16 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { CiLock, CiUser } from "react-icons/ci";
 import toast from "react-hot-toast";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { AxiosError } from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { LoginAxiosResponse } from "../../data/data";
 import { loginSchema, registerSchema } from "../../validation";
 import axiosInstance from "../../config/axios.config";
 import {
-  IErrorResponse,
+  ApiError,
   IFormInputLogin,
   IFormInputRegister,
 } from "../../interfaces";
@@ -18,19 +18,32 @@ import { ErrorMsg } from "../../imports";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { BsArrowRight } from "react-icons/bs";
 import { MdOutlineEmail } from "react-icons/md";
-import { FiChrome, FiGithub } from "react-icons/fi";
+import { FiGithub } from "react-icons/fi";
 import {
   decodeJwtSafe,
   getToken,
   setRole,
+  setRoleAdmin,
   setToken,
 } from "../../helpers/helpers";
 const AuthPage = () => {
-  const [isLogin, setIsLogin] = useState(true);
+  const [searchParams] = useSearchParams();
+  const mode = searchParams.get("mode");
+  // Set initial state based on URL parameter, default to login
+  const [isLogin, setIsLogin] = useState(mode === "register" ? false : true);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+  // Update isLogin when URL parameter changes
+  useEffect(() => {
+    if (mode === "register") {
+      setIsLogin(false);
+    } else {
+      setIsLogin(true);
+    }
+  }, [mode]);
   const {
     register: registerRegister,
     handleSubmit: RegisterSubmit,
@@ -53,9 +66,9 @@ const AuthPage = () => {
         position: "top-right",
         duration: 2000,
       });
-    } catch (error) {
-      const ErrorObj = error as AxiosError<IErrorResponse>;
-      toast.error(`${ErrorObj.response?.data.message}`, {
+    } catch (err) {
+      const error = err as AxiosError<ApiError>;
+      toast.error(error.response?.data.message || "register invalid", {
         position: "top-right",
         duration: 2000,
       });
@@ -80,17 +93,29 @@ const AuthPage = () => {
         "/auth/login",
         data
       );
-      toast.success(response.data.message, { position: "top-right" });
+      toast.success(response.data.message, { position: "top-center" });
       setToken(response.data.data.token);
       const token = getToken();
       const payload = decodeJwtSafe(token);
-      setRole(payload?.roles[0] ?? null);
-      console.log(payload?.roles[0] ?? null);
-      navigate("/");
-    } catch (error) {
-      const err = error as AxiosError<{ message: string }>;
-      toast.error(err.response?.data.message || "Login failed", {
-        position: "top-right",
+      const roles = payload?.roles || [];
+
+      // Set roles - find ROLE_USER and ROLE_ADMIN from the roles array
+      const userRole = roles.find((role: string) => role === "ROLE_USER");
+      const adminRole = roles.find((role: string) => role === "ROLE_ADMIN");
+
+      setRole(userRole ?? null);
+      setRoleAdmin(adminRole ?? null);
+
+      // Navigate based on role - check if user has ROLE_ADMIN
+      if (adminRole === "ROLE_ADMIN" || roles.includes("ROLE_ADMIN")) {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
+    } catch (err) {
+      const error = err as AxiosError<ApiError>;
+      toast.error(error.response?.data.message || "login invalid", {
+        position: "top-center",
         duration: 4000,
       });
     } finally {
@@ -98,7 +123,11 @@ const AuthPage = () => {
     }
   };
   ///////////////////////////////////////////////////////////////////////////////////
+  const onSubmitLoginGithub = () => {
+    const baseUrl = "http://localhost:8080";
 
+    window.location.href = `${baseUrl}/oauth2/authorization/github`;
+  };
   // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -282,14 +311,14 @@ const AuthPage = () => {
                   </div>
 
                   {/* Forgot Password */}
-                  <div className="text-right">
+                  {/* <div className="text-right">
                     <Link
                       to="/forgot-password"
                       className="text-sm text-[#42D5AE] hover:text-[#38b28d] transition-colors"
                     >
                       Forgot password?
                     </Link>
-                  </div>
+                  </div> */}
 
                   {/* Submit Button */}
                   <motion.button
@@ -479,22 +508,15 @@ const AuthPage = () => {
             </div>
 
             {/* Social Login */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               <motion.button
+                onClick={onSubmitLoginGithub}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className="flex items-center justify-center gap-3 py-3 px-4 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-xl transition-all duration-300 text-gray-700 font-medium"
               >
                 <FiGithub className="w-5 h-5" />
                 GitHub
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="flex items-center justify-center gap-3 py-3 px-4 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-xl transition-all duration-300 text-gray-700 font-medium"
-              >
-                <FiChrome className="w-5 h-5" />
-                Google
               </motion.button>
             </div>
           </div>
