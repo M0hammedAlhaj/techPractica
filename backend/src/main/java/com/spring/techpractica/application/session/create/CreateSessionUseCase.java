@@ -48,9 +48,12 @@ public class CreateSessionUseCase {
 
         requirementsForSession.addRequirementsForSession(session,command);
 
-        createGithubRepositoryUseCase.createRepository(owner.getGithubAccessToken(), command.name(), command.isPrivate());
+        String repoUrl = createGithubRepositoryUseCase.createRepository(owner.getGithubAccessToken(), command.name(), command.isPrivate());
+
+        session.setGithubRepo(repoUrl);
 
         session.generateSessionCode(generateSessionCode(session));
+
         eventPublisher.publishEvent(new CreateRepoEvent(
                 owner.getId(),
                 owner.getName(),
