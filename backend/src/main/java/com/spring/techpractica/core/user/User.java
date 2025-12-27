@@ -73,7 +73,7 @@ public class User extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "technology_id", referencedColumnName = "id"))
     private Set<Technology> skills = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE, CascadeType.PERSIST},orphanRemoval = true)
     private List<SocialAccount> socialAccounts = new ArrayList<>();
 
     public User(UUID id) {
