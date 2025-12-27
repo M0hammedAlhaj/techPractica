@@ -23,4 +23,6 @@ public interface UserRepository extends BaseRepository<User> {
     Optional<User> findByEmailGithub(String email);
 
     Optional<User> findByProviderId(String providerId);
+
+    void delete(User user);
 }
