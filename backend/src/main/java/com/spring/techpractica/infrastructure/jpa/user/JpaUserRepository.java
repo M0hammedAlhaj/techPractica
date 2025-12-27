@@ -74,4 +74,9 @@ public class JpaUserRepository implements UserRepository {
     public Optional<User> findByProviderId(String providerId) {
         return jpaUser.findByProviderId(providerId);
     }
+
+    @Override
+    public void delete(User user) {
+        jpaUser.delete(user);
+    }
 }
