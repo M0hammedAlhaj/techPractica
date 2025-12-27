@@ -42,6 +42,9 @@ public class User extends BaseEntity {
     @Column(name = "github_email")
     private String githubEmail;
 
+    @Column(name = "git_user_name")
+    private String gitUserName;
+
     @Column(length = 1000, name = "github_access_token")
     private String githubAccessToken;
 
