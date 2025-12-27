@@ -42,7 +42,7 @@ export const features: Feature[] = [
   {
     title: "Skill Evaluation",
     description:
-      "Assess technical and soft skills effectively through tailored projects and tasks.",
+      "Assess technical and soft skills effectively through tailored sessions and tasks.",
     Icon: FaTools,
     style: "text-yellow-500 w-6 h-6",
   },
@@ -271,30 +271,30 @@ export const featuress = [
     color: "text-purple-500",
     bgColor: "bg-purple-50",
   },
-  {
-    icon: FaTrophy,
-    title: "Certifications",
-    description:
-      "Earn recognized certificates to showcase your skills to potential employers.",
-    color: "text-yellow-500",
-    bgColor: "bg-yellow-50",
-  },
-  {
-    icon: FaBolt,
-    title: "Interactive Learning",
-    description:
-      "Engage with interactive coding challenges and real-time feedback systems.",
-    color: "text-orange-500",
-    bgColor: "bg-orange-50",
-  },
-  {
-    icon: FaCode,
-    title: "Industry Tools",
-    description:
-      "Learn using the same tools and technologies used by top tech companies.",
-    color: "text-indigo-500",
-    bgColor: "bg-indigo-50",
-  },
+  // {
+  //   icon: FaTrophy,
+  //   title: "Certifications",
+  //   description:
+  //     "Earn recognized certificates to showcase your skills to potential employers.",
+  //   color: "text-yellow-500",
+  //   bgColor: "bg-yellow-50",
+  // },
+  // {
+  //   icon: FaBolt,
+  //   title: "Interactive Learning",
+  //   description:
+  //     "Engage with interactive coding challenges and real-time feedback systems.",
+  //   color: "text-orange-500",
+  //   bgColor: "bg-orange-50",
+  // },
+  // {
+  //   icon: FaCode,
+  //   title: "Industry Tools",
+  //   description:
+  //     "Learn using the same tools and technologies used by top tech companies.",
+  //   color: "text-indigo-500",
+  //   bgColor: "bg-indigo-50",
+  // },
 ];
 /*-------------------------------------------------------------------------------------------------- */
 export type CategoryType =
@@ -553,8 +553,8 @@ export const getStatusColor = (status: string) => {
       return "bg-yellow-100 text-yellow-800 border-yellow-200";
     case "ACTIVE":
       return "bg-green-100 text-green-800 border-green-200";
-    case "COMPLETED":
-      return "bg-blue-100 text-blue-800 border-blue-200";
+    case "RUNNING":
+      return "bg-pink-100 text-pink-800 border-pink-200";
     default:
       return "bg-gray-100 text-gray-800 border-gray-200";
   }
@@ -603,3 +603,43 @@ export const SessionVisible: ISessionVisible[] = [
     description: "Only you can view this project",
   },
 ];
+/*-------------------------------------------------------------------------------------------------- */
+export const getStatusRequestColor = (status: string) => {
+  switch (status) {
+    case "PENDINGs":
+      return "bg-yellow-100 text-yellow-700 border-yellow-200";
+    case "APPROVE":
+      return "bg-green-100 text-green-700 border-green-200";
+    case "REJECTED":
+      return "bg-red-100 text-red-700 border-red-200";
+    default:
+      return "bg-gray-100 text-gray-700 border-gray-200";
+  }
+};
+/*-------------------------------------------------------------------------------------------------- */
+export const getVisibilityColor = (visibility: boolean) => {
+  return !visibility
+    ? "bg-green-50 text-green-600 border-green-200"
+    : "bg-orange-50 text-orange-600 border-orange-200";
+};
+export const getRoleColor = (role: string) => {
+  return role === "OWNER"
+    ? "bg-red-50 text-red-600 border-red-200"
+    : "bg-sky-50 text-sky-600 border-sky-200";
+};
+
+export const columns = [
+  { id: "todo", title: "To Do", color: "#6B7280" },
+  { id: "in-progress", title: "In Progress", color: "#3B82F6" },
+  { id: "review", title: "Review", color: "#F59E0B" },
+  { id: "done", title: "Done", color: "#10B981" },
+];
+export const taskTypes = [
+  { id: "bug", name: "Bug", color: "#EF4444", icon: FaBug },
+  { id: "feature", name: "Feature", color: "#3B82F6", icon: FaBolt },
+  { id: "improvement", name: "Improvement", color: "#F59E0B", icon: FaTools },
+];
+/*-------------------------------------------------------------------------------------------------- */
+export const statuses = ["All", "WAITING", "RUNNING", "ENDED"];
+
+export const visibilities = ["All", "public", "private"];

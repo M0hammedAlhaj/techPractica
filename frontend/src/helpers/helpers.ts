@@ -1,5 +1,14 @@
+import Cookies from "universal-cookie";
+
+/////////////////
+const cookies = new Cookies();
+
 export const setToken = (token: string) => {
   sessionStorage.setItem("access_token", token);
+  cookies.remove("access_token");
+
+  // Dispatch custom event to notify AuthContext
+  window.dispatchEvent(new Event("tokenUpdated"));
 };
 
 export const getToken = () => {
@@ -7,16 +16,21 @@ export const getToken = () => {
 };
 
 export const clearToken = () => {
+  cookies.remove("access_token");
   sessionStorage.removeItem("access_token");
 };
 
 export const isAuthenticated = () => !!getToken();
 
 export const setRole = (role: string) => sessionStorage.setItem("role", role);
+export const setRoleAdmin = (role: string) =>
+  sessionStorage.setItem("role_admin", role);
+
 export const getRole = () => sessionStorage.getItem("role");
 export const clearRole = () => sessionStorage.removeItem("role");
+export const getAdminRole = () => sessionStorage.getItem("role_admin");
 
-export const isAdmin = () => getRole() === "ROLE_ADMIN";
+export const isAdmin = () => getAdminRole() === "ROLE_ADMIN";
 ////
 
 // Universal Base64URL decode (Node + Browser)
@@ -64,7 +78,3 @@ export function decodeJwtSafe(token: string | null): any | null {
     return null;
   }
 }
-
-// -------------------
-// Example usage
-// -------------------
