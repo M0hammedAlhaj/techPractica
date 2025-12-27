@@ -28,6 +28,7 @@ public class SessionResources {
     private String ownerFullName;
     private List<SessionMemberResources> members;
     private final String sessionCode;
+    private final String repoUrl;
 
 
     public SessionResources(Session session) {
@@ -55,5 +56,7 @@ public class SessionResources {
         }
 
         this.sessionCode = session.getSessionCode();
+
+        this.repoUrl = session.getGithubRepo();
     }
 }

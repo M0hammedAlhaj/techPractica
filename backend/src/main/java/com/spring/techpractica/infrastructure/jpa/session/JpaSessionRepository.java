@@ -1,6 +1,7 @@
 package com.spring.techpractica.infrastructure.jpa.session;
 
 import com.spring.techpractica.core.request.entity.Request;
+import com.spring.techpractica.core.role.entity.Role;
 import com.spring.techpractica.core.session.entity.Session;
 import com.spring.techpractica.core.session.SessionRepository;
 import com.spring.techpractica.core.session.SessionStatus;
@@ -105,5 +106,10 @@ public class JpaSessionRepository implements SessionRepository {
     @Override
     public Session findBySessionCode(String sessionCode) {
         return jpaSession.findBySessionCode(sessionCode);
+    }
+
+    @Override
+    public boolean existsByNameIgnoreCaseAndMembers_User_IdAndMembers_Role(String repoName, UUID ownerId, com.spring.techpractica.core.session.members.model.Role role) {
+        return jpaSession.existsByNameIgnoreCaseAndMembers_User_IdAndMembers_Role(repoName, ownerId, role);
     }
 }

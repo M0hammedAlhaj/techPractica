@@ -15,14 +15,12 @@ public class CreateGithubRepositoryUseCase {
     private final GitHubTokenValidator  tokenValidator;
 
 
-    public void createRepository(String accessToken, String repoName, boolean isPrivate) {
+    public String createRepository(String accessToken, String repoName, boolean isPrivate) {
 
         if(!tokenValidator.isValid(accessToken)){
             throw new GitHubTokenInvalidException();
         }
 
-        gateway.createRepository(accessToken, repoName, isPrivate);
-
-
+        return gateway.createRepository(accessToken, repoName, isPrivate);
     }
 }
