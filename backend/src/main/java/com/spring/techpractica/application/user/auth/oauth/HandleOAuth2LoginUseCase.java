@@ -28,6 +28,7 @@ public class HandleOAuth2LoginUseCase {
             if (optionalUser.isPresent()) {
                 var userAuth = optionalUser.get();
                 if (userAuth.getGithubEmail() == null) {
+                    userAuth.setGitUserName(command.name());
                     userAuth.setGithubEmail(command.email());
                     userAuth.setProviderId(command.providerId());
                     userAuth.setGithubAccessToken(command.githubToken());
@@ -43,6 +44,7 @@ public class HandleOAuth2LoginUseCase {
 
         User user = new User();
         user.setName(command.name());
+        user.setGitUserName(command.name());
         user.setEmail(command.email());
         user.setGithubEmail(command.email());
         user.setGithubAccessToken(command.githubToken());
