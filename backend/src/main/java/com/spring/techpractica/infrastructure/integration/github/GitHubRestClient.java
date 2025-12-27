@@ -17,8 +17,9 @@ public class GitHubRestClient implements GitHubRepositoryGateway {
     private static final String CREATE_REPO_URL = "https://api.github.com/user/repos";
 
     @Override
-    public void createRepository(String accessToken, String repoName, boolean isPrivate) {
-        restClient.post()
+    public String createRepository(String accessToken, String repoName, boolean isPrivate) {
+
+        Map<String, Object> response = restClient.post()
                 .uri(CREATE_REPO_URL)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                 .header(HttpHeaders.ACCEPT, "application/vnd.github+json")
@@ -29,6 +30,8 @@ public class GitHubRestClient implements GitHubRepositoryGateway {
                         "auto_init", true
                 ))
                 .retrieve()
-                .toBodilessEntity();
+                .body(Map.class);
+
+        return (String) response.get("html_url");
     }
 }

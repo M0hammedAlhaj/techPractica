@@ -11,6 +11,7 @@ import com.spring.techpractica.core.task.entity.Task;
 import com.spring.techpractica.core.user.User;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.validator.constraints.URL;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,10 @@ public class Session extends BaseEntity {
 
     @Column(name = "session_code", unique = true)
     private String sessionCode;
+
+    @URL
+    @Column(name = "github_repo")
+    private String githubRepo;
 
     @OneToMany(mappedBy = "session",
             fetch = FetchType.LAZY,

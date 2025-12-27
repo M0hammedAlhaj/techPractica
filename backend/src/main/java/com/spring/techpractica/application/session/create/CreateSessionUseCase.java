@@ -10,6 +10,7 @@ import com.spring.techpractica.core.session.members.Entity.SessionMember;
 import com.spring.techpractica.core.session.members.SessionMembersFactory;
 import com.spring.techpractica.core.session.members.model.Role;
 import com.spring.techpractica.core.session.service.SessionCodeGenerator;
+import com.spring.techpractica.core.shared.Exception.ResourcesDuplicateException;
 import com.spring.techpractica.core.system.entity.System;
 import com.spring.techpractica.core.system.SystemRepository;
 import com.spring.techpractica.core.user.User;
@@ -37,6 +38,17 @@ public class CreateSessionUseCase {
 
     @Transactional
     public Session execute(CreateSessionCommand command) {
+        boolean exists = sessionRepository
+                .existsByNameIgnoreCaseAndMembers_User_IdAndMembers_Role(
+                        command.name(),
+                        command.userId(),
+                        Role.OWNER
+                );
+
+        if (exists) {
+            throw new ResourcesDuplicateException(command.name());
+        }
+
         User owner = userRepository.getOrThrowByID(command.userId());
 
         Session session = sessionFactory.create(command);
@@ -48,9 +60,12 @@ public class CreateSessionUseCase {
 
         requirementsForSession.addRequirementsForSession(session,command);
 
-        createGithubRepositoryUseCase.createRepository(owner.getGithubAccessToken(), command.name(), command.isPrivate());
+        String repoUrl = createGithubRepositoryUseCase.createRepository(owner.getGithubAccessToken(), command.name(), command.isPrivate());
+
+        session.setGithubRepo(repoUrl);
 
         session.generateSessionCode(generateSessionCode(session));
+
         eventPublisher.publishEvent(new CreateRepoEvent(
                 owner.getId(),
                 owner.getName(),
