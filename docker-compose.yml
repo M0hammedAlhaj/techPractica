@@ -13,9 +13,8 @@ services:
       - ./db-init:/docker-entrypoint-initdb.d
 
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile-backend
+    image: maleknassar/finalback:latest
+    pull_policy: always
     container_name: tech-app
     depends_on:
       - db
@@ -27,16 +26,27 @@ services:
       SPRING_DATASOURCE_PASSWORD: 123456
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA: techPractica
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile-frontend
+    image: maleknassar/finalfront:latest
+    pull_policy: always
     container_name: tech-frontend
     ports:
       - "3000:80"
     depends_on:
       - backend
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:80/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
 
 volumes:
   postgres_data:
