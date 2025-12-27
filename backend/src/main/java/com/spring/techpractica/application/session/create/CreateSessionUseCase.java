@@ -86,13 +86,6 @@ public class CreateSessionUseCase {
     }
 
     private String generateSessionCode(Session session) {
-        String sessionCode;
-        if (session.isPrivate()) {
-            sessionCode = SessionCodeGenerator.generate();
-        }
-        else {
-            sessionCode = "PUBLIC";
-        }
-        return sessionCode;
+        return SessionCodeGenerator.generate();
     }
 }
