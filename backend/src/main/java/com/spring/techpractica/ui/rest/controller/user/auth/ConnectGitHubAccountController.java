@@ -25,7 +25,6 @@ public class ConnectGitHubAccountController {
                     """
     )
     @GetMapping("/github/connect")
-    @PreAuthorize("hasRole('USER')")
     public void connect(@AuthenticationPrincipal UserAuthentication currentUser,
                         HttpServletResponse response) throws IOException {
 
