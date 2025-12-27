@@ -32,7 +32,7 @@ public class UserSessionResources {
     private Role role;
     private List<MinimalUserResources> users;
     private final String sessionCode;
-
+    private final String repoUrl;
 
     public UserSessionResources(Session session, Role role) {
         this.id = session.getId();
@@ -57,5 +57,7 @@ public class UserSessionResources {
                 .stream()
                 .map(member -> new MinimalUserResources(member.getUser()))
                 .collect(Collectors.toList());
+
+        this.repoUrl = session.getGithubRepo();
     }
 }
