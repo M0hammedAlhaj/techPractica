@@ -70,7 +70,7 @@ public class CreateSessionUseCase {
                 owner.getId(),
                 owner.getName(),
                 owner.getEmail(),
-                String.format("https://github.com/%s/%s",owner.getName(),command.name())
+                repoUrl
         ));
         return sessionRepository.save(session);
     }
