@@ -28,6 +28,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest request)
             throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(request);
+
         Map<String, Object> attrs = oAuth2User.getAttributes();
 
         String name = (String) attrs.get("login");
@@ -39,13 +40,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             email = emailFetcher.fetchPrimaryEmail(githubToken);
         }
 
-        HttpServletRequest req =
-                ((ServletRequestAttributes) RequestContextHolder
-                        .getRequestAttributes())
-                        .getRequest();
-
-        UUID linkingUserId = (UUID) req.getSession().getAttribute("LINK_USER_ID");
-
+        // 🔥 اقرأ state (اللي فيه userId)
+        String state = request.getAdditionalParameters().get("state").toString();
+        UUID linkingUserId = UUID.fromString(state);
 
         OAuth2Command userInfo =
                 new OAuth2Command(name, email, githubToken, providerId);
