@@ -55,11 +55,9 @@ public class GetSessionStatisticsController {
             )
     })
     @GetMapping("/statistics/{sessionId}")
-    public ResponseEntity<?> getSessionStatistics(@AuthenticationPrincipal UserAuthentication user,
-                                                  @PathVariable UUID sessionId) {
+    public ResponseEntity<?> getSessionStatistics(@PathVariable UUID sessionId) {
         SessionStatistics statistics = getSessionStatisticsUseCase.execute(
                 new GetSessionStatisticsCommand(
-                        user.getUserId(),
                         sessionId
                 )
         );
