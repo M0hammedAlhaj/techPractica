@@ -34,7 +34,7 @@ public class GetUserSessionsUseCase {
         // 2) رتب الـ content فقط
         List<Session> sortedContent = page.getContent().stream()
                 .sorted(Comparator.comparing(Session::getAtCreated))   // تصاعدي
-                //.sorted(Comparator.comparing(Session::getAtCreated).reversed())  // تنازلي (الأحدث أولاً)
+                .sorted(Comparator.comparing(Session::getAtCreated).reversed())  // تنازلي (الأحدث أولاً)
                 .toList();
 
         // 3) أعد بناء Page جديد بنفس:
