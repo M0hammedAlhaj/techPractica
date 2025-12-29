@@ -20,11 +20,12 @@ public class UpdateTaskStatusUseCase {
     public Task execute(UpdateTaskStatusCommand command) {
         Task task = taskRepository.getOrThrowByID(command.taskId());
 
-        if (command.status() == TaskStatus.DONE &&
-                task.getDueDate() != null &&
-                task.getDueDate().isBefore(LocalDateTime.now())) {
-            throw new TaskDueDatePassedException();
-        }
+//        if (command.status() == TaskStatus.DONE &&
+//                task.getDueDate() != null &&
+//                task.getDueDate().isBefore(LocalDateTime.now())) {
+//            throw new TaskDueDatePassedException();
+//        }
+
         task.updateStatus(command.status());
 
         return taskRepository.save(task);
