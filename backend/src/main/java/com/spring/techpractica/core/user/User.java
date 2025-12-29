@@ -10,10 +10,7 @@ import com.spring.techpractica.core.technology.entity.Technology;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @NoArgsConstructor
@@ -42,6 +39,18 @@ public class User extends BaseEntity {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "github_email")
+    private String githubEmail;
+
+    @Column(name = "git_user_name")
+    private String gitUserName;
+
+    @Column(length = 1000, name = "github_access_token")
+    private String githubAccessToken;
+
+    @Column(name = "provider_id")
+    private String providerId;
+
     @Builder.Default
     @Enumerated(EnumType.STRING)
     private AccountStatus accountStatus = AccountStatus.UNACTIVE_ACCOUNT;
@@ -59,7 +68,7 @@ public class User extends BaseEntity {
     @JoinTable(joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     @Builder.Default
-    private List<Role> roles=new ArrayList<>();
+    private List<Role> roles = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "USERS_SKILLS",
@@ -67,8 +76,13 @@ public class User extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "technology_id", referencedColumnName = "id"))
     private Set<Technology> skills = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE, CascadeType.PERSIST},orphanRemoval = true)
     private List<SocialAccount> socialAccounts = new ArrayList<>();
+
+    public User(UUID id) {
+        super();
+        super.setId(id);
+    }
 
     public void addInfo(String firstName, String lastName, String brief) {
         this.firstName = firstName;
@@ -116,11 +130,11 @@ public class User extends BaseEntity {
         this.socialAccounts.addAll(socialAccounts);
     }
 
-    public String getFullName(){
+    public String getFullName() {
         return this.firstName + " " + this.lastName;
     }
 
-    public void setDeleted(){
+    public void setDeleted() {
         this.accountStatus = AccountStatus.IS_DELETED;
     }
 

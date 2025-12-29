@@ -14,9 +14,7 @@ public class DeleteUserUseCase {
     public String execute(DeleteUserCommand command){
         User user = userRepository.getOrThrowByID(command.userId());
 
-        user.setDeleted();
-
-        userRepository.update(user);
+        userRepository.delete(user);
 
         return String.format("User %s has been deleted", user.getId());
     }

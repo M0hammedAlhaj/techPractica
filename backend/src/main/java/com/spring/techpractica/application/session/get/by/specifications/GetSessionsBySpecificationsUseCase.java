@@ -3,6 +3,7 @@ package com.spring.techpractica.application.session.get.by.specifications;
 import com.spring.techpractica.core.session.entity.Session;
 import com.spring.techpractica.core.session.SessionRepository;
 import com.spring.techpractica.core.session.SessionStatus;
+import com.spring.techpractica.core.session.service.SessionCodePolicy;
 import com.spring.techpractica.infrastructure.jpa.session.SessionSpecifications;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -22,7 +23,16 @@ public class GetSessionsBySpecificationsUseCase {
 
     public List<Session> execute(GetSessionsBySpecificationsCommand command) {
 
-        Specification<Session> specification = SessionSpecifications.buildDynamicSpecification(command.sessionName(), command.fieldName());
+        if (SessionCodePolicy.isPrivateSessionCode(command.sessionCode())) {
+            return List.of(sessionRepository.findBySessionCode(command.sessionCode()));
+        }
+
+        Specification<Session> specification = SessionSpecifications
+                .buildDynamicSpecification(
+                        command.sessionName(),
+                        command.fieldName(),
+                        command.systemName()
+                );
 
         Pageable pageable = buildPageable(command.page(), command.size(), command.sort());
 

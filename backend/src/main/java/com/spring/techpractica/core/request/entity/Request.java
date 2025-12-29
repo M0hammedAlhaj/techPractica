@@ -37,17 +37,22 @@ public class Request extends BaseEntity {
         requestStatus = RequestState.PENDING;
     }
     public void approve() {
-        requestStatus = RequestState.APPROVE;
+        requestStatus = RequestState.APPROVED;
     }
     public void reject() {
         requestStatus = RequestState.REJECTED;
     }
 
     public boolean isApproved() {
-        return this.requestStatus == RequestState.APPROVE;
+        return this.requestStatus == RequestState.APPROVED;
     }
 
     public boolean isRejected() {
         return this.requestStatus == RequestState.REJECTED;
     }
+
+    public void delete() {
+        this.requestStatus = RequestState.DELETED;
+    }
+
 }

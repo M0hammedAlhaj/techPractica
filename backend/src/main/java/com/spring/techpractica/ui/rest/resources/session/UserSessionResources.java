@@ -31,6 +31,8 @@ public class UserSessionResources {
     private String ownerFullName;
     private Role role;
     private List<MinimalUserResources> users;
+    private final String sessionCode;
+    private final String repoUrl;
 
     public UserSessionResources(Session session, Role role) {
         this.id = session.getId();
@@ -41,6 +43,7 @@ public class UserSessionResources {
         this.ownerId = session.getOwnerId();
         this.ownerFullName = session.getOwnerFullName();
         this.role = role;
+        this.sessionCode = session.getSessionCode();
 
         if (session.getSystems() != null && !session.getSystems().isEmpty()) {
             this.system = new SystemResources(session.getSystems().getLast());
@@ -54,5 +57,7 @@ public class UserSessionResources {
                 .stream()
                 .map(member -> new MinimalUserResources(member.getUser()))
                 .collect(Collectors.toList());
+
+        this.repoUrl = session.getGithubRepo();
     }
 }

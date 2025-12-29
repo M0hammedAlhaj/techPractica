@@ -2,10 +2,11 @@ package com.spring.techpractica.core.session;
 
 import com.spring.techpractica.core.request.entity.Request;
 import com.spring.techpractica.core.session.entity.Session;
+import com.spring.techpractica.core.session.members.model.Role;
 import com.spring.techpractica.core.shared.BaseRepository;
 import com.spring.techpractica.core.system.entity.System;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
@@ -31,4 +32,12 @@ public interface SessionRepository extends BaseRepository<Session> {
     long getSessionsCount();
 
     long getUserSessionsCount(UUID userID);
+
+    Session findBySessionCode(String sessionCode);
+
+    boolean existsByNameIgnoreCaseAndMembers_User_IdAndMembers_Role(
+            String repoName,
+            UUID ownerId,
+            Role role
+    );
 }

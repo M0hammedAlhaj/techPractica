@@ -1,6 +1,7 @@
 package com.spring.techpractica.infrastructure.jpa.session;
 
 import com.spring.techpractica.core.request.entity.Request;
+import com.spring.techpractica.core.role.entity.Role;
 import com.spring.techpractica.core.session.entity.Session;
 import com.spring.techpractica.core.session.SessionRepository;
 import com.spring.techpractica.core.session.SessionStatus;
@@ -41,10 +42,21 @@ public class JpaSessionRepository implements SessionRepository {
         return jpaSession.findById(id);
     }
 
-        @Override
-        public List<Session> exploreSessions(Pageable pageable) {
-            return jpaSession.findAllByStatusNotInAndIsPrivateFalse(List.of(SessionStatus.DELETED, SessionStatus.ENDED), pageable).getContent();
-        }
+    @Override
+    public List<Session> exploreSessions(Pageable pageable) {
+        return jpaSession.findAllByStatusNotInAndIsPrivateFalse(List.of(SessionStatus.DELETED, SessionStatus.ENDED), pageable).getContent();
+    }
+
+//    @Override
+//    public List<Session> exploreSessions(UUID userId, Pageable pageable) {
+//        return jpaSession
+//                .exploreSessionsExcludeOwner(
+//                        userId,
+//                        List.of(SessionStatus.DELETED, SessionStatus.ENDED),
+//                        pageable
+//                )
+//                .getContent();
+//    }
 
     @Override
     public List<Session> getSessionsBySystems(List<System> systems, Pageable pageable) {
@@ -89,5 +101,15 @@ public class JpaSessionRepository implements SessionRepository {
     @Override
     public long getUserSessionsCount(UUID userID) {
         return jpaSession.getAllSessionsCountByUser(List.of(SessionStatus.DELETED),userID);
+    }
+
+    @Override
+    public Session findBySessionCode(String sessionCode) {
+        return jpaSession.findBySessionCode(sessionCode);
+    }
+
+    @Override
+    public boolean existsByNameIgnoreCaseAndMembers_User_IdAndMembers_Role(String repoName, UUID ownerId, com.spring.techpractica.core.session.members.model.Role role) {
+        return jpaSession.existsByNameIgnoreCaseAndMembers_User_IdAndMembers_Role(repoName, ownerId, role);
     }
 }

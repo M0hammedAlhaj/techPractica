@@ -29,7 +29,7 @@ public class UpdateTaskUseCase {
     @Transactional
     public Task execute(UpdateTaskCommand command) {
         Session session = sessionRepository.getOrThrowByID(command.sessionId());
-        taskService.validateSessionOwnership(session, command.ownerId());
+        taskService.validateSessionParticipant(session, command.userId());
 
         List<Field> fields = taskService.validateAndGetFields(command.tags());
         List<User> assignees = taskService.validateAndGetAssignees(command.assignees());

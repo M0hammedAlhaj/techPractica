@@ -1,5 +1,7 @@
 package com.spring.techpractica.application.session.request.create;
 
+import com.spring.techpractica.application.notification.CreateNotificationUseCase;
+import com.spring.techpractica.core.notification.NotificationRepository;
 import com.spring.techpractica.core.request.entity.Request;
 import com.spring.techpractica.core.request.RequestFactory;
 import com.spring.techpractica.core.request.RequestRepository;
@@ -24,6 +26,8 @@ public class CreateRequestUseCase {
     private final RequirementRepository requirementRepository;
     private final RequestFactory requestFactory;
     private final RequestRepository requestRepository;
+    private final CreateNotificationUseCase createNotificationUseCase;
+    private final NotificationRepository notificationRepository;
 
     @Transactional
     public Request execute(CreateRequestCommand command) {
@@ -46,6 +50,20 @@ public class CreateRequestUseCase {
 
         Request request = requestFactory.createRequest(user, requirement, command.brief());
 
-        return requestRepository.save(request);
+        Request savedRequest = requestRepository.save(request);
+
+        User sessionOwner = requirement.getSession().getOwner();
+
+        String title = "New Join Request";
+        String content = user.getName()
+                + " has requested to join your session: "
+                + requirement.getSession().getName();
+
+        notificationRepository.save(
+                createNotificationUseCase.execute(sessionOwner, title, content)
+        );
+
+        return savedRequest;
     }
 }
+

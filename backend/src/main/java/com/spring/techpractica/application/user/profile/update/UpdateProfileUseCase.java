@@ -60,7 +60,13 @@ public class UpdateProfileUseCase {
             mergedAccounts.add(created);
         });
 
-        user.setSocialAccounts(mergedAccounts);
+//        user.setSocialAccounts(mergedAccounts);
+
+        List<SocialAccount> accounts = user.getSocialAccounts();
+
+        accounts.clear();              // حذف القديم بطريقة صحيحة
+        accounts.addAll(mergedAccounts); // إضافة الجديد لنفس القائمة
+
 
         user.setSkills(technologies);
 

@@ -27,6 +27,8 @@ public class SessionResources {
     private UUID ownerId;
     private String ownerFullName;
     private List<SessionMemberResources> members;
+    private final String sessionCode;
+    private final String repoUrl;
 
 
     public SessionResources(Session session) {
@@ -52,5 +54,9 @@ public class SessionResources {
                     .map(SessionMemberResources::new)
                     .toList();
         }
+
+        this.sessionCode = session.getSessionCode();
+
+        this.repoUrl = session.getGithubRepo();
     }
 }

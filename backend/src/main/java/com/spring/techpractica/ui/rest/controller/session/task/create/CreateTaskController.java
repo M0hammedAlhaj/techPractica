@@ -44,11 +44,11 @@ public class CreateTaskController {
     @PostMapping("/")
     public ResponseEntity<?> createTask(@RequestBody CreateTaskRequest request,
                                         @AuthenticationPrincipal UserAuthentication userAuthentication) {
-        UUID ownerId = userAuthentication.getUserId();
+        UUID userId = userAuthentication.getUserId();
 
         Task task = createTaskUseCase.execute(
                 new CreateTaskCommand(
-                        ownerId,
+                        userId,
                         request.sessionId(),
                         request.title(),
                         request.description(),

@@ -5,11 +5,13 @@ import com.spring.techpractica.core.session.SessionStatus;
 import com.spring.techpractica.core.session.members.Entity.SessionMember;
 import com.spring.techpractica.core.session.members.model.Role;
 import com.spring.techpractica.core.shared.BaseEntity;
+import com.spring.techpractica.core.shared.Exception.ResourcesNotFoundException;
 import com.spring.techpractica.core.system.entity.System;
 import com.spring.techpractica.core.task.entity.Task;
 import com.spring.techpractica.core.user.User;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.validator.constraints.URL;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +35,13 @@ public class Session extends BaseEntity {
 
     @Column(name = "is_private")
     private boolean isPrivate;
+
+    @Column(name = "session_code", unique = true)
+    private String sessionCode;
+
+    @URL
+    @Column(name = "github_repo")
+    private String githubRepo;
 
     @OneToMany(mappedBy = "session",
             fetch = FetchType.LAZY,
@@ -83,6 +92,7 @@ public class Session extends BaseEntity {
             requirements = new ArrayList<>();
         }
         requirements.add(requirement);
+        requirement.setSession(this);
     }
 
     public void addBasicInfo(String name, String description, boolean isPrivate) {
@@ -120,6 +130,9 @@ public class Session extends BaseEntity {
     }
 
     public void runSession(){
+        if (status.equals(SessionStatus.RUNNING)) {
+            throw new UnsupportedOperationException("The session is already running.");
+        }
         this.status = SessionStatus.RUNNING;
     }
 
@@ -128,4 +141,24 @@ public class Session extends BaseEntity {
                 .anyMatch(member -> member.getUser().getId().equals(userId));
     }
 
+    public void generateSessionCode(String code) {
+        this.sessionCode = code;
+    }
+
+    public void removeMember(UUID participantId) {
+        boolean removed = members.removeIf(member ->
+                member.getUser().getId().equals(participantId)
+        );
+
+        if (!removed) {
+            throw new ResourcesNotFoundException(participantId);
+        }
+    }
+
+    public void endSession() {
+        if (status.equals(SessionStatus.ENDED)) {
+            throw new UnsupportedOperationException("The session is already ending.");
+        }
+        this.status = SessionStatus.ENDED;
+    }
 }

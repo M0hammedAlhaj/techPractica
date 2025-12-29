@@ -86,4 +86,23 @@ public class ExploreSessionsController {
                             .build());
         }
     }
+
+//    public ResponseEntity<?> exploreSessions(@AuthenticationPrincipal UserAuthentication user,
+//                                             @RequestParam int size,
+//                                             @RequestParam int page){
+//        if (page < 0 || size < 1) {
+//            throw new InvalidPageRequestException(page, size);
+//        }
+//
+//        SessionCollection response = new SessionCollection(
+//                exploreSessionsUseCase.execute(
+//                        new ExploreSessionsCommand(Optional.of(), page, size)
+//                ),getSessionsCountUseCase.execute()
+//        );
+//        return ResponseEntity.ok(StandardSuccessResponse.<SessionCollection>builder()
+//                .data(response)
+//                .message("Explore sessions successfully executed")
+//                .status(HttpStatus.OK.value())
+//                .build());
+//    }
 }

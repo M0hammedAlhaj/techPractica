@@ -19,4 +19,10 @@ public interface UserRepository extends BaseRepository<User> {
     List<User> findAllBySpecifications(Specification<User> specification, Pageable pageable);
 
     List<User> findAllByIds(Set<UUID> ids);
+
+    Optional<User> findByEmailGithub(String email);
+
+    Optional<User> findByProviderId(String providerId);
+
+    void delete(User user);
 }

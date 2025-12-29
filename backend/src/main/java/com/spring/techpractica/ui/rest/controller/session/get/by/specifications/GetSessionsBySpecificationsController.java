@@ -49,11 +49,21 @@ public class GetSessionsBySpecificationsController {
             @RequestParam(required = false) String sort,
             @RequestParam(required = false) String fieldName,
             @RequestParam(required = false) String sessionName,
+            @RequestParam(required = false) String sessionCode,
+            @RequestParam(required = false) String systemName,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        var response = new SessionCollection(
-                useCase.execute(new GetSessionsBySpecificationsCommand(sort, fieldName, sessionName, page, size)),getSessionsCountUseCase.execute()
+        var response = new SessionCollection(useCase.execute(
+                new GetSessionsBySpecificationsCommand(
+                        sort,
+                        fieldName,
+                        sessionName,
+                        sessionCode,
+                        systemName,
+                        page,
+                        size)),
+                getSessionsCountUseCase.execute()
         );
 
         return ResponseEntity.ok(StandardSuccessResponse.<SessionCollection>builder()

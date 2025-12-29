@@ -1,20 +1,20 @@
 package com.spring.techpractica.application.session.update;
 
-import com.spring.techpractica.application.session.create.CreateSessionCommand;
 import com.spring.techpractica.core.field.FieldRepository;
 import com.spring.techpractica.core.field.entity.Field;
 import com.spring.techpractica.core.request.RequestRepository;
 import com.spring.techpractica.core.requirement.RequirementFactory;
 import com.spring.techpractica.core.requirement.RequirementRepository;
 import com.spring.techpractica.core.requirement.entity.Requirement;
+import com.spring.techpractica.core.requirement.technology.Entity.RequirementTechnology;
 import com.spring.techpractica.core.requirement.technology.RequirementTechnologyFactory;
-import com.spring.techpractica.core.session.entity.Session;
 import com.spring.techpractica.core.session.SessionRepository;
+import com.spring.techpractica.core.session.entity.Session;
 import com.spring.techpractica.core.session.service.AddRequirementsForSessionService;
 import com.spring.techpractica.core.shared.Exception.ResourcesNotFoundException;
 import com.spring.techpractica.core.shared.Exception.UnauthorizedActionException;
-import com.spring.techpractica.core.system.entity.System;
 import com.spring.techpractica.core.system.SystemRepository;
+import com.spring.techpractica.core.system.entity.System;
 import com.spring.techpractica.core.technology.TechnologyRepository;
 import com.spring.techpractica.core.technology.entity.Technology;
 import com.spring.techpractica.core.user.User;
@@ -23,7 +23,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -79,18 +82,39 @@ public class UpdateSessionUseCase {
             List<Technology> technologies = fetchTechnologies(reqCommand.getTechnologies());
 
             if (existingFieldAndReq.containsKey(fieldId)) {
+
                 Requirement existingReq = existingFieldAndReq.get(fieldId);
-                existingReq.clearRequirementTechnologies();
-                technologies.forEach(tech ->
-                        existingReq.addRequirementTechnology(requirementTechnologyFactory.create(existingReq, tech))
+
+                Map<UUID, RequirementTechnology> existingTechMap =
+                        existingReq.getRequirementTechnologies().stream()
+                                .collect(Collectors.toMap(
+                                        rt -> rt.getTechnology().getId(),
+                                        rt -> rt
+                                ));
+
+                technologies.forEach(tech -> {
+                    if (!existingTechMap.containsKey(tech.getId())) {
+                        existingReq.addRequirementTechnology(
+                                requirementTechnologyFactory.create(existingReq, tech)
+                        );
+                    }
+                });
+
+                existingReq.getRequirementTechnologies().removeIf(rt ->
+                        technologies.stream()
+                                .noneMatch(t -> t.getId().equals(rt.getTechnology().getId()))
                 );
+
                 existingFieldAndReq.remove(fieldId);
-            } else {
+            }
+            else {
                 Requirement newReq = createRequirement(session, fieldId);
                 session.addRequirement(newReq);
+
                 technologies.forEach(tech ->
                         newReq.addRequirementTechnology(requirementTechnologyFactory.create(newReq, tech))
                 );
+                requirementRepository.save(newReq);
             }
         });
 

@@ -1,5 +1,6 @@
 package com.spring.techpractica.application.user.auth.login;
 
+import com.spring.techpractica.core.user.AccountStatus;
 import com.spring.techpractica.core.user.exception.UserAuthenticationException;
 import com.spring.techpractica.core.user.service.PasswordEncryptor;
 import com.spring.techpractica.core.user.User;
@@ -20,9 +21,13 @@ public class LoginAccountUseCase {
         Optional<User> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
+            if (user.getAccountStatus() == AccountStatus.IS_DELETED) {
+                throw new UserAuthenticationException("this user is deleted");
+            }
             if (passwordEncryptor.matches(command.password(), user.getPassword())) {
                 return user;
             }
+
         }
         throw new UserAuthenticationException("Invalid email or password");
     }

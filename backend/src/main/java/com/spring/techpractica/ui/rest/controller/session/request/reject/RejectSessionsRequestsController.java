@@ -64,7 +64,7 @@ public class RejectSessionsRequestsController {
     public ResponseEntity<?> rejectSessionRequests(@AuthenticationPrincipal UserAuthentication userAuthentication
             , @PathVariable("sessionId") UUID sessionId, @PathVariable("requestId") UUID requestId) {
 
-        RequestSessionResponse request = rejectSessionsRequestsUseCase.execute(
+        Request request = rejectSessionsRequestsUseCase.execute(
                 new RejectSessionsRequestsCommand(
                         userAuthentication.getUserId(),
                         sessionId,
@@ -73,11 +73,11 @@ public class RejectSessionsRequestsController {
         );
 
 
-        ApproveSessionResources responseData = new ApproveSessionResources(request.getRequest(), request.getNotification());
+        RequestResources responseData = new RequestResources(request);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(
-                        StandardSuccessResponse.<ApproveSessionResources>builder()
+                        StandardSuccessResponse.<RequestResources>builder()
                                 .data(responseData)
                                 .message("Request rejected successfully")
                                 .status(HttpStatus.OK.value())
