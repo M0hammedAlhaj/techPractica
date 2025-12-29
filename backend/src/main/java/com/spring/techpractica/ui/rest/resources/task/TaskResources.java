@@ -15,6 +15,7 @@ import java.util.UUID;
 public class TaskResources {
 
     private final UUID id;
+    private final UUID ownerId;
     private final String title;
     private final String description;
     private final String type;
@@ -40,5 +41,7 @@ public class TaskResources {
                 .stream()
                 .map(Field::getName)
                 .toList();
+
+        this.ownerId = task.getSession().getOwnerId();
     }
 }
