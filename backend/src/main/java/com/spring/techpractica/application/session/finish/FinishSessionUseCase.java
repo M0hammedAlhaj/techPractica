@@ -56,14 +56,39 @@ public class FinishSessionUseCase {
                         Collectors.counting()
                 ));
 
-        Map<UUID, Long> onTimeTasksPerUser = session.getTasks().stream()
-                .filter(task -> task.getStatus() == TaskStatus.DONE)
-                .filter(task -> !task.getAtModified().isAfter(task.getDueDate()))
-                .flatMap(task -> task.getUsersAssigned().stream())
-                .collect(Collectors.groupingBy(
-                        User::getId,
-                        Collectors.counting()
-                ));
+//        Map<UUID, Long> onTimeTasksPerUser = session.getTasks().stream()
+//                .filter(task -> task.getStatus() == TaskStatus.DONE)
+//                .filter(task -> !task.getAtModified().isAfter(task.getDueDate()))
+//                .flatMap(task -> task.getUsersAssigned().stream())
+//                .collect(Collectors.groupingBy(
+//                        User::getId,
+//                        Collectors.counting()
+//                ));
+
+        Map<UUID, Long> onTimeTasksPerUser =
+                session.getTasks().stream()
+                        .filter(task -> task.getStatus() == TaskStatus.DONE)
+                        .filter(task -> {
+                            var doneDateTime = task.getAtModified();
+                            var dueDateTime  = task.getDueDate();
+
+                            // مقارنة التاريخ بدون الوقت
+                            var doneDate = doneDateTime.toLocalDate();
+                            var dueDate  = dueDateTime.toLocalDate();
+
+                            return
+                                    // قبل أو بنفس الوقت
+                                    !doneDateTime.isAfter(dueDateTime)
+                                            ||
+                                            // أو بنفس اليوم بغض النظر عن الوقت
+                                            doneDate.isEqual(dueDate);
+                        })
+                        .flatMap(task -> task.getUsersAssigned().stream())
+                        .collect(Collectors.groupingBy(
+                                User::getId,
+                                Collectors.counting()
+                        ));
+
 
 //        long totalDoneTasks = session.getTasks().stream()
 //                .filter(task -> task.getStatus() == TaskStatus.DONE)
