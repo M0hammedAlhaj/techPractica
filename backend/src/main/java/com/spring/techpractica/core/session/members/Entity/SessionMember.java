@@ -19,7 +19,8 @@ public class SessionMember {
     @EmbeddedId
     private UserSessionId userSessionId=new UserSessionId();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,
+    cascade = CascadeType.REMOVE)
     @MapsId("userId")
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user;

@@ -3,6 +3,7 @@ package com.spring.techpractica.core.user;
 import com.spring.techpractica.core.notification.entity.Notification;
 import com.spring.techpractica.core.request.entity.Request;
 import com.spring.techpractica.core.role.entity.Role;
+import com.spring.techpractica.core.session.members.Entity.SessionMember;
 import com.spring.techpractica.core.shared.BaseEntity;
 import com.spring.techpractica.core.social.account.entity.SocialAccount;
 import com.spring.techpractica.core.task.entity.Task;
@@ -54,6 +55,9 @@ public class User extends BaseEntity {
     @Builder.Default
     @Enumerated(EnumType.STRING)
     private AccountStatus accountStatus = AccountStatus.UNACTIVE_ACCOUNT;
+
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "user")
+    private List<SessionMember> sessionMembers;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
     private List<Request> requests;
