@@ -10,10 +10,11 @@ import org.springframework.stereotype.Service;
 public class DeleteUserUseCase {
 
     private final UserRepository userRepository;
+    private final SessionMemberJpa sessionMemberJpa;
 
-    public String execute(DeleteUserCommand command){
+    public String execute(DeleteUserCommand command) {
         User user = userRepository.getOrThrowByID(command.userId());
-
+        sessionMemberJpa.deleteByUserId(user.getId());
         userRepository.delete(user);
 
         return String.format("User %s has been deleted", user.getId());
