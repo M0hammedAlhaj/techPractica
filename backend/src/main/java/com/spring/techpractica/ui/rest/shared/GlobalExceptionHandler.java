@@ -1,9 +1,6 @@
 package com.spring.techpractica.ui.rest.shared;
 
-import com.spring.techpractica.core.shared.Exception.OperationDuplicateException;
-import com.spring.techpractica.core.shared.Exception.ResourcesDuplicateException;
-import com.spring.techpractica.core.shared.Exception.ResourcesNotFoundException;
-import com.spring.techpractica.core.shared.Exception.UnauthorizedActionException;
+import com.spring.techpractica.core.shared.Exception.*;
 import com.spring.techpractica.core.user.exception.IncompleteAccountException;
 import com.spring.techpractica.ui.rest.shared.exception.InvalidPageRequestException;
 import com.spring.techpractica.infrastructure.jwt.exception.JwtValidationException;
@@ -124,4 +121,16 @@ public class GlobalExceptionHandler {
                         .code("UNAUTHORIZED_ACTION")
                         .build());
     }
+
+    @ExceptionHandler(GitHubTokenInvalidException.class)
+    public ResponseEntity<StandardErrorResponse> handleGitHubTokenInvalidException(GitHubTokenInvalidException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(StandardErrorResponse.builder()
+                        .timestamp(Instant.now())
+                        .message(ex.getMessage())
+                        .status(HttpStatus.UNAUTHORIZED.value())
+                        .code("GITHUB_TOKEN_INVALID")
+                        .build());
+    }
+
 }

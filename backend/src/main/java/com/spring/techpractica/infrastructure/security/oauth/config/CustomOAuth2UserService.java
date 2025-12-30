@@ -40,7 +40,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }
 
         UUID linkingUserId = null;
-        String linkingUserIdStr = (String) session.getAttribute("LINKING_USER_ID");
+        String linkingUserIdStr =
+                (String) session.getAttribute("LINK_USER_ID");
+
+        session.removeAttribute("LINK_USER_ID");
 
         if (linkingUserIdStr != null) {
             try {

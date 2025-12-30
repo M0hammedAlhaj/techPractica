@@ -34,7 +34,7 @@ public class ConnectGitHubAccountController {
                         HttpServletResponse response) throws IOException {
 
         String userId = String.valueOf(jwtExtracting.extractId(token));
-        request.getSession().setAttribute("LINKING_USER_ID", userId.toString());
+        request.getSession().setAttribute("LINK_USER_ID", userId);
 
         response.sendRedirect("/oauth2/authorization/github");
     }
